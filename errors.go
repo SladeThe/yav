@@ -3,8 +3,6 @@ package yav
 import (
 	"errors"
 	"fmt"
-
-	"go.uber.org/multierr"
 )
 
 const (
@@ -119,32 +117,4 @@ func (err Error) ValueAsString() string {
 	}
 
 	return ""
-}
-
-func WithNamespace(namespace string, err error) error {
-	if err == nil {
-		return nil
-	}
-
-	if validationErr, ok := err.(Error); ok {
-		if validationErr.ValueName == "" {
-			return err
-		}
-
-		validationErr.ValueName = namespace + "." + validationErr.ValueName
-		return validationErr
-	}
-
-	partialErrs := multierr.Errors(err) // TODO update in-place ?
-	if len(partialErrs) <= 1 {
-		return err
-	}
-
-	var combinedErr error
-
-	for _, partialErr := range partialErrs {
-		multierr.AppendInto(&combinedErr, WithNamespace(namespace, partialErr))
-	}
-
-	return combinedErr
 }
