@@ -25,7 +25,7 @@ type Account struct {
     ID string `json:"id" validate:"required,uuid"`
     
     Login    string `json:"login" validate:"required,min=4,max=20,alphanum,lowercase"`
-    Password string `json:"password" validate:"required_with=Login,omitempty,min=8,max=32,excludes_whitespace,text"`
+    Password string `json:"password" validate:"required_with=Login,omitempty,min=8,max=32,text"`
     
     Email string `json:"email" validate:"required,min=6,max=100,email"`
     Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
@@ -52,7 +52,6 @@ func (a Account) Validate() error {
 			vstring.OmitEmpty,
 			vstring.Min(8),
 			vstring.Max(32),
-			vstring.ExcludesWhitespace,
 			vstring.IsText,
 		),
 		yav.Chain(
