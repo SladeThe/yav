@@ -1,0 +1,16 @@
+# Binaries and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test and coverage tool files
+*.test
+*.out
+
+# IDEs
+/.idea
+
+# Vendor
+vendor/
