@@ -20,6 +20,8 @@ The future plans are to introduce more playground and probably to add YAV's own 
 
 ## Examples
 
+YAV doesn't need the validate field attribute. It is added, so that you can compare YAV and playground code.
+
 ```go
 type Account struct {
     ID string `json:"id" validate:"required,uuid"`
