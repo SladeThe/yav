@@ -4,68 +4,44 @@ import (
 	"strings"
 
 	"github.com/SladeThe/yav"
-	"github.com/SladeThe/yav/internal"
-)
-
-var (
-	equalFuncs = make(map[string]yav.ValidateFunc[string])
-	oneOfFuncs = make(map[string]yav.ValidateFunc[string])
 )
 
 func Equal(parameter string) yav.ValidateFunc[string] {
-	if validateFunc, ok := equalFuncs[parameter]; ok {
-		return validateFunc
-	}
-
-	return internal.RegisterValidateFunc(&equalFuncs, parameter, equal(parameter))
+	return equal(parameter).validate
 }
 
-func equal(parameter string) yav.ValidateFunc[string] {
-	return func(name string, value string) (stop bool, err error) {
-		if value != parameter {
-			return false, yav.Error{
-				CheckName: yav.CheckNameEqual,
-				Parameter: parameter,
-				ValueName: name,
-				Value:     value,
-			}
-		}
-
-		return false, nil
-	}
+func OneOf(parameters ...string) yav.ValidateFunc[string] {
+	return oneOf(parameters).validate
 }
 
-func OneOf(parameter string) yav.ValidateFunc[string] {
-	if validateFunc, ok := oneOfFuncs[parameter]; ok {
-		return validateFunc
-	}
+type equal string
 
-	return internal.RegisterValidateFunc(&oneOfFuncs, parameter, oneOf(parameter))
-}
-
-func oneOf(parameter string) yav.ValidateFunc[string] {
-	var expectedValues []string
-
-	for _, expectedValue := range strings.Split(parameter, " ") {
-		if expectedValue = strings.TrimSpace(expectedValue); expectedValue != "" {
-			expectedValues = append(expectedValues, expectedValue)
-		}
-	}
-
-	expectedValues = expectedValues[:len(expectedValues):len(expectedValues)]
-
-	return func(name string, value string) (stop bool, err error) {
-		for _, expectedValue := range expectedValues {
-			if value == expectedValue {
-				return false, nil
-			}
-		}
-
+func (e equal) validate(name string, value string) (stop bool, err error) {
+	if value != string(e) {
 		return false, yav.Error{
-			CheckName: yav.CheckNameOneOf,
-			Parameter: parameter,
+			CheckName: yav.CheckNameEqual,
+			Parameter: string(e),
 			ValueName: name,
 			Value:     value,
 		}
+	}
+
+	return false, nil
+}
+
+type oneOf []string
+
+func (o oneOf) validate(name string, value string) (stop bool, err error) {
+	for _, parameter := range o {
+		if value == parameter {
+			return false, nil
+		}
+	}
+
+	return false, yav.Error{
+		CheckName: yav.CheckNameOneOf,
+		Parameter: strings.Join(o, " "),
+		ValueName: name,
+		Value:     value,
 	}
 }

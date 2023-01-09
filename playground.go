@@ -25,10 +25,12 @@ var (
 
 	playgroundParameterlessCheckNames = map[string]struct{}{
 		CheckNameRequired: {},
-		CheckNameEmail:    {},
-		CheckNameE164:     {},
-		CheckNameUUID:     {},
-		CheckNameUnique:   {},
+
+		CheckNameUnique: {},
+
+		CheckNameEmail: {},
+		CheckNameE164:  {},
+		CheckNameUUID:  {},
 
 		CheckNameLowercase: {},
 		CheckNameUppercase: {},

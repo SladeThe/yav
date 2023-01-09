@@ -4,60 +4,42 @@ import (
 	"strconv"
 
 	"github.com/SladeThe/yav"
-	"github.com/SladeThe/yav/internal"
-)
-
-var (
-	minFuncs = make(map[int]yav.ValidateFunc[string])
-	maxFuncs = make(map[int]yav.ValidateFunc[string])
 )
 
 func Min(parameter int) yav.ValidateFunc[string] {
-	if validateFunc, ok := minFuncs[parameter]; ok {
-		return validateFunc
-	}
-
-	return internal.RegisterValidateFunc(&minFuncs, parameter, min(parameter))
-}
-
-func min(parameter int) yav.ValidateFunc[string] {
-	parameterString := strconv.Itoa(parameter)
-
-	return func(name string, value string) (stop bool, err error) {
-		if len(value) < parameter {
-			return false, yav.Error{
-				CheckName: yav.CheckNameMin,
-				Parameter: parameterString,
-				ValueName: name,
-				Value:     value,
-			}
-		}
-
-		return false, nil
-	}
+	return min(parameter).validate
 }
 
 func Max(parameter int) yav.ValidateFunc[string] {
-	if validateFunc, ok := maxFuncs[parameter]; ok {
-		return validateFunc
-	}
-
-	return internal.RegisterValidateFunc(&maxFuncs, parameter, max(parameter))
+	return max(parameter).validate
 }
 
-func max(parameter int) yav.ValidateFunc[string] {
-	parameterString := strconv.Itoa(parameter)
+type min int
 
-	return func(name string, value string) (stop bool, err error) {
-		if len(value) > parameter {
-			return false, yav.Error{
-				CheckName: yav.CheckNameMax,
-				Parameter: parameterString,
-				ValueName: name,
-				Value:     value,
-			}
+func (m min) validate(name string, value string) (stop bool, err error) {
+	if len(value) < int(m) {
+		return false, yav.Error{
+			CheckName: yav.CheckNameMin,
+			Parameter: strconv.Itoa(int(m)),
+			ValueName: name,
+			Value:     value,
 		}
-
-		return false, nil
 	}
+
+	return false, nil
+}
+
+type max int
+
+func (m max) validate(name string, value string) (stop bool, err error) {
+	if len(value) > int(m) {
+		return false, yav.Error{
+			CheckName: yav.CheckNameMax,
+			Parameter: strconv.Itoa(int(m)),
+			ValueName: name,
+			Value:     value,
+		}
+	}
+
+	return false, nil
 }

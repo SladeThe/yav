@@ -5,6 +5,8 @@ import (
 	"github.com/SladeThe/yav/internal"
 )
 
+// TODO replace maps with generic structs after the next Go release, it doesn't compile in 1.19.4
+
 var (
 	requiredWithAnyFuncs    = make(map[string]yav.ValidateFunc[string])
 	requiredWithoutAnyFuncs = make(map[string]yav.ValidateFunc[string])

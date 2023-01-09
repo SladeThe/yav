@@ -137,6 +137,27 @@ func TestValidate(t *testing.T) {
 			return a
 		}(),
 	}, {
+		name: "valid age",
+		account: func() Account {
+			a := ValidAccount()
+			a.Age = 20
+			return a
+		}(),
+	}, {
+		name: "small age",
+		account: func() Account {
+			a := ValidAccount()
+			a.Age = 17
+			return a
+		}(),
+	}, {
+		name: "ancient age",
+		account: func() Account {
+			a := ValidAccount()
+			a.Age = 120
+			return a
+		}(),
+	}, {
 		name: "invalid secret",
 		account: func() Account {
 			a := ValidAccount()

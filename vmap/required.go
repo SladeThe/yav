@@ -1,15 +1,15 @@
-package vslice
+package vmap
 
 import (
 	"github.com/SladeThe/yav"
 	"github.com/SladeThe/yav/internal"
 )
 
-func OmitEmpty[S ~[]T, T any](_ string, value S) (stop bool, err error) {
+func OmitEmpty[M ~map[K]V, K comparable, V any](_ string, value M) (stop bool, err error) {
 	return len(value) == 0, nil
 }
 
-func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
+func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool, err error) {
 	if len(value) == 0 {
 		return false, yav.Error{
 			CheckName: yav.CheckNameRequired,
@@ -20,14 +20,14 @@ func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
+func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.IsValid[M]
 	}
 
 	// TODO avoid allocations ?
 
-	return func(name string, value S) (stop bool, err error) {
+	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
 			return false, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
@@ -40,14 +40,17 @@ func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 	}
 }
 
-func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
+func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
+	fields string,
+	accumulator yav.Accumulator,
+) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.IsValid[M]
 	}
 
 	// TODO avoid allocations ?
 
-	return func(name string, value S) (stop bool, err error) {
+	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
 			return false, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
@@ -60,14 +63,14 @@ func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulato
 	}
 }
 
-func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
+func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.IsValid[M]
 	}
 
 	// TODO avoid allocations ?
 
-	return func(name string, value S) (stop bool, err error) {
+	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
 			return false, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
@@ -80,14 +83,17 @@ func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 	}
 }
 
-func RequiredWithoutAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
+func RequiredWithoutAll[M ~map[K]V, K comparable, V any](
+	fields string,
+	accumulator yav.Accumulator,
+) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.IsValid[M]
 	}
 
 	// TODO avoid allocations ?
 
-	return func(name string, value S) (stop bool, err error) {
+	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
 			return false, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,

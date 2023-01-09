@@ -7,6 +7,7 @@ import (
 	"go.uber.org/multierr"
 
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/vnumeric"
 	"github.com/SladeThe/yav/vstring"
 )
 
@@ -23,6 +24,8 @@ type Account struct {
 
 	Email string `json:"email" validate:"required,min=6,max=100,email,lowercase"`
 	Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
+
+	Age uint8 `json:"age" validate:"omitempty,gte=18,lt=120"`
 
 	Secret    string `json:"secret" validate:"required,eq=secure"`
 	PromoCode string `json:"promoCode" validate:"omitempty,oneof=BlackFriday2022 BlackFriday2023"`
@@ -77,6 +80,12 @@ func (a Account) ChainValidate() error {
 			vstring.IsE164,
 		),
 		yav.Chain(
+			"age", a.Age,
+			vnumeric.OmitEmpty[uint8],
+			vnumeric.GreaterThanOrEqual[uint8](18),
+			vnumeric.LessThan[uint8](120),
+		),
+		yav.Chain(
 			"secret", a.Secret,
 			vstring.Required,
 			vstring.Equal("secure"),
@@ -84,7 +93,7 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"promoCode", a.PromoCode,
 			vstring.OmitEmpty,
-			vstring.OneOf("BlackFriday2022 BlackFriday2023"),
+			vstring.OneOf("BlackFriday2022", "BlackFriday2023"),
 		),
 		yav.Chain(
 			"firstName", a.FirstName,
@@ -155,6 +164,12 @@ func (a Account) OzzoValidate() error {
 			ozzo.Required,
 			ozzo.Length(8, 16),
 			is.E164,
+		),
+		ozzo.Field(
+			&a.Age,
+			ozzo.When(ozzo.IsEmpty(a.Age), ozzo.Skip),
+			ozzo.Min(18),
+			ozzo.Max(119),
 		),
 		ozzo.Field(
 			&a.Secret,

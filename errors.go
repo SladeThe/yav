@@ -12,14 +12,27 @@ const (
 	CheckNameRequiredWithAll    = "required_with_all"
 	CheckNameRequiredWithoutAll = "required_without_all"
 
-	CheckNameMin    = "min"
-	CheckNameMax    = "max"
-	CheckNameEmail  = "email"
-	CheckNameE164   = "e164"
-	CheckNameUUID   = "uuid"
+	CheckNameMin                = "min"
+	CheckNameMax                = "max"
+	CheckNameGreaterThan        = "gt"
+	CheckNameGreaterThanOrEqual = "gte"
+	CheckNameLessThan           = "lt"
+	CheckNameLessThanOrEqual    = "lte"
+
 	CheckNameEqual  = "eq"
 	CheckNameOneOf  = "oneof"
 	CheckNameUnique = "unique"
+
+	CheckNameEmail = "email"
+	CheckNameE164  = "e164"
+	CheckNameUUID  = "uuid"
+
+	CheckNameURI = "uri"
+	CheckNameURL = "url"
+
+	CheckNameHostname        = "hostname"         // RFC 952
+	CheckNameHostnameRFC1123 = "hostname_rfc1123" // RFC 1123, DNS name
+	CheckNameHostnamePort    = "hostname_port"    // [RFC 1123]:<port>
 
 	CheckNameAlpha        = "alpha"
 	CheckNameAlphanumeric = "alphanum"
@@ -55,7 +68,7 @@ type Error struct {
 	Parameter string
 
 	ValueName string
-	Value     any
+	Value     any // TODO Value() method and typed containers for commonly used types to avoid allocations + benchmark
 }
 
 func IsError(err error) bool {

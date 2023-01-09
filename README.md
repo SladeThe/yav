@@ -99,9 +99,9 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 #### Account struct validation
 
 ```
-BenchmarkChain              805762        1526 ns/op          0 B/op        0 allocs/op
-BenchmarkOzzo*               92058       13223 ns/op      11908 B/op      194 allocs/op
-BenchmarkPlayground         365997        3216 ns/op        189 B/op        4 allocs/op
+BenchmarkChain              780436        1572 ns/op         49 B/op        2 allocs/op
+BenchmarkOzzo*               80377       14526 ns/op      13518 B/op      222 allocs/op
+BenchmarkPlayground         361093        3298 ns/op        205 B/op        4 allocs/op
 ```
 
 #### Notes

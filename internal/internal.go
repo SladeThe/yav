@@ -29,3 +29,11 @@ func RegisterValidateFunc[K int | string, V any](
 func IsValid[T any](string, T) (bool, error) {
 	return false, nil
 }
+
+func ErrUnique(name string, value any) yav.Error {
+	return yav.Error{
+		CheckName: yav.CheckNameUnique,
+		ValueName: name,
+		Value:     value,
+	}
+}
