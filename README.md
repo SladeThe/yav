@@ -20,8 +20,6 @@ The future plans are to introduce more playground and probably to add YAV's own 
 
 ## Examples
 
-YAV doesn't need the validate field attribute. It is added, so that you can compare YAV and playground code.
-
 ```go
 type Account struct {
     ID string `json:"id" validate:"required,uuid"`
@@ -74,6 +72,14 @@ func (a Account) Validate() error {
 }
 ```
 
+#### Notes
+
+* YAV doesn't need the validate field attribute. It is added, so that you can compare YAV and playground code.
+* Despite the YAV's playground wrapper registers JSON tags as field names using `RegisterTagNameFunc`,
+  the validator ignores it in `required_with/without` constructs.
+  Therefore, we pass uppercase `"Login"` to `vstring.RequiredWithAny` in order to produce playground-compatible errors.
+  If full compatibility is not required, pass the field names in whatever style you prefer.
+
 ## Benchmarks
 
 ```
@@ -98,7 +104,7 @@ BenchmarkOzzo*               92058       13223 ns/op      11908 B/op      194 al
 BenchmarkPlayground         365997        3216 ns/op        189 B/op        4 allocs/op
 ```
 
-#### Benchmark notes
+#### Notes
 
 * The Account in the Examples section is a reduced version of the structure.
 * Ozzo validator lacks some playground features. Therefore, those validation steps were not enabled for ozzo.
