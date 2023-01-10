@@ -6,7 +6,7 @@ import (
 	"github.com/SladeThe/yav"
 )
 
-func BenchmarkChain(b *testing.B) {
+func BenchmarkYAV(b *testing.B) {
 	account := ValidAccount()
 
 	if err := account.ChainValidate(); err != nil {

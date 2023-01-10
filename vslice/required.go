@@ -22,7 +22,7 @@ func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 
 func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.Valid[S]
 	}
 
 	// TODO avoid allocations ?
@@ -42,7 +42,7 @@ func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 
 func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.Valid[S]
 	}
 
 	// TODO avoid allocations ?
@@ -62,7 +62,7 @@ func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulato
 
 func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.Valid[S]
 	}
 
 	// TODO avoid allocations ?
@@ -82,7 +82,7 @@ func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 
 func RequiredWithoutAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[S]
+		return internal.Valid[S]
 	}
 
 	// TODO avoid allocations ?

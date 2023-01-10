@@ -4,7 +4,7 @@ import (
 	"github.com/SladeThe/yav/internal"
 )
 
-func IsUnique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
+func Unique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
 	switch len(value) {
 	case 0, 1:
 	case 2:

@@ -13,7 +13,7 @@ var (
 	rfc1123Regex = regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]{0,62})(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,62})*?$`)
 )
 
-func IsHostname(name string, value string) (stop bool, err error) {
+func Hostname(name string, value string) (stop bool, err error) {
 	if !rfc952Regex.MatchString(value) {
 		return false, yav.Error{
 			CheckName: yav.CheckNameHostname,
@@ -25,7 +25,7 @@ func IsHostname(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsHostnameRFC1123(name string, value string) (stop bool, err error) {
+func HostnameRFC1123(name string, value string) (stop bool, err error) {
 	if !rfc1123Regex.MatchString(value) {
 		return false, yav.Error{
 			CheckName: yav.CheckNameHostnameRFC1123,
@@ -37,7 +37,7 @@ func IsHostnameRFC1123(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsHostnamePort(name string, value string) (stop bool, err error) {
+func HostnamePort(name string, value string) (stop bool, err error) {
 	host, port, errSplit := net.SplitHostPort(value)
 	if errSplit != nil {
 		return false, errHostnamePort(name, value)

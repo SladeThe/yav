@@ -8,10 +8,10 @@ import (
 // TODO replace maps with generic structs after the next Go release, it doesn't compile in 1.19.4
 
 var (
-	requiredWithAnyFuncs    = make(map[string]yav.ValidateFunc[string])
-	requiredWithoutAnyFuncs = make(map[string]yav.ValidateFunc[string])
-	requiredWithAllFuncs    = make(map[string]yav.ValidateFunc[string])
-	requiredWithoutAllFuncs = make(map[string]yav.ValidateFunc[string])
+	requiredWithAnyFuncs    map[string]yav.ValidateFunc[string]
+	requiredWithoutAnyFuncs map[string]yav.ValidateFunc[string]
+	requiredWithAllFuncs    map[string]yav.ValidateFunc[string]
+	requiredWithoutAllFuncs map[string]yav.ValidateFunc[string]
 )
 
 func OmitEmpty(_ string, value string) (stop bool, err error) {
@@ -31,14 +31,14 @@ func Required(name string, value string) (stop bool, err error) {
 
 func RequiredWithAny(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[string]
+		return internal.Valid[string]
 	}
 
 	if validateFunc, ok := requiredWithAnyFuncs[fields]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&requiredWithAnyFuncs, fields, requiredWithAny(fields))
+	return internal.RegisterMapEntry(&requiredWithAnyFuncs, fields, requiredWithAny(fields))
 }
 
 func requiredWithAny(parameter string) yav.ValidateFunc[string] {
@@ -57,14 +57,14 @@ func requiredWithAny(parameter string) yav.ValidateFunc[string] {
 
 func RequiredWithoutAny(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[string]
+		return internal.Valid[string]
 	}
 
 	if validateFunc, ok := requiredWithoutAnyFuncs[fields]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&requiredWithoutAnyFuncs, fields, requiredWithoutAny(fields))
+	return internal.RegisterMapEntry(&requiredWithoutAnyFuncs, fields, requiredWithoutAny(fields))
 }
 
 func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
@@ -82,14 +82,14 @@ func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
 }
 func RequiredWithAll(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[string]
+		return internal.Valid[string]
 	}
 
 	if validateFunc, ok := requiredWithAllFuncs[fields]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&requiredWithAllFuncs, fields, requiredWithAll(fields))
+	return internal.RegisterMapEntry(&requiredWithAllFuncs, fields, requiredWithAll(fields))
 }
 
 func requiredWithAll(parameter string) yav.ValidateFunc[string] {
@@ -108,14 +108,14 @@ func requiredWithAll(parameter string) yav.ValidateFunc[string] {
 
 func RequiredWithoutAll(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[string]
+		return internal.Valid[string]
 	}
 
 	if validateFunc, ok := requiredWithoutAllFuncs[fields]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&requiredWithoutAllFuncs, fields, requiredWithoutAll(fields))
+	return internal.RegisterMapEntry(&requiredWithoutAllFuncs, fields, requiredWithoutAll(fields))
 }
 
 func requiredWithoutAll(parameter string) yav.ValidateFunc[string] {

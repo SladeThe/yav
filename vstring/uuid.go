@@ -10,7 +10,7 @@ var (
 	uuidRegex = regexp.MustCompile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 )
 
-func IsUUID(name string, value string) (stop bool, err error) {
+func UUID(name string, value string) (stop bool, err error) {
 	if !uuidRegex.MatchString(value) {
 		return false, yav.Error{
 			CheckName: yav.CheckNameUUID,

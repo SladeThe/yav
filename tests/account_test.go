@@ -7,6 +7,7 @@ import (
 	"go.uber.org/multierr"
 
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/vmap"
 	"github.com/SladeThe/yav/vnumeric"
 	"github.com/SladeThe/yav/vstring"
 )
@@ -15,6 +16,46 @@ var (
 	ozzoContainsLowerAlpha = ozzo.NewStringRule(govalidator.HasLowerCase, "must contain lower alpha")
 	ozzoContainsUpperAlpha = ozzo.NewStringRule(govalidator.HasUpperCase, "must contain upper alpha")
 )
+
+type Size struct {
+	Width  uint16 `json:"width" validate:"required,min=32,max=512"`
+	Height uint16 `json:"height" validate:"required,gt=31,lte=512"`
+}
+
+func (s Size) ChainValidate() error {
+	return multierr.Combine(
+		yav.Chain(
+			"width", s.Width,
+			vnumeric.Required[uint16],
+			vnumeric.Min[uint16](32),
+			vnumeric.Max[uint16](512),
+		),
+		yav.Chain(
+			"height", s.Height,
+			vnumeric.Required[uint16],
+			vnumeric.GreaterThan[uint16](31),
+			vnumeric.LessThanOrEqual[uint16](512),
+		),
+	)
+}
+
+func (s Size) OzzoValidate() error {
+	return ozzo.ValidateStruct(
+		&s,
+		ozzo.Field(
+			&s.Width,
+			ozzo.Required,
+			ozzo.Min(32),
+			ozzo.Max(512),
+		),
+		ozzo.Field(
+			&s.Height,
+			ozzo.Required,
+			ozzo.Min(32),
+			ozzo.Max(512),
+		),
+	)
+}
 
 type Account struct {
 	ID string `json:"id" validate:"required,uuid"`
@@ -25,7 +66,8 @@ type Account struct {
 	Email string `json:"email" validate:"required,min=6,max=100,email,lowercase"`
 	Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
 
-	Age uint8 `json:"age" validate:"omitempty,gte=18,lt=120"`
+	Age     uint8           `json:"age" validate:"omitempty,gte=18,lt=120"`
+	Avatars map[Size][]byte `json:"avatars" validate:"omitempty,min=3,max=10"`
 
 	Secret    string `json:"secret" validate:"required,eq=secure"`
 	PromoCode string `json:"promoCode" validate:"omitempty,oneof=BlackFriday2022 BlackFriday2023"`
@@ -41,49 +83,50 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"id", a.ID,
 			vstring.Required,
-			vstring.IsUUID,
+			vstring.UUID,
 		),
 		yav.Chain(
 			"login", a.Login,
 			vstring.Required,
-			vstring.Min(4),
-			vstring.Max(20),
-			vstring.IsAlphanumeric,
-			vstring.IsLowercase,
+			vstring.InRange(4, 20),
+			vstring.Alphanumeric,
+			vstring.Lowercase,
 		),
 		yav.Chain(
 			"password", a.Password,
 			vstring.RequiredWithAny("Login", yav.RequiredWithAny().String(a.Login)),
 			vstring.OmitEmpty,
-			vstring.Min(8),
-			vstring.Max(32),
+			vstring.InRange(8, 32),
 			vstring.ContainsLowerAlpha,
 			vstring.ContainsUpperAlpha,
 			vstring.ContainsDigit,
 			vstring.ContainsSpecialCharacter,
 			vstring.ExcludesWhitespace,
-			vstring.IsText,
+			vstring.Text,
 		),
 		yav.Chain(
 			"email", a.Email,
 			vstring.Required,
-			vstring.Min(6),
-			vstring.Max(100),
-			vstring.IsEmail,
-			vstring.IsLowercase,
+			vstring.InRange(6, 100),
+			vstring.Email,
+			vstring.Lowercase,
 		),
 		yav.Chain(
 			"phone", a.Phone,
 			vstring.Required,
-			vstring.Min(8),
-			vstring.Max(16),
-			vstring.IsE164,
+			vstring.InRange(8, 16),
+			vstring.E164,
 		),
 		yav.Chain(
 			"age", a.Age,
 			vnumeric.OmitEmpty[uint8],
 			vnumeric.GreaterThanOrEqual[uint8](18),
 			vnumeric.LessThan[uint8](120),
+		),
+		yav.Chain(
+			"avatars", a.Avatars,
+			vmap.OmitEmpty[map[Size][]byte],
+			vmap.InRange[map[Size][]byte](3, 10),
 		),
 		yav.Chain(
 			"secret", a.Secret,
@@ -98,18 +141,16 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"firstName", a.FirstName,
 			vstring.OmitEmpty,
-			vstring.Min(2),
-			vstring.Max(30),
-			vstring.IsAlpha,
+			vstring.InRange(2, 30),
+			vstring.Alpha,
 			vstring.StartsWithUpperAlpha,
 			vstring.EndsWithLowerAlpha,
 		),
 		yav.Chain(
 			"lastName", a.LastName,
 			vstring.OmitEmpty,
-			vstring.Min(2),
-			vstring.Max(30),
-			vstring.IsAlpha,
+			vstring.InRange(2, 30),
+			vstring.Alpha,
 			vstring.StartsWithUpperAlpha,
 			vstring.EndsWithLowerAlpha,
 		),
@@ -120,11 +161,10 @@ func (a Account) ChainValidate() error {
 				yav.RequiredWithoutAll().String(a.FirstName).String(a.LastName),
 			),
 			vstring.OmitEmpty,
-			vstring.Min(2),
-			vstring.Max(50),
-			vstring.IsTitle,
-			vstring.IsAlpha,
-			vstring.IsUppercase,
+			vstring.InRange(2, 50),
+			vstring.Title,
+			vstring.Alpha,
+			vstring.Uppercase,
 		),
 	)
 }
@@ -170,6 +210,12 @@ func (a Account) OzzoValidate() error {
 			ozzo.When(ozzo.IsEmpty(a.Age), ozzo.Skip),
 			ozzo.Min(18),
 			ozzo.Max(119),
+		),
+		ozzo.Field(
+			&a.Avatars,
+			ozzo.When(ozzo.IsEmpty(a.Avatars), ozzo.Skip),
+			ozzo.Min(3),
+			ozzo.Max(10),
 		),
 		ozzo.Field(
 			&a.Secret,

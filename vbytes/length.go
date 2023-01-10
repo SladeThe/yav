@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	minFuncs = make(map[int]yav.ValidateFunc[[]byte])
-	maxFuncs = make(map[int]yav.ValidateFunc[[]byte])
+	minFuncs map[int]yav.ValidateFunc[[]byte]
+	maxFuncs map[int]yav.ValidateFunc[[]byte]
 )
 
 func Min(parameter int) yav.ValidateFunc[[]byte] {
@@ -17,7 +17,7 @@ func Min(parameter int) yav.ValidateFunc[[]byte] {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&minFuncs, parameter, min(parameter))
+	return internal.RegisterMapEntry(&minFuncs, parameter, min(parameter))
 }
 
 func min(parameter int) yav.ValidateFunc[[]byte] {
@@ -42,7 +42,7 @@ func Max(parameter int) yav.ValidateFunc[[]byte] {
 		return validateFunc
 	}
 
-	return internal.RegisterValidateFunc(&maxFuncs, parameter, max(parameter))
+	return internal.RegisterMapEntry(&maxFuncs, parameter, max(parameter))
 }
 
 func max(parameter int) yav.ValidateFunc[[]byte] {

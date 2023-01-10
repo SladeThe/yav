@@ -36,37 +36,34 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"id", a.ID,
 			vstring.Required,
-			vstring.IsUUID,
+			vstring.UUID,
 		),
 		yav.Chain(
 			"login", a.Login,
 			vstring.Required,
 			vstring.Min(4),
 			vstring.Max(20),
-			vstring.IsAlphanumeric,
-			vstring.IsLowercase,
+			vstring.Alphanumeric,
+			vstring.Lowercase,
 		),
 		yav.Chain(
 			"password", a.Password,
 			vstring.RequiredWithAny("Login", yav.RequiredWithAny().String(a.Login)),
 			vstring.OmitEmpty,
-			vstring.Min(8),
-			vstring.Max(32),
-			vstring.IsText,
+			vstring.InRange(8, 32),
+			vstring.Text,
 		),
 		yav.Chain(
 			"email", a.Email,
 			vstring.Required,
-			vstring.Min(6),
-			vstring.Max(100),
-			vstring.IsEmail,
+			vstring.InRange(6, 100),
+			vstring.Email,
 		),
 		yav.Chain(
 			"phone", a.Phone,
 			vstring.Required,
-			vstring.Min(8),
-			vstring.Max(16),
-			vstring.IsE164,
+			vstring.InRange(8, 16),
+			vstring.E164,
 		),
 	)
 }
@@ -91,7 +88,7 @@ cpu: Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz
 #### Tiny struct validation
 
 ```
-BenchmarkChain            12907930       92.15 ns/op          0 B/op        0 allocs/op
+BenchmarkYAV              12907930       92.15 ns/op          0 B/op        0 allocs/op
 BenchmarkOzzo*             1334562       890.1 ns/op       1248 B/op       20 allocs/op
 BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 allocs/op
 ```
@@ -99,13 +96,14 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 #### Account struct validation
 
 ```
-BenchmarkChain              780436        1572 ns/op         49 B/op        2 allocs/op
-BenchmarkOzzo*               80377       14526 ns/op      13518 B/op      222 allocs/op
-BenchmarkPlayground         361093        3298 ns/op        205 B/op        4 allocs/op
+BenchmarkYAV                733173        1594 ns/op         49 B/op        2 allocs/op
+BenchmarkOzzo*               75604       16073 ns/op      15214 B/op      251 allocs/op
+BenchmarkPlayground         350634        3304 ns/op        205 B/op        4 allocs/op
 ```
 
 #### Notes
 
 * The Account in the Examples section is a reduced version of the structure.
+  See the [actual code](tests/account_test.go).
 * Ozzo validator lacks some playground features. Therefore, those validation steps were not enabled for ozzo.
 * The YAV is still slower, than a manually written validation boilerplate, but the amount of code differs dramatically.

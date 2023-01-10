@@ -7,7 +7,7 @@ import (
 	"github.com/SladeThe/yav"
 )
 
-func IsURI(name string, value string) (stop bool, err error) {
+func URI(name string, value string) (stop bool, err error) {
 	if !isURX(value, true) {
 		return false, yav.Error{
 			CheckName: yav.CheckNameURI,
@@ -19,7 +19,7 @@ func IsURI(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsURL(name string, value string) (stop bool, err error) {
+func URL(name string, value string) (stop bool, err error) {
 	if !isURX(value, false) {
 		return false, yav.Error{
 			CheckName: yav.CheckNameURL,

@@ -4,29 +4,25 @@ import (
 	"github.com/SladeThe/yav"
 )
 
-func RegisterValidateFunc[K int | string, V any](
-	validateFuncs *map[K]yav.ValidateFunc[V],
-	key K,
-	validateFunc yav.ValidateFunc[V],
-) yav.ValidateFunc[V] {
-	src := *validateFuncs
+func RegisterMapEntry[K comparable, V any](m *map[K]V, key K, value V) V {
+	src := *m
 
 	if _, ok := src[key]; ok {
-		return validateFunc
+		return value
 	}
 
-	dst := make(map[K]yav.ValidateFunc[V], len(src)+1)
+	dst := make(map[K]V, len(src)+1)
 
 	for k, v := range src {
 		dst[k] = v
 	}
 
-	dst[key] = validateFunc
-	*validateFuncs = dst
-	return validateFunc
+	dst[key] = value
+	*m = dst
+	return value
 }
 
-func IsValid[T any](string, T) (bool, error) {
+func Valid[T any](string, T) (bool, error) {
 	return false, nil
 }
 

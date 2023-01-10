@@ -9,7 +9,7 @@ import (
 	"github.com/SladeThe/yav/common"
 )
 
-func IsAlpha(name string, value string) (stop bool, err error) {
+func Alpha(name string, value string) (stop bool, err error) {
 	for _, r := range value {
 		if !common.IsAlpha(r) {
 			return false, yav.Error{
@@ -23,7 +23,7 @@ func IsAlpha(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsAlphanumeric(name string, value string) (stop bool, err error) {
+func Alphanumeric(name string, value string) (stop bool, err error) {
 	for _, r := range value {
 		if !common.IsAlphanumeric(r) {
 			return false, yav.Error{
@@ -37,7 +37,7 @@ func IsAlphanumeric(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsLowercase(name string, value string) (stop bool, err error) {
+func Lowercase(name string, value string) (stop bool, err error) {
 	for _, r := range value {
 		if unicode.IsUpper(r) {
 			return false, yav.Error{
@@ -51,7 +51,7 @@ func IsLowercase(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func IsUppercase(name string, value string) (stop bool, err error) {
+func Uppercase(name string, value string) (stop bool, err error) {
 	for _, r := range value {
 		if unicode.IsLower(r) {
 			return false, yav.Error{
@@ -267,8 +267,8 @@ func EndsWithSpecialCharacter(name string, value string) (stop bool, err error) 
 	return false, nil
 }
 
-// IsText validates string value using common.IsText.
-func IsText(name string, value string) (stop bool, err error) {
+// Text validates string value using common.IsText.
+func Text(name string, value string) (stop bool, err error) {
 	if common.IsText(value) {
 		return false, nil
 	}
@@ -280,8 +280,8 @@ func IsText(name string, value string) (stop bool, err error) {
 	}
 }
 
-// IsTitle validates string value using common.IsTitle.
-func IsTitle(name string, value string) (stop bool, err error) {
+// Title validates string value using common.IsTitle.
+func Title(name string, value string) (stop bool, err error) {
 	if common.IsTitle(value) {
 		return false, nil
 	}

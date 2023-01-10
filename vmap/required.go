@@ -22,7 +22,7 @@ func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool,
 
 func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[M]
+		return internal.Valid[M]
 	}
 
 	// TODO avoid allocations ?
@@ -45,7 +45,7 @@ func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
 	accumulator yav.Accumulator,
 ) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[M]
+		return internal.Valid[M]
 	}
 
 	// TODO avoid allocations ?
@@ -65,7 +65,7 @@ func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
 
 func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[M]
+		return internal.Valid[M]
 	}
 
 	// TODO avoid allocations ?
@@ -88,7 +88,7 @@ func RequiredWithoutAll[M ~map[K]V, K comparable, V any](
 	accumulator yav.Accumulator,
 ) yav.ValidateFunc[M] {
 	if !accumulator.IsEnabled() {
-		return internal.IsValid[M]
+		return internal.Valid[M]
 	}
 
 	// TODO avoid allocations ?

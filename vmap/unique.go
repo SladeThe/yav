@@ -4,7 +4,7 @@ import (
 	"github.com/SladeThe/yav/internal"
 )
 
-func IsUnique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop bool, err error) {
+func Unique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop bool, err error) {
 	if len(value) <= 1 {
 		return false, nil
 	}
