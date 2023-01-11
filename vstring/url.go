@@ -9,7 +9,7 @@ import (
 
 func URI(name string, value string) (stop bool, err error) {
 	if !isURX(value, true) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameURI,
 			ValueName: name,
 			Value:     value,
@@ -21,7 +21,7 @@ func URI(name string, value string) (stop bool, err error) {
 
 func URL(name string, value string) (stop bool, err error) {
 	if !isURX(value, false) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameURL,
 			ValueName: name,
 			Value:     value,

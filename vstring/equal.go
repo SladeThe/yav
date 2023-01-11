@@ -18,7 +18,7 @@ type equal string
 
 func (e equal) validate(name string, value string) (stop bool, err error) {
 	if value != string(e) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameEqual,
 			Parameter: string(e),
 			ValueName: name,
@@ -38,7 +38,7 @@ func (o oneOf) validate(name string, value string) (stop bool, err error) {
 		}
 	}
 
-	return false, yav.Error{
+	return true, yav.Error{
 		CheckName: yav.CheckNameOneOf,
 		Parameter: strings.Join(o, " "),
 		ValueName: name,

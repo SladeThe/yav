@@ -11,7 +11,7 @@ func OmitEmpty[S ~[]T, T any](_ string, value S) (stop bool, err error) {
 
 func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 	if len(value) == 0 {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameRequired,
 			ValueName: name,
 		}
@@ -29,7 +29,7 @@ func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
 				Parameter: fields,
 				ValueName: name,
@@ -49,7 +49,7 @@ func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulato
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
 				Parameter: fields,
 				ValueName: name,
@@ -69,7 +69,7 @@ func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
 				Parameter: fields,
 				ValueName: name,
@@ -89,7 +89,7 @@ func RequiredWithoutAll[S ~[]T, T any](fields string, accumulator yav.Accumulato
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
 				Parameter: fields,
 				ValueName: name,

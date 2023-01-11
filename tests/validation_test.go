@@ -14,7 +14,7 @@ func TestValidate(t *testing.T) {
 
 	test := func(account Account) func(t *testing.T) {
 		return func(t *testing.T) {
-			assert.Equal(t, v.Validate(account), account.ChainValidate(), "incompatible with playground")
+			assert.Equal(t, v.Validate(account), account.Validate(), "incompatible with playground")
 		}
 	}
 
@@ -167,7 +167,7 @@ func TestValidate(t *testing.T) {
 
 			for i := 0; i < 3; i++ {
 				size := Size{Width: width, Height: width}
-				bytes := make([]byte, size.Width*size.Height*4)
+				bytes := make([]byte, int(size.Width)*int(size.Height)*4)
 				a.Avatars[size] = bytes
 				width <<= 1
 			}
@@ -184,7 +184,24 @@ func TestValidate(t *testing.T) {
 
 			for i := 0; i < 2; i++ {
 				size := Size{Width: width, Height: width}
-				bytes := make([]byte, size.Width*size.Height*4)
+				bytes := make([]byte, int(size.Width)*int(size.Height)*4)
+				a.Avatars[size] = bytes
+				width <<= 1
+			}
+
+			return a
+		}(),
+	}, {
+		name: "invalid avatar size",
+		account: func() Account {
+			a := ValidAccount()
+			a.Avatars = make(map[Size][]byte)
+
+			var width uint16 = 31
+
+			for i := 0; i < 3; i++ {
+				size := Size{Width: width, Height: width}
+				bytes := make([]byte, int(size.Width)*int(size.Height)*4)
 				a.Avatars[size] = bytes
 				width <<= 1
 			}

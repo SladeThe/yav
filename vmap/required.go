@@ -11,7 +11,7 @@ func OmitEmpty[M ~map[K]V, K comparable, V any](_ string, value M) (stop bool, e
 
 func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool, err error) {
 	if len(value) == 0 {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameRequired,
 			ValueName: name,
 		}
@@ -29,7 +29,7 @@ func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string, accumulator
 
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
 				Parameter: fields,
 				ValueName: name,
@@ -52,7 +52,7 @@ func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
 
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
 				Parameter: fields,
 				ValueName: name,
@@ -72,7 +72,7 @@ func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string, accumulator
 
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
 				Parameter: fields,
 				ValueName: name,
@@ -95,7 +95,7 @@ func RequiredWithoutAll[M ~map[K]V, K comparable, V any](
 
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
 				Parameter: fields,
 				ValueName: name,

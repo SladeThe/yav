@@ -7,9 +7,11 @@ import (
 	"go.uber.org/multierr"
 
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/vbytes"
 	"github.com/SladeThe/yav/vmap"
 	"github.com/SladeThe/yav/vnumeric"
 	"github.com/SladeThe/yav/vstring"
+	"github.com/SladeThe/yav/vstruct"
 )
 
 var (
@@ -22,7 +24,7 @@ type Size struct {
 	Height uint16 `json:"height" validate:"required,gt=31,lte=512"`
 }
 
-func (s Size) ChainValidate() error {
+func (s Size) Validate() error {
 	return multierr.Combine(
 		yav.Chain(
 			"width", s.Width,
@@ -67,7 +69,7 @@ type Account struct {
 	Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
 
 	Age     uint8           `json:"age" validate:"omitempty,gte=18,lt=120"`
-	Avatars map[Size][]byte `json:"avatars" validate:"omitempty,min=3,max=10"`
+	Avatars map[Size][]byte `json:"avatars" validate:"omitempty,min=3,max=10,dive,keys,endkeys,required"`
 
 	Secret    string `json:"secret" validate:"required,eq=secure"`
 	PromoCode string `json:"promoCode" validate:"omitempty,oneof=BlackFriday2022 BlackFriday2023"`
@@ -78,7 +80,7 @@ type Account struct {
 	DisplayName string `json:"displayName" validate:"required_without_all=FirstName LastName,omitempty,min=2,max=50,title,alpha,uppercase"`
 }
 
-func (a Account) ChainValidate() error {
+func (a Account) Validate() error {
 	return multierr.Combine(
 		yav.Chain(
 			"id", a.ID,
@@ -88,7 +90,7 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"login", a.Login,
 			vstring.Required,
-			vstring.InRange(4, 20),
+			vstring.Between(4, 20),
 			vstring.Alphanumeric,
 			vstring.Lowercase,
 		),
@@ -96,7 +98,7 @@ func (a Account) ChainValidate() error {
 			"password", a.Password,
 			vstring.RequiredWithAny("Login", yav.RequiredWithAny().String(a.Login)),
 			vstring.OmitEmpty,
-			vstring.InRange(8, 32),
+			vstring.Between(8, 32),
 			vstring.ContainsLowerAlpha,
 			vstring.ContainsUpperAlpha,
 			vstring.ContainsDigit,
@@ -107,14 +109,14 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"email", a.Email,
 			vstring.Required,
-			vstring.InRange(6, 100),
+			vstring.Between(6, 100),
 			vstring.Email,
 			vstring.Lowercase,
 		),
 		yav.Chain(
 			"phone", a.Phone,
 			vstring.Required,
-			vstring.InRange(8, 16),
+			vstring.Between(8, 16),
 			vstring.E164,
 		),
 		yav.Chain(
@@ -126,7 +128,13 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"avatars", a.Avatars,
 			vmap.OmitEmpty[map[Size][]byte],
-			vmap.InRange[map[Size][]byte](3, 10),
+			vmap.Between[map[Size][]byte](3, 10),
+			vmap.Keys[map[Size][]byte](
+				vstruct.Validate[Size],
+			),
+			vmap.Values[map[Size][]byte](
+				vbytes.Required,
+			),
 		),
 		yav.Chain(
 			"secret", a.Secret,
@@ -141,7 +149,7 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"firstName", a.FirstName,
 			vstring.OmitEmpty,
-			vstring.InRange(2, 30),
+			vstring.Between(2, 30),
 			vstring.Alpha,
 			vstring.StartsWithUpperAlpha,
 			vstring.EndsWithLowerAlpha,
@@ -149,7 +157,7 @@ func (a Account) ChainValidate() error {
 		yav.Chain(
 			"lastName", a.LastName,
 			vstring.OmitEmpty,
-			vstring.InRange(2, 30),
+			vstring.Between(2, 30),
 			vstring.Alpha,
 			vstring.StartsWithUpperAlpha,
 			vstring.EndsWithLowerAlpha,
@@ -161,7 +169,7 @@ func (a Account) ChainValidate() error {
 				yav.RequiredWithoutAll().String(a.FirstName).String(a.LastName),
 			),
 			vstring.OmitEmpty,
-			vstring.InRange(2, 50),
+			vstring.Between(2, 50),
 			vstring.Title,
 			vstring.Alpha,
 			vstring.Uppercase,

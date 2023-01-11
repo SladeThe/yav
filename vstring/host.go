@@ -15,7 +15,7 @@ var (
 
 func Hostname(name string, value string) (stop bool, err error) {
 	if !rfc952Regex.MatchString(value) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameHostname,
 			ValueName: name,
 			Value:     value,
@@ -27,7 +27,7 @@ func Hostname(name string, value string) (stop bool, err error) {
 
 func HostnameRFC1123(name string, value string) (stop bool, err error) {
 	if !rfc1123Regex.MatchString(value) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameHostnameRFC1123,
 			ValueName: name,
 			Value:     value,
@@ -40,15 +40,15 @@ func HostnameRFC1123(name string, value string) (stop bool, err error) {
 func HostnamePort(name string, value string) (stop bool, err error) {
 	host, port, errSplit := net.SplitHostPort(value)
 	if errSplit != nil {
-		return false, errHostnamePort(name, value)
+		return true, errHostnamePort(name, value)
 	}
 
 	if _, errPort := strconv.ParseUint(port, 10, 16); errPort != nil {
-		return false, errHostnamePort(name, value)
+		return true, errHostnamePort(name, value)
 	}
 
 	if host != "" && !rfc1123Regex.MatchString(host) {
-		return false, errHostnamePort(name, value)
+		return true, errHostnamePort(name, value)
 	}
 
 	return false, nil

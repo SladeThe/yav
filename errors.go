@@ -68,7 +68,7 @@ type Error struct {
 	Parameter string
 
 	ValueName string
-	Value     any // TODO Value() method and typed containers for commonly used types to avoid allocations + benchmark
+	Value     any
 }
 
 func IsError(err error) bool {

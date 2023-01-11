@@ -11,7 +11,7 @@ func Min[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) < parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
 				Parameter: strconv.Itoa(parameter),
 				ValueName: name,
@@ -28,7 +28,7 @@ func Max[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) > parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
 				Parameter: strconv.Itoa(parameter),
 				ValueName: name,

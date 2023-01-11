@@ -12,7 +12,7 @@ var (
 
 func E164(name string, value string) (stop bool, err error) {
 	if !e164Regex.MatchString(value) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameE164,
 			ValueName: name,
 			Value:     value,

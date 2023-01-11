@@ -20,12 +20,20 @@ func Min(parameter int) yav.ValidateFunc[[]byte] {
 	return internal.RegisterMapEntry(&minFuncs, parameter, min(parameter))
 }
 
+func Max(parameter int) yav.ValidateFunc[[]byte] {
+	if validateFunc, ok := maxFuncs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&maxFuncs, parameter, max(parameter))
+}
+
 func min(parameter int) yav.ValidateFunc[[]byte] {
 	parameterString := strconv.Itoa(parameter)
 
 	return func(name string, value []byte) (stop bool, err error) {
 		if len(value) < parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
 				Parameter: parameterString,
 				ValueName: name,
@@ -37,20 +45,12 @@ func min(parameter int) yav.ValidateFunc[[]byte] {
 	}
 }
 
-func Max(parameter int) yav.ValidateFunc[[]byte] {
-	if validateFunc, ok := maxFuncs[parameter]; ok {
-		return validateFunc
-	}
-
-	return internal.RegisterMapEntry(&maxFuncs, parameter, max(parameter))
-}
-
 func max(parameter int) yav.ValidateFunc[[]byte] {
 	parameterString := strconv.Itoa(parameter)
 
 	return func(name string, value []byte) (stop bool, err error) {
 		if len(value) > parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
 				Parameter: parameterString,
 				ValueName: name,

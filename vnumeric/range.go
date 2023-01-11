@@ -9,6 +9,7 @@ import (
 )
 
 // TODO get rid of allocations
+// TODO Between
 
 func Min[T constraints.Integer](parameter T) yav.ValidateFunc[T] {
 	return min[T]{parameter: parameter}.validate
@@ -40,7 +41,7 @@ type min[T constraints.Integer] struct {
 
 func (m min[T]) validate(name string, value T) (stop bool, err error) {
 	if value < m.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%d", m.parameter),
 			ValueName: name,
@@ -57,7 +58,7 @@ type max[T constraints.Integer] struct {
 
 func (m max[T]) validate(name string, value T) (stop bool, err error) {
 	if value > m.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%d", m.parameter),
 			ValueName: name,
@@ -74,7 +75,7 @@ type lessThan[T constraints.Integer] struct {
 
 func (l lessThan[T]) validate(name string, value T) (stop bool, err error) {
 	if value >= l.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%d", l.parameter),
 			ValueName: name,
@@ -91,7 +92,7 @@ type lessThanOrEqual[T constraints.Integer] struct {
 
 func (l lessThanOrEqual[T]) validate(name string, value T) (stop bool, err error) {
 	if value > l.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%d", l.parameter),
 			ValueName: name,
@@ -108,7 +109,7 @@ type greaterThan[T constraints.Integer] struct {
 
 func (l greaterThan[T]) validate(name string, value T) (stop bool, err error) {
 	if value <= l.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%d", l.parameter),
 			ValueName: name,
@@ -125,7 +126,7 @@ type greaterThanOrEqual[T constraints.Integer] struct {
 
 func (l greaterThanOrEqual[T]) validate(name string, value T) (stop bool, err error) {
 	if value < l.parameter {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%d", l.parameter),
 			ValueName: name,

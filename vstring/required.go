@@ -20,7 +20,7 @@ func OmitEmpty(_ string, value string) (stop bool, err error) {
 
 func Required(name string, value string) (stop bool, err error) {
 	if value == "" {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameRequired,
 			ValueName: name,
 		}
@@ -44,7 +44,7 @@ func RequiredWithAny(fields string, accumulator yav.Accumulator) yav.ValidateFun
 func requiredWithAny(parameter string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
 				Parameter: parameter,
 				ValueName: name,
@@ -70,7 +70,7 @@ func RequiredWithoutAny(fields string, accumulator yav.Accumulator) yav.Validate
 func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
 				Parameter: parameter,
 				ValueName: name,
@@ -95,7 +95,7 @@ func RequiredWithAll(fields string, accumulator yav.Accumulator) yav.ValidateFun
 func requiredWithAll(parameter string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
 				Parameter: parameter,
 				ValueName: name,
@@ -121,7 +121,7 @@ func RequiredWithoutAll(fields string, accumulator yav.Accumulator) yav.Validate
 func requiredWithoutAll(parameter string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
 				Parameter: parameter,
 				ValueName: name,

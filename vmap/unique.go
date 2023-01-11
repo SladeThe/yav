@@ -13,7 +13,7 @@ func Unique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop 
 
 	for _, v := range value {
 		if _, ok := m[v]; ok {
-			return false, internal.ErrUnique(name, value)
+			return true, internal.ErrUnique(name, value)
 		}
 
 		m[v] = struct{}{} // TODO do not add the last, also reduce map capacity + benchmark

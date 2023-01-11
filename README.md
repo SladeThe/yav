@@ -20,6 +20,86 @@ The future plans are to introduce more playground and probably to add YAV's own 
 
 ## Examples
 
+#### Single field struct validation
+
+The field name passed to `yav.Chain` doesn't affect the validation process and
+is only necessary for building a validation error. 
+
+```go
+type AccountID struct {
+	ID string
+}
+
+func (id AccountID) Validate() error {
+	return yav.Chain(
+		"id", id.ID,
+		vstring.Required,
+		vstring.UUID,
+	)
+}
+```
+
+#### Combine validation errors 
+
+Use [multierr](https://github.com/uber-go/multierr) to combine multiple validation errors.
+
+```go
+type Password struct {
+	Salt, Hash []byte
+}
+
+func (p Password) Validate() error {
+	return multierr.Combine(
+		yav.Chain(
+			"salt", p.Salt,
+			vbytes.Required,
+			vbytes.Max(200),
+		),
+		yav.Chain(
+			"hash", p.Hash,
+			vbytes.Required,
+			vbytes.Max(200),
+		),
+	)
+}
+```
+
+#### Validate nested structs
+
+Use `yav.Nested` to add value namespace, i.e. to get `password.salt` error instead of just `salt`. \
+Contrary, any possible `id` error is returned as if the field were in the `Account` struct directly.
+
+```go
+type Account struct {
+	AccountID
+
+	Login    string
+	Password Password
+}
+
+func (a Account) Validate() error {
+	return multierr.Combine(
+		a.AccountID.Validate(),
+		yav.Chain(
+			"login", a.Login,
+			vstring.Required,
+			vstring.Min(4),
+			vstring.Max(20),
+			vstring.Alphanumeric,
+			vstring.Lowercase,
+		),
+		yav.Nested("password", a.Password.Validate()),
+	)
+}
+```
+
+#### Compare YAV and playground validator
+
+Despite the YAV's playground wrapper registers JSON tags as field names using `RegisterTagNameFunc`,
+the validator ignores it in `required_with/without` constructs.
+Therefore, we pass uppercase `"Login"` to `vstring.RequiredWithAny` in order to produce playground-compatible errors.
+If full compatibility is not required, pass the field names in whatever style you prefer.
+
 ```go
 type Account struct {
     ID string `json:"id" validate:"required,uuid"`
@@ -50,32 +130,143 @@ func (a Account) Validate() error {
 			"password", a.Password,
 			vstring.RequiredWithAny("Login", yav.RequiredWithAny().String(a.Login)),
 			vstring.OmitEmpty,
-			vstring.InRange(8, 32),
+			vstring.Between(8, 32),
 			vstring.Text,
 		),
 		yav.Chain(
 			"email", a.Email,
 			vstring.Required,
-			vstring.InRange(6, 100),
+			vstring.Between(6, 100),
 			vstring.Email,
 		),
 		yav.Chain(
 			"phone", a.Phone,
 			vstring.Required,
-			vstring.InRange(8, 16),
+			vstring.Between(8, 16),
 			vstring.E164,
 		),
 	)
 }
 ```
 
-#### Notes
+## Available validations
 
-* YAV doesn't need the validate field attribute. It is added, so that you can compare YAV and playground code.
-* Despite the YAV's playground wrapper registers JSON tags as field names using `RegisterTagNameFunc`,
-  the validator ignores it in `required_with/without` constructs.
-  Therefore, we pass uppercase `"Login"` to `vstring.RequiredWithAny` in order to produce playground-compatible errors.
-  If full compatibility is not required, pass the field names in whatever style you prefer.
+#### Bytes
+
+```
+OmitEmpty
+Required
+RequiredWithAny
+RequiredWithoutAny
+
+Min
+Max
+```
+
+#### Map
+
+```
+OmitEmpty
+Required
+RequiredWithAny
+RequiredWithoutAny
+RequiredWithAll
+RequiredWithoutAll
+
+Unique
+
+Min
+Max
+Between
+
+Keys
+Values
+```
+
+#### Number
+
+```
+OmitEmpty
+Required
+
+Min
+Max
+LessThan
+LessThanOrEqual
+GreaterThan
+GreaterThanOrEqual
+```
+
+#### Slice
+
+```
+OmitEmpty
+Required
+RequiredWithAny
+RequiredWithoutAny
+RequiredWithAll
+RequiredWithoutAll
+
+Unique
+
+Min
+Max
+
+Items
+```
+
+#### String
+
+```
+OmitEmpty
+Required
+RequiredWithAny
+RequiredWithoutAny
+RequiredWithAll
+RequiredWithoutAll
+
+Min
+Max
+Between
+
+Equal
+OneOf
+
+Alpha
+Alphanumeric
+Lowercase
+Uppercase
+ContainsAlpha
+ContainsLowerAlpha
+ContainsUpperAlpha
+ContainsDigit
+ContainsSpecialCharacter
+ExcludesWhitespace
+StartsWithAlpha
+StartsWithLowerAlpha
+StartsWithUpperAlpha
+StartsWithDigit
+StartsWithSpecialCharacter
+EndsWithAlpha
+EndsWithLowerAlpha
+EndsWithUpperAlpha
+EndsWithDigit
+EndsWithSpecialCharacter
+
+Text
+Title
+
+E164
+Email
+Hostname
+HostnameRFC1123
+HostnamePort
+URI
+URL
+UUID
+```
+
+#### Time
 
 ## Benchmarks
 
@@ -89,21 +280,21 @@ cpu: Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz
 
 ```
 BenchmarkYAV              12907930       92.15 ns/op          0 B/op        0 allocs/op
-BenchmarkOzzo*             1334562       890.1 ns/op       1248 B/op       20 allocs/op
+BenchmarkOzzo              1334562       890.1 ns/op       1248 B/op       20 allocs/op
 BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 allocs/op
 ```
 
 #### Account struct validation
 
 ```
-BenchmarkYAV                733173        1594 ns/op         49 B/op        2 allocs/op
+BenchmarkYAV                666706        1776 ns/op        164 B/op        6 allocs/op
 BenchmarkOzzo*               75604       16073 ns/op      15214 B/op      251 allocs/op
-BenchmarkPlayground         350634        3304 ns/op        205 B/op        4 allocs/op
+BenchmarkPlayground         355452        3351 ns/op        206 B/op        4 allocs/op
 ```
 
 #### Notes
 
-* The Account in the Examples section is a reduced version of the structure.
-  See the [actual code](tests/account_test.go).
-* Ozzo validator lacks some playground features. Therefore, those validation steps were not enabled for ozzo.
+* The Account in the Examples section is a reduced version of the [benchmarked structure](tests/account_test.go).
+* Ozzo validator lacks some features available in both YAV and playground validator.
+  Therefore, those validation steps were not enabled for ozzo.
 * The YAV is still slower, than a manually written validation boilerplate, but the amount of code differs dramatically.

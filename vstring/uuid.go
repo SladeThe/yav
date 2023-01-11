@@ -12,7 +12,7 @@ var (
 
 func UUID(name string, value string) (stop bool, err error) {
 	if !uuidRegex.MatchString(value) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameUUID,
 			ValueName: name,
 			Value:     value,

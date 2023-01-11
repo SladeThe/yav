@@ -16,7 +16,7 @@ func OmitEmpty(_ string, value []byte) (stop bool, err error) {
 
 func Required(name string, value []byte) (stop bool, err error) {
 	if len(value) == 0 {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameRequired,
 			ValueName: name,
 		}
@@ -37,20 +37,6 @@ func RequiredWithAny(fields string, accumulator yav.Accumulator) yav.ValidateFun
 	return internal.RegisterMapEntry(&requiredWithAnyFuncs, fields, requiredWithAny(fields))
 }
 
-func requiredWithAny(parameter string) yav.ValidateFunc[[]byte] {
-	return func(name string, value []byte) (stop bool, err error) {
-		if len(value) == 0 {
-			return false, yav.Error{
-				CheckName: yav.CheckNameRequiredWithAny,
-				Parameter: parameter,
-				ValueName: name,
-			}
-		}
-
-		return false, nil
-	}
-}
-
 func RequiredWithoutAny(fields string, accumulator yav.Accumulator) yav.ValidateFunc[[]byte] {
 	if !accumulator.IsEnabled() {
 		return internal.Valid[[]byte]
@@ -63,10 +49,24 @@ func RequiredWithoutAny(fields string, accumulator yav.Accumulator) yav.Validate
 	return internal.RegisterMapEntry(&requiredWithoutAnyFuncs, fields, requiredWithoutAny(fields))
 }
 
+func requiredWithAny(parameter string) yav.ValidateFunc[[]byte] {
+	return func(name string, value []byte) (stop bool, err error) {
+		if len(value) == 0 {
+			return true, yav.Error{
+				CheckName: yav.CheckNameRequiredWithAny,
+				Parameter: parameter,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 func requiredWithoutAny(parameter string) yav.ValidateFunc[[]byte] {
 	return func(name string, value []byte) (stop bool, err error) {
 		if len(value) == 0 {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
 				Parameter: parameter,
 				ValueName: name,

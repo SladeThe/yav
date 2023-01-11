@@ -9,6 +9,8 @@ import (
 )
 
 type key[P comparable] struct {
+	mapPackage   string
+	mapType      string
 	keyPackage   string
 	keyType      string
 	valuePackage string
@@ -22,6 +24,8 @@ func newKey[P comparable, M ~map[K]V, K comparable, V any](parameter P) key[P] {
 	keyType, valueType := mapType.Key(), mapType.Elem()
 
 	return key[P]{
+		mapPackage:   mapType.PkgPath(),
+		mapType:      mapType.String(),
 		keyPackage:   keyType.PkgPath(),
 		keyType:      keyType.String(),
 		valuePackage: valueType.PkgPath(),
@@ -30,14 +34,14 @@ func newKey[P comparable, M ~map[K]V, K comparable, V any](parameter P) key[P] {
 	}
 }
 
-type inRangeKey struct {
+type betweenKey struct {
 	min, max int
 }
 
 var (
 	minFuncs     map[key[int]]any
 	maxFuncs     map[key[int]]any
-	inRangeFuncs map[key[inRangeKey]]any
+	betweenFuncs map[key[betweenKey]]any
 )
 
 func Min[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
@@ -60,20 +64,20 @@ func Max[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
 	return internal.RegisterMapEntry[key[int], any](&maxFuncs, k, max[M](parameter)).(yav.ValidateFunc[M])
 }
 
-func InRange[M ~map[K]V, K comparable, V any](min, max int) yav.ValidateFunc[M] {
-	k := newKey[inRangeKey, M](inRangeKey{min: min, max: max})
+func Between[M ~map[K]V, K comparable, V any](min, max int) yav.ValidateFunc[M] {
+	k := newKey[betweenKey, M](betweenKey{min: min, max: max})
 
-	if validateFunc, ok := inRangeFuncs[k]; ok {
+	if validateFunc, ok := betweenFuncs[k]; ok {
 		return validateFunc.(yav.ValidateFunc[M])
 	}
 
-	return internal.RegisterMapEntry[key[inRangeKey], any](&inRangeFuncs, k, inRange[M](min, max)).(yav.ValidateFunc[M])
+	return internal.RegisterMapEntry[key[betweenKey], any](&betweenFuncs, k, between[M](min, max)).(yav.ValidateFunc[M])
 }
 
 func min[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) < parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
 				Parameter: strconv.Itoa(parameter),
 				ValueName: name,
@@ -88,7 +92,7 @@ func min[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
 func max[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) > parameter {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
 				Parameter: strconv.Itoa(parameter),
 				ValueName: name,
@@ -100,10 +104,10 @@ func max[M ~map[K]V, K comparable, V any](parameter int) yav.ValidateFunc[M] {
 	}
 }
 
-func inRange[M ~map[K]V, K comparable, V any](min, max int) yav.ValidateFunc[M] {
+func between[M ~map[K]V, K comparable, V any](min, max int) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		if len(value) < min {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
 				Parameter: strconv.Itoa(min),
 				ValueName: name,
@@ -112,7 +116,7 @@ func inRange[M ~map[K]V, K comparable, V any](min, max int) yav.ValidateFunc[M] 
 		}
 
 		if len(value) > max {
-			return false, yav.Error{
+			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
 				Parameter: strconv.Itoa(max),
 				ValueName: name,

@@ -12,7 +12,7 @@ var (
 
 func Email(name string, value string) (stop bool, err error) {
 	if !emailRegex.MatchString(value) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameEmail,
 			ValueName: name,
 			Value:     value,

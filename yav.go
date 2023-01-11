@@ -7,18 +7,24 @@ import (
 type ValidateFunc[T any] func(name string, value T) (stop bool, err error)
 
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
+	var combinedErr error
+
 	for _, validateFunc := range validateFuncs {
-		if stop, err := validateFunc(name, value); stop || err != nil {
-			return err
+		stop, err := validateFunc(name, value)
+		if err != nil {
+			multierr.AppendInto(&combinedErr, err)
+		}
+		if stop {
+			break
 		}
 	}
 
-	return nil
+	return combinedErr
 }
 
 func Or[T any](name string, value T, validateFuncs ...ValidateFunc[T]) (stop bool, err error) {
 	for _, validateFunc := range validateFuncs {
-		if stop, err = validateFunc(name, value); stop || err == nil {
+		if stop, err = validateFunc(name, value); err == nil {
 			return
 		}
 	}
@@ -40,7 +46,7 @@ func Nested(name string, err error) error {
 		return validationErr
 	}
 
-	partialErrs := multierr.Errors(err) // TODO update in-place ?
+	partialErrs := multierr.Errors(err)
 	if len(partialErrs) <= 1 {
 		return err
 	}

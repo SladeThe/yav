@@ -9,14 +9,14 @@ import (
 func BenchmarkYAV(b *testing.B) {
 	account := ValidAccount()
 
-	if err := account.ChainValidate(); err != nil {
+	if err := account.Validate(); err != nil {
 		b.Fatalf("unexpected error: %v", err)
 	}
 
 	b.ReportAllocs()
 
 	for i := 0; i < b.N; i++ {
-		_ = account.ChainValidate()
+		_ = account.Validate()
 	}
 }
 

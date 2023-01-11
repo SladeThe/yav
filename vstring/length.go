@@ -14,15 +14,15 @@ func Max(parameter int) yav.ValidateFunc[string] {
 	return max(parameter).validate
 }
 
-func InRange(min, max int) yav.ValidateFunc[string] {
-	return inRange{min: min, max: max}.validate
+func Between(min, max int) yav.ValidateFunc[string] {
+	return between{min: min, max: max}.validate
 }
 
 type min int
 
 func (m min) validate(name string, value string) (stop bool, err error) {
 	if len(value) < int(m) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: strconv.Itoa(int(m)),
 			ValueName: name,
@@ -37,7 +37,7 @@ type max int
 
 func (m max) validate(name string, value string) (stop bool, err error) {
 	if len(value) > int(m) {
-		return false, yav.Error{
+		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: strconv.Itoa(int(m)),
 			ValueName: name,
@@ -48,24 +48,24 @@ func (m max) validate(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-type inRange struct {
+type between struct {
 	min, max int
 }
 
-func (l inRange) validate(name string, value string) (stop bool, err error) {
-	if len(value) < l.min {
-		return false, yav.Error{
+func (b between) validate(name string, value string) (stop bool, err error) {
+	if len(value) < b.min {
+		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
-			Parameter: strconv.Itoa(l.min),
+			Parameter: strconv.Itoa(b.min),
 			ValueName: name,
 			Value:     value,
 		}
 	}
 
-	if len(value) > l.max {
-		return false, yav.Error{
+	if len(value) > b.max {
+		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
-			Parameter: strconv.Itoa(l.max),
+			Parameter: strconv.Itoa(b.max),
 			ValueName: name,
 			Value:     value,
 		}
