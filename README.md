@@ -268,6 +268,11 @@ UUID
 
 #### Time
 
+```
+OmitEmpty
+Required
+```
+
 ## Benchmarks
 
 ```
