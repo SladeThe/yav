@@ -261,7 +261,7 @@ func ValidAccount() Account {
 	a := Account{
 		ID:          "6a310c88-4698-4807-9578-f1f054a8b4ca",
 		Login:       "yav123",
-		Password:    "DasPassword#123",
+		Password:    "DasPasswort#123",
 		Email:       "yav+123@yav.yav",
 		Phone:       "+1234567890",
 		Secret:      "secure",

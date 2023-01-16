@@ -98,21 +98,21 @@ func TestValidate(t *testing.T) {
 		name: "password no digit",
 		account: func() Account {
 			a := ValidAccount()
-			a.Password = "DasPassword#"
+			a.Password = "DasPasswort#"
 			return a
 		}(),
 	}, {
 		name: "password no special character",
 		account: func() Account {
 			a := ValidAccount()
-			a.Password = "DasPassword123"
+			a.Password = "DasPasswort123"
 			return a
 		}(),
 	}, {
 		name: "password with space",
 		account: func() Account {
 			a := ValidAccount()
-			a.Password = "DasPassword# #123"
+			a.Password = "DasPasswort# #123"
 			return a
 		}(),
 	}, {
