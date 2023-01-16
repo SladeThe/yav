@@ -160,6 +160,7 @@ RequiredWithoutAny
 
 Min
 Max
+Between
 ```
 
 #### Map
@@ -190,6 +191,7 @@ Required
 
 Min
 Max
+Between
 LessThan
 LessThanOrEqual
 GreaterThan
