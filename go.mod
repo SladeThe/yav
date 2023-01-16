@@ -8,7 +8,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/stretchr/testify v1.8.1
 	go.uber.org/multierr v1.9.0
-	golang.org/x/exp v0.0.0-20230108222341-4b8118a2686a
+	golang.org/x/exp v0.0.0-20230116083435-1de6713980de
 )
 
 require (

@@ -158,35 +158,13 @@ func TestValidate(t *testing.T) {
 			return a
 		}(),
 	}, {
-		name: "valid avatars",
-		account: func() Account {
-			a := ValidAccount()
-			a.Avatars = make(map[Size][]byte)
-
-			var width uint16 = 32
-
-			for i := 0; i < 3; i++ {
-				size := Size{Width: width, Height: width}
-				bytes := make([]byte, int(size.Width)*int(size.Height)*4)
-				a.Avatars[size] = bytes
-				width <<= 1
-			}
-
-			return a
-		}(),
-	}, {
 		name: "insufficient avatar count",
 		account: func() Account {
 			a := ValidAccount()
-			a.Avatars = make(map[Size][]byte)
 
-			var width uint16 = 32
-
-			for i := 0; i < 2; i++ {
-				size := Size{Width: width, Height: width}
-				bytes := make([]byte, int(size.Width)*int(size.Height)*4)
-				a.Avatars[size] = bytes
-				width <<= 1
+			for size := range a.Avatars {
+				delete(a.Avatars, size)
+				break
 			}
 
 			return a

@@ -29,14 +29,14 @@ func (s Size) Validate() error {
 		yav.Chain(
 			"width", s.Width,
 			vnumeric.Required[uint16],
-			vnumeric.Min[uint16](32),
-			vnumeric.Max[uint16](512),
+			vnumeric.MinUint16(32),
+			vnumeric.MaxUint16(512),
 		),
 		yav.Chain(
 			"height", s.Height,
 			vnumeric.Required[uint16],
-			vnumeric.GreaterThan[uint16](31),
-			vnumeric.LessThanOrEqual[uint16](512),
+			vnumeric.GreaterThanUint16(31),
+			vnumeric.LessThanOrEqualUint16(512),
 		),
 	)
 }
@@ -69,7 +69,7 @@ type Account struct {
 	Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
 
 	Age     uint8           `json:"age" validate:"omitempty,gte=18,lt=120"`
-	Avatars map[Size][]byte `json:"avatars" validate:"omitempty,min=3,max=10,dive,keys,endkeys,required"`
+	Avatars map[Size][]byte `json:"avatars" validate:"omitempty,min=3,max=10,dive,keys,endkeys,required,min=1,max=1000000"`
 
 	Secret    string `json:"secret" validate:"required,eq=secure"`
 	PromoCode string `json:"promoCode" validate:"omitempty,oneof=BlackFriday2022 BlackFriday2023"`
@@ -122,8 +122,8 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"age", a.Age,
 			vnumeric.OmitEmpty[uint8],
-			vnumeric.GreaterThanOrEqual[uint8](18),
-			vnumeric.LessThan[uint8](120),
+			vnumeric.GreaterThanOrEqualUint8(18),
+			vnumeric.LessThanUint8(120),
 		),
 		yav.Chain(
 			"avatars", a.Avatars,
@@ -134,6 +134,7 @@ func (a Account) Validate() error {
 			),
 			vmap.Values[map[Size][]byte](
 				vbytes.Required,
+				vbytes.Between(1, 1000000),
 			),
 		),
 		yav.Chain(
@@ -222,8 +223,7 @@ func (a Account) OzzoValidate() error {
 		ozzo.Field(
 			&a.Avatars,
 			ozzo.When(ozzo.IsEmpty(a.Avatars), ozzo.Skip),
-			ozzo.Min(3),
-			ozzo.Max(10),
+			ozzo.Length(3, 10),
 		),
 		ozzo.Field(
 			&a.Secret,
@@ -258,7 +258,7 @@ func (a Account) OzzoValidate() error {
 }
 
 func ValidAccount() Account {
-	return Account{
+	a := Account{
 		ID:          "6a310c88-4698-4807-9578-f1f054a8b4ca",
 		Login:       "yav123",
 		Password:    "DasPassword#123",
@@ -267,4 +267,17 @@ func ValidAccount() Account {
 		Secret:      "secure",
 		DisplayName: "YAV",
 	}
+
+	a.Avatars = make(map[Size][]byte)
+
+	var width uint16 = 32
+
+	for i := 0; i < 3; i++ {
+		size := Size{Width: width, Height: width}
+		bytes := make([]byte, int(size.Width)*int(size.Height)*4)
+		a.Avatars[size] = bytes
+		width <<= 1
+	}
+
+	return a
 }

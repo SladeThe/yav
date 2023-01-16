@@ -83,8 +83,7 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"login", a.Login,
 			vstring.Required,
-			vstring.Min(4),
-			vstring.Max(20),
+			vstring.Between(4, 20),
 			vstring.Alphanumeric,
 			vstring.Lowercase,
 		),
@@ -292,9 +291,9 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 #### Account struct validation
 
 ```
-BenchmarkYAV                666706        1776 ns/op        164 B/op        6 allocs/op
-BenchmarkOzzo*               75604       16073 ns/op      15214 B/op      251 allocs/op
-BenchmarkPlayground         355452        3351 ns/op        206 B/op        4 allocs/op
+BenchmarkYAV                562638        2127 ns/op        123 B/op        4 allocs/op
+BenchmarkOzzo*               64515       17206 ns/op      15487 B/op      253 allocs/op
+BenchmarkPlayground         189013        6204 ns/op        587 B/op       21 allocs/op
 ```
 
 #### Notes
