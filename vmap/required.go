@@ -21,20 +21,20 @@ func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool,
 	return false, nil
 }
 
-func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithAny[M] {
-	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny[M])
+func RequiredWithAny[M ~map[K]V, K comparable, V any]() accumulators.RequiredWithAny[M] {
+	return accumulators.NewRequiredWithAny(provideRequiredWithAny[M])
 }
 
-func RequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithoutAny[M] {
-	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny[M])
+func RequiredWithoutAny[M ~map[K]V, K comparable, V any]() accumulators.RequiredWithoutAny[M] {
+	return accumulators.NewRequiredWithoutAny(provideRequiredWithoutAny[M])
 }
 
-func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithAll[M] {
-	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll[M])
+func RequiredWithAll[M ~map[K]V, K comparable, V any]() accumulators.RequiredWithAll[M] {
+	return accumulators.NewRequiredWithAll(provideRequiredWithAll[M])
 }
 
-func RequiredWithoutAll[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithoutAll[M] {
-	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll[M])
+func RequiredWithoutAll[M ~map[K]V, K comparable, V any]() accumulators.RequiredWithoutAll[M] {
+	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll[M])
 }
 
 func provideRequiredWithAny[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {

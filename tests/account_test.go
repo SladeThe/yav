@@ -96,7 +96,7 @@ func (a Account) Validate() error {
 		),
 		yav.Chain(
 			"password", a.Password,
-			vstring.RequiredWithAny("Login").String(a.Login).Func(),
+			vstring.RequiredWithAny().String(a.Login).Fields("Login"),
 			vstring.OmitEmpty,
 			vstring.Between(8, 32),
 			vstring.ContainsLowerAlpha,
@@ -165,7 +165,7 @@ func (a Account) Validate() error {
 		),
 		yav.Chain(
 			"displayName", a.DisplayName,
-			vstring.RequiredWithoutAll("FirstName LastName").String(a.FirstName).String(a.LastName).Func(),
+			vstring.RequiredWithoutAll().String(a.FirstName).String(a.LastName).Fields("FirstName LastName"),
 			vstring.OmitEmpty,
 			vstring.Between(2, 50),
 			vstring.Title,

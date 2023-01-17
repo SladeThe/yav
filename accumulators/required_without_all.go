@@ -5,14 +5,12 @@ import (
 )
 
 type RequiredWithoutAll[T any] struct {
-	fields      string
 	provideFunc ProvideFunc[T]
 	enabled     bool
 }
 
-func NewRequiredWithoutAll[T any](fields string, provideFunc ProvideFunc[T]) RequiredWithoutAll[T] {
+func NewRequiredWithoutAll[T any](provideFunc ProvideFunc[T]) RequiredWithoutAll[T] {
 	return RequiredWithoutAll[T]{
-		fields:      fields,
 		provideFunc: provideFunc,
 		enabled:     true,
 	}
@@ -83,6 +81,6 @@ func (r RequiredWithoutAll[T]) Uint64(value uint64) RequiredWithoutAll[T] {
 	return r
 }
 
-func (r RequiredWithoutAll[T]) Func() yav.ValidateFunc[T] {
-	return r.provideFunc(r.fields, r.enabled)
+func (r RequiredWithoutAll[T]) Fields(fields string) yav.ValidateFunc[T] {
+	return r.provideFunc(fields, r.enabled)
 }

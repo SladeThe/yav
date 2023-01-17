@@ -28,20 +28,20 @@ func Required(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny(fields string) accumulators.RequiredWithAny[string] {
-	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny)
+func RequiredWithAny() accumulators.RequiredWithAny[string] {
+	return accumulators.NewRequiredWithAny(provideRequiredWithAny)
 }
 
-func RequiredWithoutAny(fields string) accumulators.RequiredWithoutAny[string] {
-	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny)
+func RequiredWithoutAny() accumulators.RequiredWithoutAny[string] {
+	return accumulators.NewRequiredWithoutAny(provideRequiredWithoutAny)
 }
 
-func RequiredWithAll(fields string) accumulators.RequiredWithAll[string] {
-	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll)
+func RequiredWithAll() accumulators.RequiredWithAll[string] {
+	return accumulators.NewRequiredWithAll(provideRequiredWithAll)
 }
 
-func RequiredWithoutAll(fields string) accumulators.RequiredWithoutAll[string] {
-	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll)
+func RequiredWithoutAll() accumulators.RequiredWithoutAll[string] {
+	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll)
 }
 
 func provideRequiredWithAny(fields string, enabled bool) yav.ValidateFunc[string] {

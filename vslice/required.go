@@ -21,20 +21,20 @@ func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny[S ~[]T, T any](fields string) accumulators.RequiredWithAny[S] {
-	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny[S])
+func RequiredWithAny[S ~[]T, T any]() accumulators.RequiredWithAny[S] {
+	return accumulators.NewRequiredWithAny(provideRequiredWithAny[S])
 }
 
-func RequiredWithoutAny[S ~[]T, T any](fields string) accumulators.RequiredWithoutAny[S] {
-	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny[S])
+func RequiredWithoutAny[S ~[]T, T any]() accumulators.RequiredWithoutAny[S] {
+	return accumulators.NewRequiredWithoutAny(provideRequiredWithoutAny[S])
 }
 
-func RequiredWithAll[S ~[]T, T any](fields string) accumulators.RequiredWithAll[S] {
-	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll[S])
+func RequiredWithAll[S ~[]T, T any]() accumulators.RequiredWithAll[S] {
+	return accumulators.NewRequiredWithAll(provideRequiredWithAll[S])
 }
 
-func RequiredWithoutAll[S ~[]T, T any](fields string) accumulators.RequiredWithoutAll[S] {
-	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll[S])
+func RequiredWithoutAll[S ~[]T, T any]() accumulators.RequiredWithoutAll[S] {
+	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll[S])
 }
 
 func provideRequiredWithAny[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {

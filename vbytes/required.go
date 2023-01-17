@@ -28,20 +28,20 @@ func Required(name string, value []byte) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny(fields string) accumulators.RequiredWithAny[[]byte] {
-	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny)
+func RequiredWithAny() accumulators.RequiredWithAny[[]byte] {
+	return accumulators.NewRequiredWithAny(provideRequiredWithAny)
 }
 
-func RequiredWithoutAny(fields string) accumulators.RequiredWithoutAny[[]byte] {
-	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny)
+func RequiredWithoutAny() accumulators.RequiredWithoutAny[[]byte] {
+	return accumulators.NewRequiredWithoutAny(provideRequiredWithoutAny)
 }
 
-func RequiredWithAll(fields string) accumulators.RequiredWithAll[[]byte] {
-	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll)
+func RequiredWithAll() accumulators.RequiredWithAll[[]byte] {
+	return accumulators.NewRequiredWithAll(provideRequiredWithAll)
 }
 
-func RequiredWithoutAll(fields string) accumulators.RequiredWithoutAll[[]byte] {
-	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll)
+func RequiredWithoutAll() accumulators.RequiredWithoutAll[[]byte] {
+	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll)
 }
 
 func provideRequiredWithAny(fields string, enabled bool) yav.ValidateFunc[[]byte] {

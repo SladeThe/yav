@@ -127,7 +127,7 @@ func (a Account) Validate() error {
 		),
 		yav.Chain(
 			"password", a.Password,
-			vstring.RequiredWithAny("Login").String(a.Login).Func(),
+			vstring.RequiredWithAny().String(a.Login).Fields("Login"),
 			vstring.OmitEmpty,
 			vstring.Between(8, 32),
 			vstring.Text,
