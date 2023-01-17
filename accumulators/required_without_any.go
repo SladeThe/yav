@@ -81,6 +81,6 @@ func (r RequiredWithoutAny[T]) Uint64(value uint64) RequiredWithoutAny[T] {
 	return r
 }
 
-func (r RequiredWithoutAny[T]) Fields(fields string) yav.ValidateFunc[T] {
-	return r.provideFunc(fields, r.enabled)
+func (r RequiredWithoutAny[T]) Names(names string) yav.ValidateFunc[T] {
+	return r.provideFunc(names, r.enabled)
 }
