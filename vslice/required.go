@@ -2,6 +2,7 @@ package vslice
 
 import (
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/accumulators"
 	"github.com/SladeThe/yav/internal"
 )
 
@@ -20,8 +21,24 @@ func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
-	if !accumulator.IsEnabled() {
+func RequiredWithAny[S ~[]T, T any](fields string) accumulators.RequiredWithAny[S] {
+	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny[S])
+}
+
+func RequiredWithoutAny[S ~[]T, T any](fields string) accumulators.RequiredWithoutAny[S] {
+	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny[S])
+}
+
+func RequiredWithAll[S ~[]T, T any](fields string) accumulators.RequiredWithAll[S] {
+	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll[S])
+}
+
+func RequiredWithoutAll[S ~[]T, T any](fields string) accumulators.RequiredWithoutAll[S] {
+	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll[S])
+}
+
+func provideRequiredWithAny[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
+	if !enabled {
 		return internal.Valid[S]
 	}
 
@@ -40,8 +57,8 @@ func RequiredWithAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 	}
 }
 
-func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAny[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
+	if !enabled {
 		return internal.Valid[S]
 	}
 
@@ -60,8 +77,8 @@ func RequiredWithoutAny[S ~[]T, T any](fields string, accumulator yav.Accumulato
 	}
 }
 
-func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithAll[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
+	if !enabled {
 		return internal.Valid[S]
 	}
 
@@ -80,8 +97,8 @@ func RequiredWithAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) 
 	}
 }
 
-func RequiredWithoutAll[S ~[]T, T any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[S] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAll[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
+	if !enabled {
 		return internal.Valid[S]
 	}
 
