@@ -2,10 +2,9 @@ package vstring
 
 import (
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/accumulators"
 	"github.com/SladeThe/yav/internal"
 )
-
-// TODO replace maps with generic structs after the next Go release, it doesn't compile in 1.19.4
 
 var (
 	requiredWithAnyFuncs    map[string]yav.ValidateFunc[string]
@@ -29,8 +28,24 @@ func Required(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-func RequiredWithAny(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
-	if !accumulator.IsEnabled() {
+func RequiredWithAny(fields string) accumulators.RequiredWithAny[string] {
+	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny)
+}
+
+func RequiredWithoutAny(fields string) accumulators.RequiredWithoutAny[string] {
+	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny)
+}
+
+func RequiredWithAll(fields string) accumulators.RequiredWithAll[string] {
+	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll)
+}
+
+func RequiredWithoutAll(fields string) accumulators.RequiredWithoutAll[string] {
+	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll)
+}
+
+func provideRequiredWithAny(fields string, enabled bool) yav.ValidateFunc[string] {
+	if !enabled {
 		return internal.Valid[string]
 	}
 
@@ -54,9 +69,8 @@ func requiredWithAny(parameter string) yav.ValidateFunc[string] {
 		return false, nil
 	}
 }
-
-func RequiredWithoutAny(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAny(fields string, enabled bool) yav.ValidateFunc[string] {
+	if !enabled {
 		return internal.Valid[string]
 	}
 
@@ -80,8 +94,9 @@ func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
 		return false, nil
 	}
 }
-func RequiredWithAll(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
-	if !accumulator.IsEnabled() {
+
+func provideRequiredWithAll(fields string, enabled bool) yav.ValidateFunc[string] {
+	if !enabled {
 		return internal.Valid[string]
 	}
 
@@ -106,8 +121,8 @@ func requiredWithAll(parameter string) yav.ValidateFunc[string] {
 	}
 }
 
-func RequiredWithoutAll(fields string, accumulator yav.Accumulator) yav.ValidateFunc[string] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAll(fields string, enabled bool) yav.ValidateFunc[string] {
+	if !enabled {
 		return internal.Valid[string]
 	}
 

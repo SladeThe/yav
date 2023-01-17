@@ -2,6 +2,7 @@ package vmap
 
 import (
 	"github.com/SladeThe/yav"
+	"github.com/SladeThe/yav/accumulators"
 	"github.com/SladeThe/yav/internal"
 )
 
@@ -20,8 +21,24 @@ func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool,
 	return false, nil
 }
 
-func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
-	if !accumulator.IsEnabled() {
+func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithAny[M] {
+	return accumulators.NewRequiredWithAny(fields, provideRequiredWithAny[M])
+}
+
+func RequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithoutAny[M] {
+	return accumulators.NewRequiredWithoutAny(fields, provideRequiredWithoutAny[M])
+}
+
+func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithAll[M] {
+	return accumulators.NewRequiredWithAll(fields, provideRequiredWithAll[M])
+}
+
+func RequiredWithoutAll[M ~map[K]V, K comparable, V any](fields string) accumulators.RequiredWithoutAll[M] {
+	return accumulators.NewRequiredWithoutAll(fields, provideRequiredWithoutAll[M])
+}
+
+func provideRequiredWithAny[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
+	if !enabled {
 		return internal.Valid[M]
 	}
 
@@ -40,11 +57,8 @@ func RequiredWithAny[M ~map[K]V, K comparable, V any](fields string, accumulator
 	}
 }
 
-func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
-	fields string,
-	accumulator yav.Accumulator,
-) yav.ValidateFunc[M] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
+	if !enabled {
 		return internal.Valid[M]
 	}
 
@@ -63,8 +77,8 @@ func RequiredWithoutAny[M ~map[K]V, K comparable, V any](
 	}
 }
 
-func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string, accumulator yav.Accumulator) yav.ValidateFunc[M] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithAll[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
+	if !enabled {
 		return internal.Valid[M]
 	}
 
@@ -83,11 +97,8 @@ func RequiredWithAll[M ~map[K]V, K comparable, V any](fields string, accumulator
 	}
 }
 
-func RequiredWithoutAll[M ~map[K]V, K comparable, V any](
-	fields string,
-	accumulator yav.Accumulator,
-) yav.ValidateFunc[M] {
-	if !accumulator.IsEnabled() {
+func provideRequiredWithoutAll[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
+	if !enabled {
 		return internal.Valid[M]
 	}
 
