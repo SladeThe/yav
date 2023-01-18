@@ -22,10 +22,6 @@ func RegisterMapEntry[K comparable, V any](m *map[K]V, key K, value V) V {
 	return value
 }
 
-func Valid[T any](string, T) (bool, error) {
-	return false, nil
-}
-
 func ErrUnique(name string, value any) yav.Error {
 	return yav.Error{
 		CheckName: yav.CheckNameUnique,

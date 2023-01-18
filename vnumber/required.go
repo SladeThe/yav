@@ -1,4 +1,4 @@
-package vnumeric
+package vnumber
 
 import (
 	"golang.org/x/exp/constraints"

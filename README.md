@@ -128,7 +128,6 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"password", a.Password,
 			vstring.RequiredWithAny().String(a.Login).Names("Login"),
-			vstring.OmitEmpty,
 			vstring.Between(8, 32),
 			vstring.Text,
 		),
@@ -150,7 +149,7 @@ func (a Account) Validate() error {
 
 ## Available validations
 
-#### Bytes
+#### Common
 
 ```
 OmitEmpty
@@ -159,7 +158,11 @@ RequiredWithAny
 RequiredWithoutAny
 RequiredWithAll
 RequiredWithoutAll
+```
 
+#### Bytes
+
+```
 Min
 Max
 Between
@@ -168,13 +171,6 @@ Between
 #### Map
 
 ```
-OmitEmpty
-Required
-RequiredWithAny
-RequiredWithoutAny
-RequiredWithAll
-RequiredWithoutAll
-
 Unique
 
 Min
@@ -188,9 +184,6 @@ Values
 #### Number
 
 ```
-OmitEmpty
-Required
-
 Min
 Max
 Between
@@ -203,13 +196,6 @@ GreaterThanOrEqual
 #### Slice
 
 ```
-OmitEmpty
-Required
-RequiredWithAny
-RequiredWithoutAny
-RequiredWithAll
-RequiredWithoutAll
-
 Unique
 
 Min
@@ -221,13 +207,6 @@ Items
 #### String
 
 ```
-OmitEmpty
-Required
-RequiredWithAny
-RequiredWithoutAny
-RequiredWithAll
-RequiredWithoutAll
-
 Min
 Max
 Between
@@ -272,8 +251,7 @@ UUID
 #### Time
 
 ```
-OmitEmpty
-Required
+-
 ```
 
 ## Benchmarks

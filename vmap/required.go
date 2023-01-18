@@ -3,7 +3,6 @@ package vmap
 import (
 	"github.com/SladeThe/yav"
 	"github.com/SladeThe/yav/accumulators"
-	"github.com/SladeThe/yav/internal"
 )
 
 func OmitEmpty[M ~map[K]V, K comparable, V any](_ string, value M) (stop bool, err error) {
@@ -37,9 +36,9 @@ func RequiredWithoutAll[M ~map[K]V, K comparable, V any]() accumulators.Required
 	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll[M])
 }
 
-func provideRequiredWithAny[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
-	if !enabled {
-		return internal.Valid[M]
+func provideRequiredWithAny[M ~map[K]V, K comparable, V any](names string, required bool) yav.ValidateFunc[M] {
+	if !required {
+		return OmitEmpty[M]
 	}
 
 	// TODO avoid allocations ?
@@ -48,7 +47,7 @@ func provideRequiredWithAny[M ~map[K]V, K comparable, V any](fields string, enab
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -57,9 +56,9 @@ func provideRequiredWithAny[M ~map[K]V, K comparable, V any](fields string, enab
 	}
 }
 
-func provideRequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
-	if !enabled {
-		return internal.Valid[M]
+func provideRequiredWithoutAny[M ~map[K]V, K comparable, V any](names string, required bool) yav.ValidateFunc[M] {
+	if !required {
+		return OmitEmpty[M]
 	}
 
 	// TODO avoid allocations ?
@@ -68,7 +67,7 @@ func provideRequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string, e
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -77,9 +76,9 @@ func provideRequiredWithoutAny[M ~map[K]V, K comparable, V any](fields string, e
 	}
 }
 
-func provideRequiredWithAll[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
-	if !enabled {
-		return internal.Valid[M]
+func provideRequiredWithAll[M ~map[K]V, K comparable, V any](names string, required bool) yav.ValidateFunc[M] {
+	if !required {
+		return OmitEmpty[M]
 	}
 
 	// TODO avoid allocations ?
@@ -88,7 +87,7 @@ func provideRequiredWithAll[M ~map[K]V, K comparable, V any](fields string, enab
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -97,9 +96,9 @@ func provideRequiredWithAll[M ~map[K]V, K comparable, V any](fields string, enab
 	}
 }
 
-func provideRequiredWithoutAll[M ~map[K]V, K comparable, V any](fields string, enabled bool) yav.ValidateFunc[M] {
-	if !enabled {
-		return internal.Valid[M]
+func provideRequiredWithoutAll[M ~map[K]V, K comparable, V any](names string, required bool) yav.ValidateFunc[M] {
+	if !required {
+		return OmitEmpty[M]
 	}
 
 	// TODO avoid allocations ?
@@ -108,7 +107,7 @@ func provideRequiredWithoutAll[M ~map[K]V, K comparable, V any](fields string, e
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}

@@ -3,7 +3,6 @@ package vslice
 import (
 	"github.com/SladeThe/yav"
 	"github.com/SladeThe/yav/accumulators"
-	"github.com/SladeThe/yav/internal"
 )
 
 func OmitEmpty[S ~[]T, T any](_ string, value S) (stop bool, err error) {
@@ -37,9 +36,9 @@ func RequiredWithoutAll[S ~[]T, T any]() accumulators.RequiredWithoutAll[S] {
 	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll[S])
 }
 
-func provideRequiredWithAny[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
-	if !enabled {
-		return internal.Valid[S]
+func provideRequiredWithAny[S ~[]T, T any](names string, required bool) yav.ValidateFunc[S] {
+	if !required {
+		return OmitEmpty[S]
 	}
 
 	// TODO avoid allocations ?
@@ -48,7 +47,7 @@ func provideRequiredWithAny[S ~[]T, T any](fields string, enabled bool) yav.Vali
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -57,9 +56,9 @@ func provideRequiredWithAny[S ~[]T, T any](fields string, enabled bool) yav.Vali
 	}
 }
 
-func provideRequiredWithoutAny[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
-	if !enabled {
-		return internal.Valid[S]
+func provideRequiredWithoutAny[S ~[]T, T any](names string, required bool) yav.ValidateFunc[S] {
+	if !required {
+		return OmitEmpty[S]
 	}
 
 	// TODO avoid allocations ?
@@ -68,7 +67,7 @@ func provideRequiredWithoutAny[S ~[]T, T any](fields string, enabled bool) yav.V
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -77,9 +76,9 @@ func provideRequiredWithoutAny[S ~[]T, T any](fields string, enabled bool) yav.V
 	}
 }
 
-func provideRequiredWithAll[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
-	if !enabled {
-		return internal.Valid[S]
+func provideRequiredWithAll[S ~[]T, T any](names string, required bool) yav.ValidateFunc[S] {
+	if !required {
+		return OmitEmpty[S]
 	}
 
 	// TODO avoid allocations ?
@@ -88,7 +87,7 @@ func provideRequiredWithAll[S ~[]T, T any](fields string, enabled bool) yav.Vali
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -97,9 +96,9 @@ func provideRequiredWithAll[S ~[]T, T any](fields string, enabled bool) yav.Vali
 	}
 }
 
-func provideRequiredWithoutAll[S ~[]T, T any](fields string, enabled bool) yav.ValidateFunc[S] {
-	if !enabled {
-		return internal.Valid[S]
+func provideRequiredWithoutAll[S ~[]T, T any](names string, required bool) yav.ValidateFunc[S] {
+	if !required {
+		return OmitEmpty[S]
 	}
 
 	// TODO avoid allocations ?
@@ -108,7 +107,7 @@ func provideRequiredWithoutAll[S ~[]T, T any](fields string, enabled bool) yav.V
 		if len(value) == 0 {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
-				Parameter: fields,
+				Parameter: names,
 				ValueName: name,
 			}
 		}

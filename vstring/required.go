@@ -44,24 +44,24 @@ func RequiredWithoutAll() accumulators.RequiredWithoutAll[string] {
 	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll)
 }
 
-func provideRequiredWithAny(fields string, enabled bool) yav.ValidateFunc[string] {
-	if !enabled {
-		return internal.Valid[string]
+func provideRequiredWithAny(names string, required bool) yav.ValidateFunc[string] {
+	if !required {
+		return OmitEmpty
 	}
 
-	if validateFunc, ok := requiredWithAnyFuncs[fields]; ok {
+	if validateFunc, ok := requiredWithAnyFuncs[names]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&requiredWithAnyFuncs, fields, requiredWithAny(fields))
+	return internal.RegisterMapEntry(&requiredWithAnyFuncs, names, requiredWithAny(names))
 }
 
-func requiredWithAny(parameter string) yav.ValidateFunc[string] {
+func requiredWithAny(names string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAny,
-				Parameter: parameter,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -69,24 +69,25 @@ func requiredWithAny(parameter string) yav.ValidateFunc[string] {
 		return false, nil
 	}
 }
-func provideRequiredWithoutAny(fields string, enabled bool) yav.ValidateFunc[string] {
-	if !enabled {
-		return internal.Valid[string]
+
+func provideRequiredWithoutAny(names string, required bool) yav.ValidateFunc[string] {
+	if !required {
+		return OmitEmpty
 	}
 
-	if validateFunc, ok := requiredWithoutAnyFuncs[fields]; ok {
+	if validateFunc, ok := requiredWithoutAnyFuncs[names]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&requiredWithoutAnyFuncs, fields, requiredWithoutAny(fields))
+	return internal.RegisterMapEntry(&requiredWithoutAnyFuncs, names, requiredWithoutAny(names))
 }
 
-func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
+func requiredWithoutAny(names string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAny,
-				Parameter: parameter,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -95,24 +96,24 @@ func requiredWithoutAny(parameter string) yav.ValidateFunc[string] {
 	}
 }
 
-func provideRequiredWithAll(fields string, enabled bool) yav.ValidateFunc[string] {
-	if !enabled {
-		return internal.Valid[string]
+func provideRequiredWithAll(names string, required bool) yav.ValidateFunc[string] {
+	if !required {
+		return OmitEmpty
 	}
 
-	if validateFunc, ok := requiredWithAllFuncs[fields]; ok {
+	if validateFunc, ok := requiredWithAllFuncs[names]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&requiredWithAllFuncs, fields, requiredWithAll(fields))
+	return internal.RegisterMapEntry(&requiredWithAllFuncs, names, requiredWithAll(names))
 }
 
-func requiredWithAll(parameter string) yav.ValidateFunc[string] {
+func requiredWithAll(names string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithAll,
-				Parameter: parameter,
+				Parameter: names,
 				ValueName: name,
 			}
 		}
@@ -121,24 +122,24 @@ func requiredWithAll(parameter string) yav.ValidateFunc[string] {
 	}
 }
 
-func provideRequiredWithoutAll(fields string, enabled bool) yav.ValidateFunc[string] {
-	if !enabled {
-		return internal.Valid[string]
+func provideRequiredWithoutAll(names string, required bool) yav.ValidateFunc[string] {
+	if !required {
+		return OmitEmpty
 	}
 
-	if validateFunc, ok := requiredWithoutAllFuncs[fields]; ok {
+	if validateFunc, ok := requiredWithoutAllFuncs[names]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&requiredWithoutAllFuncs, fields, requiredWithoutAll(fields))
+	return internal.RegisterMapEntry(&requiredWithoutAllFuncs, names, requiredWithoutAll(names))
 }
 
-func requiredWithoutAll(parameter string) yav.ValidateFunc[string] {
+func requiredWithoutAll(names string) yav.ValidateFunc[string] {
 	return func(name string, value string) (stop bool, err error) {
 		if value == "" {
 			return true, yav.Error{
 				CheckName: yav.CheckNameRequiredWithoutAll,
-				Parameter: parameter,
+				Parameter: names,
 				ValueName: name,
 			}
 		}

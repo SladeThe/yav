@@ -9,7 +9,7 @@ import (
 	"github.com/SladeThe/yav"
 	"github.com/SladeThe/yav/vbytes"
 	"github.com/SladeThe/yav/vmap"
-	"github.com/SladeThe/yav/vnumeric"
+	"github.com/SladeThe/yav/vnumber"
 	"github.com/SladeThe/yav/vstring"
 	"github.com/SladeThe/yav/vstruct"
 )
@@ -28,15 +28,15 @@ func (s Size) Validate() error {
 	return multierr.Combine(
 		yav.Chain(
 			"width", s.Width,
-			vnumeric.Required[uint16],
-			vnumeric.MinUint16(32),
-			vnumeric.MaxUint16(512),
+			vnumber.Required[uint16],
+			vnumber.MinUint16(32),
+			vnumber.MaxUint16(512),
 		),
 		yav.Chain(
 			"height", s.Height,
-			vnumeric.Required[uint16],
-			vnumeric.GreaterThanUint16(31),
-			vnumeric.LessThanOrEqualUint16(512),
+			vnumber.Required[uint16],
+			vnumber.GreaterThanUint16(31),
+			vnumber.LessThanOrEqualUint16(512),
 		),
 	)
 }
@@ -97,7 +97,6 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"password", a.Password,
 			vstring.RequiredWithAny().String(a.Login).Names("Login"),
-			vstring.OmitEmpty,
 			vstring.Between(8, 32),
 			vstring.ContainsLowerAlpha,
 			vstring.ContainsUpperAlpha,
@@ -121,9 +120,9 @@ func (a Account) Validate() error {
 		),
 		yav.Chain(
 			"age", a.Age,
-			vnumeric.OmitEmpty[uint8],
-			vnumeric.GreaterThanOrEqualUint8(18),
-			vnumeric.LessThanUint8(120),
+			vnumber.OmitEmpty[uint8],
+			vnumber.GreaterThanOrEqualUint8(18),
+			vnumber.LessThanUint8(120),
 		),
 		yav.Chain(
 			"avatars", a.Avatars,
@@ -166,7 +165,6 @@ func (a Account) Validate() error {
 		yav.Chain(
 			"displayName", a.DisplayName,
 			vstring.RequiredWithoutAll().String(a.FirstName).String(a.LastName).Names("FirstName LastName"),
-			vstring.OmitEmpty,
 			vstring.Between(2, 50),
 			vstring.Title,
 			vstring.Alpha,
@@ -214,8 +212,8 @@ func (a Account) OzzoValidate() error {
 		ozzo.Field(
 			&a.Age,
 			ozzo.When(ozzo.IsEmpty(a.Age), ozzo.Skip),
-			ozzo.Min(18),
-			ozzo.Max(119),
+			ozzo.Min(uint8(18)),
+			ozzo.Max(uint8(119)),
 		),
 		ozzo.Field(
 			&a.Avatars,
@@ -261,6 +259,7 @@ func ValidAccount() Account {
 		Password:    "DasPasswort#123",
 		Email:       "yav+123@yav.yav",
 		Phone:       "+1234567890",
+		Age:         18,
 		Secret:      "secure",
 		DisplayName: "YAV",
 	}

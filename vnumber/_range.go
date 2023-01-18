@@ -1,4 +1,4 @@
-package vnumeric
+package vnumber
 
 import (
 	"fmt"
