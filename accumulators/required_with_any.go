@@ -1,6 +1,9 @@
 package accumulators
 
 import (
+	"reflect"
+	"time"
+
 	"github.com/SladeThe/yav"
 )
 
@@ -23,6 +26,21 @@ func (r RequiredWithAny[T]) String(value string) RequiredWithAny[T] {
 
 func (r RequiredWithAny[T]) Bytes(value []byte) RequiredWithAny[T] {
 	r.required = r.required || len(value) != 0
+	return r
+}
+
+func (r RequiredWithAny[T]) Slice(value any) RequiredWithAny[T] {
+	r.required = r.required || reflect.ValueOf(value).Len() != 0
+	return r
+}
+
+func (r RequiredWithAny[T]) Map(value any) RequiredWithAny[T] {
+	r.required = r.required || reflect.ValueOf(value).Len() != 0
+	return r
+}
+
+func (r RequiredWithAny[T]) Time(value time.Time) RequiredWithAny[T] {
+	r.required = r.required || !value.IsZero()
 	return r
 }
 
