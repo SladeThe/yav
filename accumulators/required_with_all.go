@@ -30,12 +30,12 @@ func (r RequiredWithAll[T]) Bytes(value []byte) RequiredWithAll[T] {
 }
 
 func (r RequiredWithAll[T]) Slice(value any) RequiredWithAll[T] {
-	r.required = r.required && reflect.ValueOf(value).Len() != 0
+	r.required = r.required && value != nil && reflect.ValueOf(value).Len() != 0
 	return r
 }
 
 func (r RequiredWithAll[T]) Map(value any) RequiredWithAll[T] {
-	r.required = r.required && reflect.ValueOf(value).Len() != 0
+	r.required = r.required && value != nil && reflect.ValueOf(value).Len() != 0
 	return r
 }
 
