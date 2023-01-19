@@ -12,7 +12,7 @@ import (
 func Keys[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[K]) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		for k := range value {
-			multierr.AppendInto(&err, keyChain(name, k, validateFuncs...))
+			multierr.AppendInto(&err, keyChain(name, k, validateFuncs))
 		}
 
 		return
@@ -22,14 +22,14 @@ func Keys[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[K])
 func Values[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[V]) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		for k, v := range value {
-			multierr.AppendInto(&err, valueChain(name, k, v, validateFuncs...))
+			multierr.AppendInto(&err, valueChain(name, k, v, validateFuncs))
 		}
 
 		return
 	}
 }
 
-func keyChain[K comparable](name string, key K, validateFuncs ...yav.ValidateFunc[K]) error {
+func keyChain[K comparable](name string, key K, validateFuncs []yav.ValidateFunc[K]) error {
 	for _, validateFunc := range validateFuncs {
 		if stop, err := validateFunc(name, key); stop {
 			return withKeyName(name, key, err)
@@ -39,7 +39,7 @@ func keyChain[K comparable](name string, key K, validateFuncs ...yav.ValidateFun
 	return nil
 }
 
-func valueChain[K comparable, V any](name string, key K, value V, validateFuncs ...yav.ValidateFunc[V]) error {
+func valueChain[K comparable, V any](name string, key K, value V, validateFuncs []yav.ValidateFunc[V]) error {
 	for _, validateFunc := range validateFuncs {
 		if stop, err := validateFunc(name, value); stop {
 			return withKeyName(name, key, err)

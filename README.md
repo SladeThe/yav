@@ -23,7 +23,7 @@ The future plans are to introduce more playground and probably to add YAV's own 
 #### Single field struct validation
 
 The field name passed to `yav.Chain` doesn't affect the validation process and
-is only necessary for building a validation error. 
+is only necessary for building a validation error.
 
 ```go
 type AccountID struct {
@@ -39,7 +39,7 @@ func (id AccountID) Validate() error {
 }
 ```
 
-#### Combine validation errors 
+#### Combine validation errors
 
 Use [multierr](https://github.com/uber-go/multierr) to combine multiple validation errors.
 
@@ -171,11 +171,11 @@ Between
 #### Map
 
 ```
-Unique
-
 Min
 Max
 Between
+
+Unique
 
 Keys
 Values
@@ -191,15 +191,19 @@ LessThan
 LessThanOrEqual
 GreaterThan
 GreaterThanOrEqual
+
+Equal
+OneOf
 ```
 
 #### Slice
 
 ```
-Unique
-
 Min
 Max
+Between
+
+Unique
 
 Items
 ```

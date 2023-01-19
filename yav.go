@@ -22,14 +22,16 @@ func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error 
 	return combinedErr
 }
 
-func Or[T any](name string, value T, validateFuncs ...ValidateFunc[T]) (stop bool, err error) {
-	for _, validateFunc := range validateFuncs {
-		if stop, err = validateFunc(name, value); err == nil {
-			return
+func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
+	return func(name string, value T) (stop bool, err error) {
+		for _, validateFunc := range validateFuncs {
+			if stop, err = validateFunc(name, value); err == nil {
+				return
+			}
 		}
-	}
 
-	return
+		return
+	}
 }
 
 func Nested(name string, err error) error {

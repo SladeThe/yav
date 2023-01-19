@@ -12,14 +12,14 @@ import (
 func Items[S ~[]T, T any](validateFuncs ...yav.ValidateFunc[T]) yav.ValidateFunc[S] {
 	return func(name string, value S) (stop bool, err error) {
 		for i, v := range value {
-			multierr.AppendInto(&err, itemChain(name, i, v, validateFuncs...))
+			multierr.AppendInto(&err, itemChain(name, i, v, validateFuncs))
 		}
 
 		return
 	}
 }
 
-func itemChain[T any](name string, index int, value T, validateFuncs ...yav.ValidateFunc[T]) error {
+func itemChain[T any](name string, index int, value T, validateFuncs []yav.ValidateFunc[T]) error {
 	for _, validateFunc := range validateFuncs {
 		if stop, err := validateFunc(name, value); stop {
 			return withIndex(name, index, err)

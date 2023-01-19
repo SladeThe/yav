@@ -5,6 +5,7 @@ import (
 
 	"github.com/SladeThe/yav"
 	"github.com/SladeThe/yav/accumulators"
+	"github.com/SladeThe/yav/internal"
 )
 
 type Element generic.Type
