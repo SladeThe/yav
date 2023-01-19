@@ -77,6 +77,7 @@ func IsError(err error) bool {
 }
 
 func (err Error) Is(target error) bool {
+	err.Value = nil
 	return err == target
 }
 
