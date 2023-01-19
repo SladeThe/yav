@@ -11,7 +11,6 @@ import (
 	"github.com/SladeThe/yav/vmap"
 	"github.com/SladeThe/yav/vnumber"
 	"github.com/SladeThe/yav/vstring"
-	"github.com/SladeThe/yav/vstruct"
 )
 
 var (
@@ -129,7 +128,7 @@ func (a Account) Validate() error {
 			vmap.OmitEmpty[map[Size][]byte],
 			vmap.Between[map[Size][]byte](3, 10),
 			vmap.Keys[map[Size][]byte](
-				vstruct.Validate[Size],
+				yav.CallValidate[Size],
 			),
 			vmap.Values[map[Size][]byte](
 				vbytes.Required,

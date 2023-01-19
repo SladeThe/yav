@@ -4,6 +4,10 @@ import (
 	"go.uber.org/multierr"
 )
 
+type Validatable interface {
+	Validate() error
+}
+
 type ValidateFunc[T any] func(name string, value T) (stop bool, err error)
 
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
@@ -60,4 +64,14 @@ func Nested(name string, err error) error {
 	}
 
 	return combinedErr
+}
+
+func CallValidate[T Validatable](_ string, value T) (stop bool, err error) {
+	err = value.Validate()
+	return err != nil, err
+}
+
+func NestedCallValidate[T Validatable](name string, value T) (stop bool, err error) {
+	err = value.Validate()
+	return err != nil, Nested(name, err)
 }
