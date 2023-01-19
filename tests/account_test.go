@@ -28,8 +28,7 @@ func (s Size) Validate() error {
 		yav.Chain(
 			"width", s.Width,
 			vnumber.Required[uint16],
-			vnumber.MinUint16(32),
-			vnumber.MaxUint16(512),
+			vnumber.BetweenUint16(32, 512),
 		),
 		yav.Chain(
 			"height", s.Height,
