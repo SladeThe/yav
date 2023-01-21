@@ -27,6 +27,10 @@ func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error 
 }
 
 func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
+	if len(validateFuncs) == 1 {
+		return validateFuncs[0]
+	}
+
 	return func(name string, value T) (stop bool, err error) {
 		for _, validateFunc := range validateFuncs {
 			if stop, err = validateFunc(name, value); err == nil {
@@ -35,6 +39,30 @@ func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 		}
 
 		return
+	}
+}
+
+func Or2[T any](validateFunc1, validateFunc2 ValidateFunc[T]) ValidateFunc[T] {
+	return func(name string, value T) (stop bool, err error) {
+		if stop, err = validateFunc1(name, value); err == nil {
+			return
+		}
+
+		return validateFunc2(name, value)
+	}
+}
+
+func Or3[T any](validateFunc1, validateFunc2, validateFunc3 ValidateFunc[T]) ValidateFunc[T] {
+	return func(name string, value T) (stop bool, err error) {
+		if stop, err = validateFunc1(name, value); err == nil {
+			return
+		}
+
+		if stop, err = validateFunc2(name, value); err == nil {
+			return
+		}
+
+		return validateFunc3(name, value)
 	}
 }
 
