@@ -9,14 +9,25 @@ func Unique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop 
 		return false, nil
 	}
 
-	m := make(map[V]struct{}, len(value))
+	m := make(map[V]struct{}, len(value)-1)
+
+	expectedLength := 0
 
 	for _, v := range value {
-		if _, ok := m[v]; ok {
-			return true, internal.ErrUnique(name, value)
+		if expectedLength == len(value)-1 {
+			if _, ok := m[v]; ok {
+				return true, internal.ErrUnique(name, value)
+			}
+
+			return false, nil
 		}
 
-		m[v] = struct{}{} // TODO do not add the last, also reduce map capacity + benchmark
+		m[v] = struct{}{}
+		expectedLength++
+
+		if len(m) != expectedLength {
+			return true, internal.ErrUnique(name, value)
+		}
 	}
 
 	return false, nil

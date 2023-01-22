@@ -27,14 +27,21 @@ func Unique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
 			return true, internal.ErrUnique(name, value)
 		}
 	default:
-		m := make(map[T]struct{}, len(value))
+		m := make(map[T]struct{}, len(value)-1)
 
-		for _, item := range value {
-			if _, ok := m[item]; ok {
+		expectedLength := 0
+
+		for _, item := range value[:len(value)-1] {
+			m[item] = struct{}{}
+			expectedLength++
+
+			if len(m) != expectedLength {
 				return true, internal.ErrUnique(name, value)
 			}
+		}
 
-			m[item] = struct{}{} // TODO do not add the last, also reduce map capacity + benchmark
+		if _, ok := m[value[len(value)-1]]; ok {
+			return true, internal.ErrUnique(name, value)
 		}
 	}
 
