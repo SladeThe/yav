@@ -131,7 +131,7 @@ func TestUnique(t *testing.T) {
 			},
 		},
 	}, {
-		name: "duplicate 6",
+		name: "duplicate 6a",
 		args: args{
 			name:  "s",
 			value: []uint{5, 4, 3, 2, 1, 1},
@@ -142,6 +142,20 @@ func TestUnique(t *testing.T) {
 				CheckName: "unique",
 				ValueName: "s",
 				Value:     []uint{5, 4, 3, 2, 1, 1},
+			},
+		},
+	}, {
+		name: "duplicate 6b",
+		args: args{
+			name:  "s",
+			value: []uint{1, 1, 2, 3, 4, 5},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "unique",
+				ValueName: "s",
+				Value:     []uint{1, 1, 2, 3, 4, 5},
 			},
 		},
 	}}
