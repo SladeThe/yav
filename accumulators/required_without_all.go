@@ -44,6 +44,11 @@ func (r RequiredWithoutAll[T]) Time(value time.Time) RequiredWithoutAll[T] {
 	return r
 }
 
+func (r RequiredWithoutAll[T]) Zeroer(value yav.Zeroer) RequiredWithoutAll[T] {
+	r.required = r.required && value.IsZero()
+	return r
+}
+
 func (r RequiredWithoutAll[T]) Bool(value bool) RequiredWithoutAll[T] {
 	r.required = r.required && !value
 	return r

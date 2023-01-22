@@ -8,6 +8,10 @@ type Validatable interface {
 	Validate() error
 }
 
+type Zeroer interface {
+	IsZero() bool
+}
+
 type ValidateFunc[T any] func(name string, value T) (stop bool, err error)
 
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
