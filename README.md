@@ -277,9 +277,9 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 #### Account struct validation
 
 ```
-BenchmarkYAV                562638        2127 ns/op        123 B/op        4 allocs/op
-BenchmarkOzzo*               64515       17206 ns/op      15487 B/op      253 allocs/op
-BenchmarkPlayground         189013        6204 ns/op        587 B/op       21 allocs/op
+BenchmarkYAV                726290        1598 ns/op        123 B/op        4 allocs/op
+BenchmarkOzzo*               74018       15931 ns/op      15520 B/op      253 allocs/op
+BenchmarkPlayground         195158        6138 ns/op        587 B/op       21 allocs/op
 ```
 
 #### Notes
