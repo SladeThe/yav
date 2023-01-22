@@ -1,0 +1,3 @@
+test:
+	go test -v -coverpkg ./... -covermode=atomic -coverprofile cover.out -timeout 5m ./...
+	go tool cover -func cover.out | grep total && unlink cover.out
