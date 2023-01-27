@@ -255,7 +255,18 @@ UUID
 #### Time
 
 ```
--
+Min
+Max
+Between
+LessThan
+LessThanOrEqual
+GreaterThan
+GreaterThanOrEqual
+
+LessThanNamed
+LessThanOrEqualNamed
+GreaterThanNamed
+GreaterThanOrEqualNamed
 ```
 
 ## Benchmarks
@@ -277,9 +288,9 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 #### Account struct validation
 
 ```
-BenchmarkYAV                726290        1598 ns/op        123 B/op        4 allocs/op
-BenchmarkOzzo*               74018       15931 ns/op      15520 B/op      253 allocs/op
-BenchmarkPlayground         195158        6138 ns/op        587 B/op       21 allocs/op
+BenchmarkYAV                729123        1658 ns/op        123 B/op        4 allocs/op
+BenchmarkOzzo*               54954       21684 ns/op      19215 B/op      317 allocs/op
+BenchmarkPlayground         172633        6789 ns/op        653 B/op       23 allocs/op
 ```
 
 #### Notes

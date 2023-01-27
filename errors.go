@@ -19,6 +19,11 @@ const (
 	CheckNameLessThan           = "lt"
 	CheckNameLessThanOrEqual    = "lte"
 
+	CheckNameGreaterThanNamed        = "gtfield"
+	CheckNameGreaterThanOrEqualNamed = "gtefield"
+	CheckNameLessThanNamed           = "ltfield"
+	CheckNameLessThanOrEqualNamed    = "ltefield"
+
 	CheckNameEqual  = "eq"
 	CheckNameOneOf  = "oneof"
 	CheckNameUnique = "unique"

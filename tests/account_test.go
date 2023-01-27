@@ -1,6 +1,8 @@
 package tests
 
 import (
+	"time"
+
 	"github.com/asaskevich/govalidator"
 	ozzo "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -11,6 +13,7 @@ import (
 	"github.com/SladeThe/yav/vmap"
 	"github.com/SladeThe/yav/vnumber"
 	"github.com/SladeThe/yav/vstring"
+	"github.com/SladeThe/yav/vtime"
 )
 
 var (
@@ -76,6 +79,9 @@ type Account struct {
 	LastName  string `json:"lastName" validate:"omitempty,min=2,max=30,alpha,starts_with_upper_alpha,ends_with_lower_alpha"`
 
 	DisplayName string `json:"displayName" validate:"required_without_all=FirstName LastName,omitempty,min=2,max=50,title,alpha,uppercase"`
+
+	CreatedAt time.Time `json:"createdAt" validate:"required,ltefield=UpdatedAt"`
+	UpdatedAt time.Time `json:"updatedAt" validate:"required,gtefield=CreatedAt"`
 }
 
 func (a Account) Validate() error {
@@ -127,7 +133,7 @@ func (a Account) Validate() error {
 			vmap.OmitEmpty[map[Size][]byte],
 			vmap.Between[map[Size][]byte](3, 10),
 			vmap.Keys[map[Size][]byte](
-				yav.CallValidate[Size],
+				yav.UnnamedValidate[Size],
 			),
 			vmap.Values[map[Size][]byte](
 				vbytes.Required,
@@ -167,6 +173,16 @@ func (a Account) Validate() error {
 			vstring.Title,
 			vstring.Alpha,
 			vstring.Uppercase,
+		),
+		yav.Chain(
+			"createdAt", a.CreatedAt,
+			vtime.Required,
+			vtime.LessThanOrEqualNamed("UpdatedAt", a.UpdatedAt),
+		),
+		yav.Chain(
+			"updatedAt", a.UpdatedAt,
+			vtime.Required,
+			vtime.GreaterThanOrEqualNamed("CreatedAt", a.CreatedAt),
 		),
 	)
 }
@@ -247,6 +263,16 @@ func (a Account) OzzoValidate() error {
 			is.Alpha,
 			is.UpperCase,
 		),
+		ozzo.Field(
+			&a.CreatedAt,
+			ozzo.Required,
+			ozzo.Max(a.UpdatedAt),
+		),
+		ozzo.Field(
+			&a.UpdatedAt,
+			ozzo.Required,
+			ozzo.Min(a.CreatedAt),
+		),
 	)
 }
 
@@ -260,6 +286,8 @@ func ValidAccount() Account {
 		Age:         18,
 		Secret:      "secure",
 		DisplayName: "YAV",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 
 	a.Avatars = make(map[Size][]byte)

@@ -59,7 +59,12 @@ func withKeyName[K any](name string, key K, err error) error {
 			return err
 		}
 
-		validationErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, validationErr.ValueName[len(name):])
+		if len(validationErr.ValueName) > len(name) && validationErr.ValueName[len(name)] != '.' {
+			validationErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, validationErr.ValueName[len(name):])
+		} else {
+			validationErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, validationErr.ValueName[len(name):])
+		}
+
 		return validationErr
 	}
 

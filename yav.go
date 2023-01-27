@@ -80,7 +80,12 @@ func Nested(name string, err error) error {
 			return err
 		}
 
-		validationErr.ValueName = name + "." + validationErr.ValueName
+		if validationErr.ValueName[0] == '[' {
+			validationErr.ValueName = name + validationErr.ValueName
+		} else {
+			validationErr.ValueName = name + "." + validationErr.ValueName
+		}
+
 		return validationErr
 	}
 
@@ -98,12 +103,12 @@ func Nested(name string, err error) error {
 	return combinedErr
 }
 
-func CallValidate[T Validatable](_ string, value T) (stop bool, err error) {
+func UnnamedValidate[T Validatable](_ string, value T) (stop bool, err error) {
 	err = value.Validate()
 	return err != nil, err
 }
 
-func NestedCallValidate[T Validatable](name string, value T) (stop bool, err error) {
+func NestedValidate[T Validatable](name string, value T) (stop bool, err error) {
 	err = value.Validate()
 	return err != nil, Nested(name, err)
 }
