@@ -11,6 +11,7 @@ import (
 var (
 	rfc952Regex  = regexp.MustCompile(`^[a-zA-Z]([a-zA-Z0-9\-]+[.]?)*[a-zA-Z0-9]$`)
 	rfc1123Regex = regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]{0,62})(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,62})*?$`)
+	fqdnRegex    = regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]{0,62})(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,62})*?(\.[a-zA-Z][a-zA-Z0-9]{0,62})\.?$`)
 )
 
 func Hostname(name string, value string) (stop bool, err error) {
@@ -49,6 +50,18 @@ func HostnamePort(name string, value string) (stop bool, err error) {
 
 	if host != "" && !rfc1123Regex.MatchString(host) {
 		return true, errHostnamePort(name, value)
+	}
+
+	return false, nil
+}
+
+func FQDN(name string, value string) (stop bool, err error) {
+	if !fqdnRegex.MatchString(value) {
+		return true, yav.Error{
+			CheckName: yav.CheckNameFQDN,
+			ValueName: name,
+			Value:     value,
+		}
 	}
 
 	return false, nil

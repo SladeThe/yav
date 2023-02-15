@@ -28,6 +28,22 @@ func Required(name string, value []byte) (stop bool, err error) {
 	return false, nil
 }
 
+func RequiredIf(conditionString string, condition bool) yav.ValidateFunc[[]byte] {
+	if !condition {
+		return OmitEmpty
+	}
+
+	return requiredIf(conditionString).validate
+}
+
+func RequiredUnless(conditionString string, condition bool) yav.ValidateFunc[[]byte] {
+	if condition {
+		return OmitEmpty
+	}
+
+	return requiredUnless(conditionString).validate
+}
+
 func RequiredWithAny() accumulators.RequiredWithAny[[]byte] {
 	return accumulators.NewRequiredWithAny(provideRequiredWithAny)
 }
@@ -42,6 +58,34 @@ func RequiredWithAll() accumulators.RequiredWithAll[[]byte] {
 
 func RequiredWithoutAll() accumulators.RequiredWithoutAll[[]byte] {
 	return accumulators.NewRequiredWithoutAll(provideRequiredWithoutAll)
+}
+
+type requiredIf string
+
+func (r requiredIf) validate(name string, value []byte) (stop bool, err error) {
+	if len(value) == 0 {
+		return true, yav.Error{
+			CheckName: yav.CheckNameRequiredIf,
+			Parameter: string(r),
+			ValueName: name,
+		}
+	}
+
+	return false, nil
+}
+
+type requiredUnless string
+
+func (r requiredUnless) validate(name string, value []byte) (stop bool, err error) {
+	if len(value) == 0 {
+		return true, yav.Error{
+			CheckName: yav.CheckNameRequiredUnless,
+			Parameter: string(r),
+			ValueName: name,
+		}
+	}
+
+	return false, nil
 }
 
 func provideRequiredWithAny(names string, required bool) yav.ValidateFunc[[]byte] {

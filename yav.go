@@ -77,10 +77,8 @@ func Nested(name string, err error) error {
 
 	if validationErr, ok := err.(Error); ok {
 		if validationErr.ValueName == "" {
-			return err
-		}
-
-		if validationErr.ValueName[0] == '[' {
+			validationErr.ValueName = name
+		} else if validationErr.ValueName[0] == '[' {
 			validationErr.ValueName = name + validationErr.ValueName
 		} else {
 			validationErr.ValueName = name + "." + validationErr.ValueName

@@ -154,6 +154,8 @@ func (a Account) Validate() error {
 ```
 OmitEmpty
 Required
+RequiredIf
+RequiredUnless
 RequiredWithAny
 RequiredWithoutAny
 RequiredWithAll
@@ -247,9 +249,12 @@ Email
 Hostname
 HostnameRFC1123
 HostnamePort
+FQDN
 URI
 URL
 UUID
+
+Regexp
 ```
 
 #### Time

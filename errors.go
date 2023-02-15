@@ -3,14 +3,26 @@ package yav
 import (
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 const (
 	CheckNameRequired           = "required"
+	CheckNameRequiredIf         = "required_if"
+	CheckNameRequiredUnless     = "required_unless"
 	CheckNameRequiredWithAny    = "required_with"
 	CheckNameRequiredWithoutAny = "required_without"
 	CheckNameRequiredWithAll    = "required_with_all"
 	CheckNameRequiredWithoutAll = "required_without_all"
+
+	// TODO excluded
+
+	CheckNameExcludedIf         = "excluded_if"
+	CheckNameExcludedUnless     = "excluded_unless"
+	CheckNameExcludedWithAny    = "excluded_with"
+	CheckNameExcludedWithoutAny = "excluded_without"
+	CheckNameExcludedWithAll    = "excluded_with_all"
+	CheckNameExcludedWithoutAll = "excluded_without_all"
 
 	CheckNameMin                = "min"
 	CheckNameMax                = "max"
@@ -38,9 +50,13 @@ const (
 	CheckNameHostname        = "hostname"         // RFC 952
 	CheckNameHostnameRFC1123 = "hostname_rfc1123" // RFC 1123, DNS name
 	CheckNameHostnamePort    = "hostname_port"    // [RFC 1123]:<port>
+	CheckNameFQDN            = "fqdn"             // RFC 1123, but must contain a non-numerical TLD
+
+	CheckNameRegexp = "regexp"
 
 	CheckNameAlpha        = "alpha"
 	CheckNameAlphanumeric = "alphanum"
+	CheckNameNumeric      = "numeric"
 	CheckNameLowercase    = "lowercase"
 	CheckNameUppercase    = "uppercase"
 
@@ -89,7 +105,7 @@ func (err Error) Is(target error) bool {
 func (err Error) Error() string {
 	if err.CheckName != "" && err.ValueName != "" {
 		if err.Parameter != "" {
-			return fmt.Sprintf("'%s' failed the '%s=%s' check", err.ValueName, err.CheckName, err.Parameter)
+			return fmt.Sprintf("'%s' failed the '%s=%q' check", err.ValueName, err.CheckName, err.Parameter)
 		}
 
 		return fmt.Sprintf("'%s' failed the '%s' check", err.ValueName, err.CheckName)
@@ -99,7 +115,7 @@ func (err Error) Error() string {
 		return fmt.Sprintf("validation failed: %s", err.CheckName)
 	}
 
-	return "unknown error"
+	return "unknown validation error"
 }
 
 func (err Error) WithParameter(parameter string) Error {
@@ -133,6 +149,32 @@ func (err Error) ValueAsString() string {
 		}
 	case fmt.Stringer:
 		return v.String()
+	case bool:
+		return strconv.FormatBool(v)
+	case int8:
+		return strconv.FormatInt(int64(v), 10)
+	case int16:
+		return strconv.FormatInt(int64(v), 10)
+	case int32:
+		return strconv.FormatInt(int64(v), 10)
+	case int64:
+		return strconv.FormatInt(v, 10)
+	case int:
+		return strconv.FormatInt(int64(v), 10)
+	case uint8:
+		return strconv.FormatUint(uint64(v), 10)
+	case uint16:
+		return strconv.FormatUint(uint64(v), 10)
+	case uint32:
+		return strconv.FormatUint(uint64(v), 10)
+	case uint64:
+		return strconv.FormatUint(v, 10)
+	case uint:
+		return strconv.FormatUint(uint64(v), 10)
+	case float32:
+		return strconv.FormatFloat(float64(v), 'g', -1, 32)
+	case float64:
+		return strconv.FormatFloat(v, 'g', -1, 64)
 	}
 
 	return ""

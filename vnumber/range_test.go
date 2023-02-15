@@ -8,8 +8,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/SladeThe/yav"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/SladeThe/yav"
 )
 
 func TestMinInt(t *testing.T) {

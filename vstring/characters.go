@@ -37,6 +37,20 @@ func Alphanumeric(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
+func Numeric(name string, value string) (stop bool, err error) {
+	for _, r := range value {
+		if !common.IsDigit(r) {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNumeric,
+				ValueName: name,
+				Value:     value,
+			}
+		}
+	}
+
+	return false, nil
+}
+
 func Lowercase(name string, value string) (stop bool, err error) {
 	for _, r := range value {
 		if unicode.IsUpper(r) {
