@@ -218,6 +218,7 @@ Max
 Between
 
 Equal
+NotEqual
 OneOf
 
 Alpha

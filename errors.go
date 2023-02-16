@@ -36,9 +36,10 @@ const (
 	CheckNameLessThanNamed           = "ltfield"
 	CheckNameLessThanOrEqualNamed    = "ltefield"
 
-	CheckNameEqual  = "eq"
-	CheckNameOneOf  = "oneof"
-	CheckNameUnique = "unique"
+	CheckNameEqual    = "eq"
+	CheckNameNotEqual = "ne"
+	CheckNameOneOf    = "oneof"
+	CheckNameUnique   = "unique"
 
 	CheckNameEmail = "email"
 	CheckNameE164  = "e164"
