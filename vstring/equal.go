@@ -41,7 +41,6 @@ func (ne notEqual) validate(name string, value string) (stop bool, err error) {
 			CheckName: yav.CheckNameNotEqual,
 			Parameter: string(ne),
 			ValueName: name,
-			Value:     value,
 		}
 	}
 
