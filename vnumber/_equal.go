@@ -2,6 +2,7 @@ package vnumber
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cheekybits/genny/generic"
 
@@ -12,7 +13,8 @@ import (
 type Element generic.Type
 
 var (
-	equalElementFuncs map[Element]yav.ValidateFunc[Element]
+	equalElementFuncs    map[Element]yav.ValidateFunc[Element]
+	notEqualElementFuncs map[Element]yav.ValidateFunc[Element]
 )
 
 func EqualElement(parameter Element) yav.ValidateFunc[Element] {
@@ -21,6 +23,14 @@ func EqualElement(parameter Element) yav.ValidateFunc[Element] {
 	}
 
 	return internal.RegisterMapEntry(&equalElementFuncs, parameter, equalElement(parameter))
+}
+
+func NotEqualElement(parameter Element) yav.ValidateFunc[Element] {
+	if validateFunc, ok := notEqualElementFuncs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualElementFuncs, parameter, notEqualElement(parameter))
 }
 
 func OneOfElement(parameters ...Element) yav.ValidateFunc[Element] {
@@ -60,6 +70,22 @@ func equalElement(parameter Element) yav.ValidateFunc[Element] {
 				Parameter: parameterString,
 				ValueName: name,
 				Value:     value,
+			}
+		}
+
+		return false, nil
+	}
+}
+
+func notEqualElement(parameter Element) yav.ValidateFunc[Element] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value Element) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
 			}
 		}
 

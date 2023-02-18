@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	equalIntFuncs map[int]yav.ValidateFunc[int]
+	equalIntFuncs    map[int]yav.ValidateFunc[int]
+	notEqualIntFuncs map[int]yav.ValidateFunc[int]
 )
 
 func EqualInt(parameter int) yav.ValidateFunc[int] {
@@ -22,6 +23,14 @@ func EqualInt(parameter int) yav.ValidateFunc[int] {
 	}
 
 	return internal.RegisterMapEntry(&equalIntFuncs, parameter, equalInt(parameter))
+}
+
+func NotEqualInt(parameter int) yav.ValidateFunc[int] {
+	if validateFunc, ok := notEqualIntFuncs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualIntFuncs, parameter, notEqualInt(parameter))
 }
 
 func OneOfInt(parameters ...int) yav.ValidateFunc[int] {
@@ -68,8 +77,25 @@ func equalInt(parameter int) yav.ValidateFunc[int] {
 	}
 }
 
+func notEqualInt(parameter int) yav.ValidateFunc[int] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value int) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalInt8Funcs map[int8]yav.ValidateFunc[int8]
+	equalInt8Funcs    map[int8]yav.ValidateFunc[int8]
+	notEqualInt8Funcs map[int8]yav.ValidateFunc[int8]
 )
 
 func EqualInt8(parameter int8) yav.ValidateFunc[int8] {
@@ -78,6 +104,14 @@ func EqualInt8(parameter int8) yav.ValidateFunc[int8] {
 	}
 
 	return internal.RegisterMapEntry(&equalInt8Funcs, parameter, equalInt8(parameter))
+}
+
+func NotEqualInt8(parameter int8) yav.ValidateFunc[int8] {
+	if validateFunc, ok := notEqualInt8Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualInt8Funcs, parameter, notEqualInt8(parameter))
 }
 
 func OneOfInt8(parameters ...int8) yav.ValidateFunc[int8] {
@@ -124,8 +158,25 @@ func equalInt8(parameter int8) yav.ValidateFunc[int8] {
 	}
 }
 
+func notEqualInt8(parameter int8) yav.ValidateFunc[int8] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value int8) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalInt16Funcs map[int16]yav.ValidateFunc[int16]
+	equalInt16Funcs    map[int16]yav.ValidateFunc[int16]
+	notEqualInt16Funcs map[int16]yav.ValidateFunc[int16]
 )
 
 func EqualInt16(parameter int16) yav.ValidateFunc[int16] {
@@ -134,6 +185,14 @@ func EqualInt16(parameter int16) yav.ValidateFunc[int16] {
 	}
 
 	return internal.RegisterMapEntry(&equalInt16Funcs, parameter, equalInt16(parameter))
+}
+
+func NotEqualInt16(parameter int16) yav.ValidateFunc[int16] {
+	if validateFunc, ok := notEqualInt16Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualInt16Funcs, parameter, notEqualInt16(parameter))
 }
 
 func OneOfInt16(parameters ...int16) yav.ValidateFunc[int16] {
@@ -180,8 +239,25 @@ func equalInt16(parameter int16) yav.ValidateFunc[int16] {
 	}
 }
 
+func notEqualInt16(parameter int16) yav.ValidateFunc[int16] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value int16) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalInt32Funcs map[int32]yav.ValidateFunc[int32]
+	equalInt32Funcs    map[int32]yav.ValidateFunc[int32]
+	notEqualInt32Funcs map[int32]yav.ValidateFunc[int32]
 )
 
 func EqualInt32(parameter int32) yav.ValidateFunc[int32] {
@@ -190,6 +266,14 @@ func EqualInt32(parameter int32) yav.ValidateFunc[int32] {
 	}
 
 	return internal.RegisterMapEntry(&equalInt32Funcs, parameter, equalInt32(parameter))
+}
+
+func NotEqualInt32(parameter int32) yav.ValidateFunc[int32] {
+	if validateFunc, ok := notEqualInt32Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualInt32Funcs, parameter, notEqualInt32(parameter))
 }
 
 func OneOfInt32(parameters ...int32) yav.ValidateFunc[int32] {
@@ -236,8 +320,25 @@ func equalInt32(parameter int32) yav.ValidateFunc[int32] {
 	}
 }
 
+func notEqualInt32(parameter int32) yav.ValidateFunc[int32] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value int32) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalInt64Funcs map[int64]yav.ValidateFunc[int64]
+	equalInt64Funcs    map[int64]yav.ValidateFunc[int64]
+	notEqualInt64Funcs map[int64]yav.ValidateFunc[int64]
 )
 
 func EqualInt64(parameter int64) yav.ValidateFunc[int64] {
@@ -246,6 +347,14 @@ func EqualInt64(parameter int64) yav.ValidateFunc[int64] {
 	}
 
 	return internal.RegisterMapEntry(&equalInt64Funcs, parameter, equalInt64(parameter))
+}
+
+func NotEqualInt64(parameter int64) yav.ValidateFunc[int64] {
+	if validateFunc, ok := notEqualInt64Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualInt64Funcs, parameter, notEqualInt64(parameter))
 }
 
 func OneOfInt64(parameters ...int64) yav.ValidateFunc[int64] {
@@ -292,8 +401,25 @@ func equalInt64(parameter int64) yav.ValidateFunc[int64] {
 	}
 }
 
+func notEqualInt64(parameter int64) yav.ValidateFunc[int64] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value int64) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalUintFuncs map[uint]yav.ValidateFunc[uint]
+	equalUintFuncs    map[uint]yav.ValidateFunc[uint]
+	notEqualUintFuncs map[uint]yav.ValidateFunc[uint]
 )
 
 func EqualUint(parameter uint) yav.ValidateFunc[uint] {
@@ -302,6 +428,14 @@ func EqualUint(parameter uint) yav.ValidateFunc[uint] {
 	}
 
 	return internal.RegisterMapEntry(&equalUintFuncs, parameter, equalUint(parameter))
+}
+
+func NotEqualUint(parameter uint) yav.ValidateFunc[uint] {
+	if validateFunc, ok := notEqualUintFuncs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualUintFuncs, parameter, notEqualUint(parameter))
 }
 
 func OneOfUint(parameters ...uint) yav.ValidateFunc[uint] {
@@ -348,8 +482,25 @@ func equalUint(parameter uint) yav.ValidateFunc[uint] {
 	}
 }
 
+func notEqualUint(parameter uint) yav.ValidateFunc[uint] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value uint) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalUint8Funcs map[uint8]yav.ValidateFunc[uint8]
+	equalUint8Funcs    map[uint8]yav.ValidateFunc[uint8]
+	notEqualUint8Funcs map[uint8]yav.ValidateFunc[uint8]
 )
 
 func EqualUint8(parameter uint8) yav.ValidateFunc[uint8] {
@@ -358,6 +509,14 @@ func EqualUint8(parameter uint8) yav.ValidateFunc[uint8] {
 	}
 
 	return internal.RegisterMapEntry(&equalUint8Funcs, parameter, equalUint8(parameter))
+}
+
+func NotEqualUint8(parameter uint8) yav.ValidateFunc[uint8] {
+	if validateFunc, ok := notEqualUint8Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualUint8Funcs, parameter, notEqualUint8(parameter))
 }
 
 func OneOfUint8(parameters ...uint8) yav.ValidateFunc[uint8] {
@@ -404,8 +563,25 @@ func equalUint8(parameter uint8) yav.ValidateFunc[uint8] {
 	}
 }
 
+func notEqualUint8(parameter uint8) yav.ValidateFunc[uint8] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value uint8) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalUint16Funcs map[uint16]yav.ValidateFunc[uint16]
+	equalUint16Funcs    map[uint16]yav.ValidateFunc[uint16]
+	notEqualUint16Funcs map[uint16]yav.ValidateFunc[uint16]
 )
 
 func EqualUint16(parameter uint16) yav.ValidateFunc[uint16] {
@@ -414,6 +590,14 @@ func EqualUint16(parameter uint16) yav.ValidateFunc[uint16] {
 	}
 
 	return internal.RegisterMapEntry(&equalUint16Funcs, parameter, equalUint16(parameter))
+}
+
+func NotEqualUint16(parameter uint16) yav.ValidateFunc[uint16] {
+	if validateFunc, ok := notEqualUint16Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualUint16Funcs, parameter, notEqualUint16(parameter))
 }
 
 func OneOfUint16(parameters ...uint16) yav.ValidateFunc[uint16] {
@@ -460,8 +644,25 @@ func equalUint16(parameter uint16) yav.ValidateFunc[uint16] {
 	}
 }
 
+func notEqualUint16(parameter uint16) yav.ValidateFunc[uint16] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value uint16) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalUint32Funcs map[uint32]yav.ValidateFunc[uint32]
+	equalUint32Funcs    map[uint32]yav.ValidateFunc[uint32]
+	notEqualUint32Funcs map[uint32]yav.ValidateFunc[uint32]
 )
 
 func EqualUint32(parameter uint32) yav.ValidateFunc[uint32] {
@@ -470,6 +671,14 @@ func EqualUint32(parameter uint32) yav.ValidateFunc[uint32] {
 	}
 
 	return internal.RegisterMapEntry(&equalUint32Funcs, parameter, equalUint32(parameter))
+}
+
+func NotEqualUint32(parameter uint32) yav.ValidateFunc[uint32] {
+	if validateFunc, ok := notEqualUint32Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualUint32Funcs, parameter, notEqualUint32(parameter))
 }
 
 func OneOfUint32(parameters ...uint32) yav.ValidateFunc[uint32] {
@@ -516,8 +725,25 @@ func equalUint32(parameter uint32) yav.ValidateFunc[uint32] {
 	}
 }
 
+func notEqualUint32(parameter uint32) yav.ValidateFunc[uint32] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value uint32) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalUint64Funcs map[uint64]yav.ValidateFunc[uint64]
+	equalUint64Funcs    map[uint64]yav.ValidateFunc[uint64]
+	notEqualUint64Funcs map[uint64]yav.ValidateFunc[uint64]
 )
 
 func EqualUint64(parameter uint64) yav.ValidateFunc[uint64] {
@@ -526,6 +752,14 @@ func EqualUint64(parameter uint64) yav.ValidateFunc[uint64] {
 	}
 
 	return internal.RegisterMapEntry(&equalUint64Funcs, parameter, equalUint64(parameter))
+}
+
+func NotEqualUint64(parameter uint64) yav.ValidateFunc[uint64] {
+	if validateFunc, ok := notEqualUint64Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualUint64Funcs, parameter, notEqualUint64(parameter))
 }
 
 func OneOfUint64(parameters ...uint64) yav.ValidateFunc[uint64] {
@@ -572,8 +806,25 @@ func equalUint64(parameter uint64) yav.ValidateFunc[uint64] {
 	}
 }
 
+func notEqualUint64(parameter uint64) yav.ValidateFunc[uint64] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value uint64) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalFloat32Funcs map[float32]yav.ValidateFunc[float32]
+	equalFloat32Funcs    map[float32]yav.ValidateFunc[float32]
+	notEqualFloat32Funcs map[float32]yav.ValidateFunc[float32]
 )
 
 func EqualFloat32(parameter float32) yav.ValidateFunc[float32] {
@@ -582,6 +833,14 @@ func EqualFloat32(parameter float32) yav.ValidateFunc[float32] {
 	}
 
 	return internal.RegisterMapEntry(&equalFloat32Funcs, parameter, equalFloat32(parameter))
+}
+
+func NotEqualFloat32(parameter float32) yav.ValidateFunc[float32] {
+	if validateFunc, ok := notEqualFloat32Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualFloat32Funcs, parameter, notEqualFloat32(parameter))
 }
 
 func OneOfFloat32(parameters ...float32) yav.ValidateFunc[float32] {
@@ -628,8 +887,25 @@ func equalFloat32(parameter float32) yav.ValidateFunc[float32] {
 	}
 }
 
+func notEqualFloat32(parameter float32) yav.ValidateFunc[float32] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value float32) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
+			}
+		}
+
+		return false, nil
+	}
+}
+
 var (
-	equalFloat64Funcs map[float64]yav.ValidateFunc[float64]
+	equalFloat64Funcs    map[float64]yav.ValidateFunc[float64]
+	notEqualFloat64Funcs map[float64]yav.ValidateFunc[float64]
 )
 
 func EqualFloat64(parameter float64) yav.ValidateFunc[float64] {
@@ -638,6 +914,14 @@ func EqualFloat64(parameter float64) yav.ValidateFunc[float64] {
 	}
 
 	return internal.RegisterMapEntry(&equalFloat64Funcs, parameter, equalFloat64(parameter))
+}
+
+func NotEqualFloat64(parameter float64) yav.ValidateFunc[float64] {
+	if validateFunc, ok := notEqualFloat64Funcs[parameter]; ok {
+		return validateFunc
+	}
+
+	return internal.RegisterMapEntry(&notEqualFloat64Funcs, parameter, notEqualFloat64(parameter))
 }
 
 func OneOfFloat64(parameters ...float64) yav.ValidateFunc[float64] {
@@ -677,6 +961,22 @@ func equalFloat64(parameter float64) yav.ValidateFunc[float64] {
 				Parameter: parameterString,
 				ValueName: name,
 				Value:     value,
+			}
+		}
+
+		return false, nil
+	}
+}
+
+func notEqualFloat64(parameter float64) yav.ValidateFunc[float64] {
+	parameterString := fmt.Sprintf("%v", parameter)
+
+	return func(name string, value float64) (stop bool, err error) {
+		if value == parameter {
+			return true, yav.Error{
+				CheckName: yav.CheckNameNotEqual,
+				Parameter: parameterString,
+				ValueName: name,
 			}
 		}
 

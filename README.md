@@ -195,6 +195,7 @@ GreaterThan
 GreaterThanOrEqual
 
 Equal
+NotEqual
 OneOf
 ```
 
