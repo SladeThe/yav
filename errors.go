@@ -15,8 +15,6 @@ const (
 	CheckNameRequiredWithAll    = "required_with_all"
 	CheckNameRequiredWithoutAll = "required_without_all"
 
-	// TODO excluded
-
 	CheckNameExcludedIf         = "excluded_if"
 	CheckNameExcludedUnless     = "excluded_unless"
 	CheckNameExcludedWithAny    = "excluded_with"
@@ -99,8 +97,16 @@ func IsError(err error) bool {
 }
 
 func (err Error) Is(target error) bool {
+	var validationErr Error
+
+	if !errors.As(target, &validationErr) {
+		return false
+	}
+
+	validationErr.Value = nil
 	err.Value = nil
-	return err == target
+
+	return err == validationErr
 }
 
 func (err Error) Error() string {

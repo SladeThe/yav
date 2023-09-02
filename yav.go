@@ -14,6 +14,10 @@ type Zeroer interface {
 
 type ValidateFunc[T any] func(name string, value T) (stop bool, err error)
 
+func Next[T any](string, T) (stop bool, err error) {
+	return false, nil
+}
+
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
 	var combinedErr error
 
