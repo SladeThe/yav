@@ -12,7 +12,7 @@ import (
 
 type Element generic.Type
 
-func TestRequiredWithAnyElement(t *testing.T) {
+func TestExcludedWithAnyElement(t *testing.T) {
 	type args struct {
 		parameters []int
 		name       string
@@ -26,7 +26,7 @@ func TestRequiredWithAnyElement(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithAnyElement()
+			accumulator := ExcludedWithAnyElement()
 
 			for _, parameter := range a.parameters {
 				accumulator = accumulator.Int(parameter)
@@ -43,37 +43,37 @@ func TestRequiredWithAnyElement(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
+		name: "not empty excluded",
 		args: args{
 			parameters: []int{-1, 0},
 			name:       "v",
-			value:      0,
+			value:      1,
 		},
 		want: want{
 			stop: true,
 			err: yav.Error{
-				CheckName: yav.CheckNameRequiredWithAny,
+				CheckName: yav.CheckNameExcludedWithAny,
 				Parameter: "pp",
 				ValueName: "v",
 			},
 		},
 	}, {
-		name: "empty not required",
+		name: "not empty not excluded",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
-			value:      0,
+			value:      1,
 		},
 		want: want{
-			stop: true,
+			stop: false,
 			err:  nil,
 		},
 	}, {
-		name: "not empty",
+		name: "empty",
 		args: args{
 			parameters: []int{1},
 			name:       "v",
-			value:      1,
+			value:      0,
 		},
 		want: want{
 			stop: false,

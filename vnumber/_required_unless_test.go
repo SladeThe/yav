@@ -54,7 +54,7 @@ func TestRequiredUnlessElement(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",

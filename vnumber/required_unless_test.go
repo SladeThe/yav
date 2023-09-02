@@ -55,7 +55,7 @@ func TestRequiredUnlessInt(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -127,7 +127,7 @@ func TestRequiredUnlessInt8(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -199,7 +199,7 @@ func TestRequiredUnlessInt16(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -271,7 +271,7 @@ func TestRequiredUnlessInt32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -343,7 +343,7 @@ func TestRequiredUnlessInt64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -415,7 +415,7 @@ func TestRequiredUnlessUint(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -487,7 +487,7 @@ func TestRequiredUnlessUint8(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -559,7 +559,7 @@ func TestRequiredUnlessUint16(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -631,7 +631,7 @@ func TestRequiredUnlessUint32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -703,7 +703,7 @@ func TestRequiredUnlessUint64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -775,7 +775,7 @@ func TestRequiredUnlessFloat32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
@@ -847,7 +847,7 @@ func TestRequiredUnlessFloat64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",

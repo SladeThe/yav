@@ -59,7 +59,7 @@ func TestRequiredWithAnyInt(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -133,7 +133,7 @@ func TestRequiredWithAnyInt8(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -207,7 +207,7 @@ func TestRequiredWithAnyInt16(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -281,7 +281,7 @@ func TestRequiredWithAnyInt32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -355,7 +355,7 @@ func TestRequiredWithAnyInt64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -429,7 +429,7 @@ func TestRequiredWithAnyUint(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -503,7 +503,7 @@ func TestRequiredWithAnyUint8(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -577,7 +577,7 @@ func TestRequiredWithAnyUint16(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -651,7 +651,7 @@ func TestRequiredWithAnyUint32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -725,7 +725,7 @@ func TestRequiredWithAnyUint64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -799,7 +799,7 @@ func TestRequiredWithAnyFloat32(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
@@ -873,7 +873,7 @@ func TestRequiredWithAnyFloat64(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",

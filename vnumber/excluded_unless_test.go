@@ -13,7 +13,7 @@ import (
 	"github.com/SladeThe/yav"
 )
 
-func TestRequiredIfInt(t *testing.T) {
+func TestExcludedUnlessInt(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -28,7 +28,7 @@ func TestRequiredIfInt(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfInt(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessInt(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -39,40 +39,40 @@ func TestRequiredIfInt(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -85,7 +85,7 @@ func TestRequiredIfInt(t *testing.T) {
 	}
 }
 
-func TestRequiredIfInt8(t *testing.T) {
+func TestExcludedUnlessInt8(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -100,7 +100,7 @@ func TestRequiredIfInt8(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfInt8(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessInt8(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -111,40 +111,40 @@ func TestRequiredIfInt8(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -157,7 +157,7 @@ func TestRequiredIfInt8(t *testing.T) {
 	}
 }
 
-func TestRequiredIfInt16(t *testing.T) {
+func TestExcludedUnlessInt16(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -172,7 +172,7 @@ func TestRequiredIfInt16(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfInt16(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessInt16(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -183,40 +183,40 @@ func TestRequiredIfInt16(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -229,7 +229,7 @@ func TestRequiredIfInt16(t *testing.T) {
 	}
 }
 
-func TestRequiredIfInt32(t *testing.T) {
+func TestExcludedUnlessInt32(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -244,7 +244,7 @@ func TestRequiredIfInt32(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfInt32(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessInt32(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -255,40 +255,40 @@ func TestRequiredIfInt32(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -301,7 +301,7 @@ func TestRequiredIfInt32(t *testing.T) {
 	}
 }
 
-func TestRequiredIfInt64(t *testing.T) {
+func TestExcludedUnlessInt64(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -316,7 +316,7 @@ func TestRequiredIfInt64(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfInt64(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessInt64(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -327,40 +327,40 @@ func TestRequiredIfInt64(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -373,7 +373,7 @@ func TestRequiredIfInt64(t *testing.T) {
 	}
 }
 
-func TestRequiredIfUint(t *testing.T) {
+func TestExcludedUnlessUint(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -388,7 +388,7 @@ func TestRequiredIfUint(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfUint(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessUint(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -399,40 +399,40 @@ func TestRequiredIfUint(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -445,7 +445,7 @@ func TestRequiredIfUint(t *testing.T) {
 	}
 }
 
-func TestRequiredIfUint8(t *testing.T) {
+func TestExcludedUnlessUint8(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -460,7 +460,7 @@ func TestRequiredIfUint8(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfUint8(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessUint8(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -471,40 +471,40 @@ func TestRequiredIfUint8(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -517,7 +517,7 @@ func TestRequiredIfUint8(t *testing.T) {
 	}
 }
 
-func TestRequiredIfUint16(t *testing.T) {
+func TestExcludedUnlessUint16(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -532,7 +532,7 @@ func TestRequiredIfUint16(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfUint16(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessUint16(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -543,40 +543,40 @@ func TestRequiredIfUint16(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -589,7 +589,7 @@ func TestRequiredIfUint16(t *testing.T) {
 	}
 }
 
-func TestRequiredIfUint32(t *testing.T) {
+func TestExcludedUnlessUint32(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -604,7 +604,7 @@ func TestRequiredIfUint32(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfUint32(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessUint32(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -615,40 +615,40 @@ func TestRequiredIfUint32(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -661,7 +661,7 @@ func TestRequiredIfUint32(t *testing.T) {
 	}
 }
 
-func TestRequiredIfUint64(t *testing.T) {
+func TestExcludedUnlessUint64(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -676,7 +676,7 @@ func TestRequiredIfUint64(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfUint64(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessUint64(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -687,40 +687,40 @@ func TestRequiredIfUint64(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -733,7 +733,7 @@ func TestRequiredIfUint64(t *testing.T) {
 	}
 }
 
-func TestRequiredIfFloat32(t *testing.T) {
+func TestExcludedUnlessFloat32(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -748,7 +748,7 @@ func TestRequiredIfFloat32(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfFloat32(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessFloat32(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -759,40 +759,40 @@ func TestRequiredIfFloat32(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,
@@ -805,7 +805,7 @@ func TestRequiredIfFloat32(t *testing.T) {
 	}
 }
 
-func TestRequiredIfFloat64(t *testing.T) {
+func TestExcludedUnlessFloat64(t *testing.T) {
 	type args struct {
 		condition       bool
 		conditionString string
@@ -820,7 +820,7 @@ func TestRequiredIfFloat64(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIfFloat64(a.conditionString, a.condition)(a.name, a.value)
+			stop, err := ExcludedUnlessFloat64(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -831,40 +831,40 @@ func TestRequiredIfFloat64(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
-		args: args{
-			condition:       true,
-			conditionString: "a == a",
-			name:            "v",
-			value:           0,
-		},
-		want: want{
-			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequiredIf,
-				Parameter: "a == a",
-				ValueName: "v",
-			},
-		},
-	}, {
-		name: "empty not required",
+		name: "not empty excluded",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           0,
+			value:           1,
 		},
 		want: want{
 			stop: true,
-			err:  nil,
+			err: yav.Error{
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
 		},
 	}, {
-		name: "not empty",
+		name: "not empty not excluded",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
 			value:           1,
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,

@@ -160,6 +160,12 @@ RequiredWithAny
 RequiredWithoutAny
 RequiredWithAll
 RequiredWithoutAll
+ExcludedIf
+ExcludedUnless
+ExcludedWithAny
+ExcludedWithoutAny
+ExcludedWithAll
+ExcludedWithoutAll
 ```
 
 #### Bytes

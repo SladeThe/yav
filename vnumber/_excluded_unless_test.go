@@ -12,11 +12,12 @@ import (
 
 type Element generic.Type
 
-func TestRequiredWithAnyElement(t *testing.T) {
+func TestExcludedUnlessElement(t *testing.T) {
 	type args struct {
-		parameters []int
-		name       string
-		value      Element
+		condition       bool
+		conditionString string
+		name            string
+		value           Element
 	}
 
 	type want struct {
@@ -26,13 +27,7 @@ func TestRequiredWithAnyElement(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithAnyElement()
-
-			for _, parameter := range a.parameters {
-				accumulator = accumulator.Int(parameter)
-			}
-
-			stop, err := accumulator.Names("pp")(a.name, a.value)
+			stop, err := ExcludedUnlessElement(a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -43,37 +38,40 @@ func TestRequiredWithAnyElement(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "empty required",
+		name: "not empty excluded",
 		args: args{
-			parameters: []int{-1, 0},
-			name:       "v",
-			value:      0,
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           1,
 		},
 		want: want{
 			stop: true,
 			err: yav.Error{
-				CheckName: yav.CheckNameRequiredWithAny,
-				Parameter: "pp",
+				CheckName: yav.CheckNameExcludedUnless,
+				Parameter: "a == b",
 				ValueName: "v",
 			},
 		},
 	}, {
-		name: "empty not required",
+		name: "not empty not excluded",
 		args: args{
-			parameters: []int{0, 0},
-			name:       "v",
-			value:      0,
+			condition:       true,
+			conditionString: "a == a",
+			name:            "v",
+			value:           1,
 		},
 		want: want{
-			stop: true,
+			stop: false,
 			err:  nil,
 		},
 	}, {
-		name: "not empty",
+		name: "empty",
 		args: args{
-			parameters: []int{1},
-			name:       "v",
-			value:      1,
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           0,
 		},
 		want: want{
 			stop: false,

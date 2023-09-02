@@ -58,7 +58,7 @@ func TestRequiredWithAllElement(t *testing.T) {
 			},
 		},
 	}, {
-		name: "empty non required",
+		name: "empty not required",
 		args: args{
 			parameters: []int{-1, 0},
 			name:       "v",
