@@ -308,7 +308,7 @@ BenchmarkPlayground         172633        6789 ns/op        653 B/op       23 al
 
 #### Notes
 
-* The Account in the Examples section is a reduced version of the [benchmarked structure](tests/account_test.go).
+* The Account in the Examples section is a reduced version of the [benchmarked structure](https://github.com/SladeThe/yav-tests/blob/main/account_test.go#L85).
 * Ozzo validator lacks some features available in both YAV and playground validator.
   Therefore, those validation steps were not enabled for ozzo.
 * The YAV is still slower, than a manually written validation boilerplate, but the amount of code differs dramatically.
