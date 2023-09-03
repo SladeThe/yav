@@ -3,8 +3,6 @@ module github.com/SladeThe/yav
 go 1.20
 
 require (
-	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
-	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-playground/validator/v10 v10.15.1
 	github.com/google/uuid v1.3.1
 	github.com/stretchr/testify v1.8.4
