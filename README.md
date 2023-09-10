@@ -2,21 +2,22 @@
 
 Go struct and field validation.
 
-The project is inspired by and is a subset of [go-playground/validator](https://github.com/go-playground/validator). \
-YAV aims to provide playground-like validator configuration and produce compatible errors whenever possible. \
+The project is inspired by [go-playground/validator](https://github.com/go-playground/validator) and uses some of its codebase. \
+YAV aims to provide Playground-like validator configuration and produce compatible errors whenever possible. \
 At the same time, the introduced chained validator improves validation speed dramatically. \
-The playground validator's performance is quite poor due to heavy reflection usage, which YAV strives not to use.
+The Playground validator's performance is quite poor due to heavy reflection usage, which YAV strives not to use.
+
+YAV's key principles:
+- mimic Playground validator whenever possible;
+- make fewer to zero allocations;
+- work fast.
 
 The main drawback of other builder-like validators (e.g. [ozzo](https://github.com/go-ozzo/ozzo-validation)) is that
 they are `interface{}`-based and allocate a lot of memory upon each run.
-Sometimes, it even makes them slower than the playground validator.
+Sometimes, it even makes them slower than the Playground validator.
 
-The repo also includes playground validator wrapper, which converts playground errors to YAV errors,
-so that you can use chained validation along with the playground validator in the same project,
-i.e. using the first one in hot paths and the second one in the places, where YAV still lacks features.
-Also, this approach allows to migrate a project from playground to chained validation part-by-part.
-
-The future plans are to introduce more playground and probably to add YAV's own features.
+Unlike in earlier versions, the repo no longer includes Playground validator wrapper in order to reduce the number
+of 3rd-party dependencies. The removed code still can be found in [yav-tests](https://github.com/SladeThe/yav-tests).
 
 ## Examples
 
@@ -92,33 +93,32 @@ func (a Account) Validate() error {
 }
 ```
 
-#### Compare YAV and playground validator
+#### Compare YAV and Playground validator
 
-Despite the YAV's playground wrapper registers JSON tags as field names using `RegisterTagNameFunc`,
-the validator ignores it in `required_with/without` constructs.
-Therefore, we pass uppercase `"Login"` to `vstring.RequiredWithAny` in order to produce playground-compatible errors.
-If full compatibility is not required, pass the field names in whatever style you prefer.
+Here we pass to YAV Go-like field names in order to produce Playground-compatible errors. \
+YAV doesn't anyhow use it, except while building validation errors. \
+If compatibility is not required, pass the field names in whatever style you prefer.
 
 ```go
 type Account struct {
-    ID string `json:"id" validate:"required,uuid"`
+    ID string `validate:"required,uuid"`
     
-    Login    string `json:"login" validate:"required,min=4,max=20,alphanum,lowercase"`
-    Password string `json:"password" validate:"required_with=Login,omitempty,min=8,max=32,text"`
+    Login    string `validate:"required,min=4,max=20,alphanum,lowercase"`
+    Password string `validate:"required_with=Login,omitempty,min=8,max=32,text"`
     
-    Email string `json:"email" validate:"required,min=6,max=100,email"`
-    Phone string `json:"phone" validate:"required,min=8,max=16,e164"`
+    Email string `validate:"required,min=6,max=100,email"`
+    Phone string `validate:"required,min=8,max=16,e164"`
 }
 
 func (a Account) Validate() error {
 	return yav.Join(
 		yav.Chain(
-			"id", a.ID,
+			"ID", a.ID,
 			vstring.Required,
 			vstring.UUID,
 		),
 		yav.Chain(
-			"login", a.Login,
+			"Login", a.Login,
 			vstring.Required,
 			vstring.Min(4),
 			vstring.Max(20),
@@ -126,19 +126,19 @@ func (a Account) Validate() error {
 			vstring.Lowercase,
 		),
 		yav.Chain(
-			"password", a.Password,
+			"Password", a.Password,
 			vstring.RequiredWithAny().String(a.Login).Names("Login"),
 			vstring.Between(8, 32),
 			vstring.Text,
 		),
 		yav.Chain(
-			"email", a.Email,
+			"Email", a.Email,
 			vstring.Required,
 			vstring.Between(6, 100),
 			vstring.Email,
 		),
 		yav.Chain(
-			"phone", a.Phone,
+			"Phone", a.Phone,
 			vstring.Required,
 			vstring.Between(8, 16),
 			vstring.E164,
@@ -309,6 +309,6 @@ BenchmarkPlayground         172633        6789 ns/op        653 B/op       23 al
 #### Notes
 
 * The Account in the Examples section is a reduced version of the [benchmarked structure](https://github.com/SladeThe/yav-tests/blob/main/account_test.go#L85).
-* Ozzo validator lacks some features available in both YAV and playground validator.
+* Ozzo validator lacks some features available in both YAV and Playground validator.
   Therefore, those validation steps were not enabled for ozzo.
 * The YAV is still slower, than a manually written validation boilerplate, but the amount of code differs dramatically.
