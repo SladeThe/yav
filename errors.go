@@ -193,6 +193,26 @@ type Errors struct {
 	Validation []Error
 }
 
+func (errs Errors) Is(target error) bool {
+	if yavErrs, ok := target.(Errors); ok && errs.IsZero() && yavErrs.IsZero() {
+		return true
+	}
+
+	for _, err := range errs.Unknown {
+		if errors.Is(err, target) {
+			return true
+		}
+	}
+
+	for _, yavErr := range errs.Validation {
+		if yavErr.Is(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (errs Errors) IsZero() bool {
 	return len(errs.Unknown)+len(errs.Validation) == 0
 }
