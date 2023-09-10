@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"strings"
 
-	"go.uber.org/multierr"
-
 	"github.com/SladeThe/yav"
 )
 
 func Items[S ~[]T, T any](validateFuncs ...yav.ValidateFunc[T]) yav.ValidateFunc[S] {
 	return func(name string, value S) (stop bool, err error) {
+		var yavErrs yav.Errors
+
 		for i, v := range value {
-			multierr.AppendInto(&err, itemChain(name, i, v, validateFuncs))
+			yavErrs.Append(itemChain(name, i, v, validateFuncs))
 		}
 
-		return
+		return false, yavErrs.AsError()
 	}
 }
 
@@ -34,25 +34,30 @@ func withIndex(name string, index int, err error) error {
 		return nil
 	}
 
-	if validationErr, ok := err.(yav.Error); ok {
-		if !strings.HasPrefix(validationErr.ValueName, name) {
-			return err
+	switch typedErr := err.(type) {
+	case yav.Error:
+		return withIndexYAV(name, index, typedErr)
+	case yav.Errors:
+		for i, yavErr := range typedErr.Validation {
+			typedErr.Validation[i] = withIndexYAV(name, index, yavErr)
 		}
 
-		validationErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, validationErr.ValueName[len(name):])
-		return validationErr
-	}
-
-	partialErrs := multierr.Errors(err)
-	if len(partialErrs) <= 1 {
+		return typedErr
+	default:
 		return err
 	}
+}
 
-	var combinedErr error
-
-	for _, partialErr := range partialErrs {
-		multierr.AppendInto(&combinedErr, withIndex(name, index, partialErr))
+func withIndexYAV(name string, index int, yavErr yav.Error) yav.Error {
+	if !strings.HasPrefix(yavErr.ValueName, name) {
+		return yavErr
 	}
 
-	return combinedErr
+	if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
+		yavErr.ValueName = fmt.Sprintf("%s[%d].%s", name, index, yavErr.ValueName[len(name):])
+	} else {
+		yavErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, yavErr.ValueName[len(name):])
+	}
+
+	return yavErr
 }

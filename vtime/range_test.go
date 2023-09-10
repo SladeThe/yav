@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/multierr"
 
 	"github.com/SladeThe/yav"
 )
@@ -459,7 +458,7 @@ func BenchmarkRange(b *testing.B) {
 	var err error
 
 	for i := 0; i < b.N; i++ {
-		err = multierr.Combine(
+		err = yav.Join(
 			yav.Chain(
 				"now", now,
 				Min(now),

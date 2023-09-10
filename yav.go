@@ -1,9 +1,5 @@
 package yav
 
-import (
-	"go.uber.org/multierr"
-)
-
 type Validatable interface {
 	Validate() error
 }
@@ -19,19 +15,17 @@ func Next[T any](string, T) (stop bool, err error) {
 }
 
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
-	var combinedErr error
+	var yavErrs Errors
 
 	for _, validateFunc := range validateFuncs {
 		stop, err := validateFunc(name, value)
-		if err != nil {
-			multierr.AppendInto(&combinedErr, err)
-		}
+		yavErrs.Append(err)
 		if stop {
 			break
 		}
 	}
 
-	return combinedErr
+	return yavErrs.AsError()
 }
 
 func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
@@ -79,30 +73,30 @@ func Nested(name string, err error) error {
 		return nil
 	}
 
-	if validationErr, ok := err.(Error); ok {
-		if validationErr.ValueName == "" {
-			validationErr.ValueName = name
-		} else if validationErr.ValueName[0] == '[' {
-			validationErr.ValueName = name + validationErr.ValueName
-		} else {
-			validationErr.ValueName = name + "." + validationErr.ValueName
+	switch typedErr := err.(type) {
+	case Error:
+		return nestedYAV(name, typedErr)
+	case Errors:
+		for i, yavErr := range typedErr.Validation {
+			typedErr.Validation[i] = nestedYAV(name, yavErr)
 		}
 
-		return validationErr
-	}
-
-	partialErrs := multierr.Errors(err)
-	if len(partialErrs) <= 1 {
+		return typedErr
+	default:
 		return err
 	}
+}
 
-	var combinedErr error
-
-	for _, partialErr := range partialErrs {
-		multierr.AppendInto(&combinedErr, Nested(name, partialErr))
+func nestedYAV(name string, yavErr Error) Error {
+	if yavErr.ValueName == "" {
+		yavErr.ValueName = name
+	} else if yavErr.ValueName[0] == '[' {
+		yavErr.ValueName = name + yavErr.ValueName
+	} else {
+		yavErr.ValueName = name + "." + yavErr.ValueName
 	}
 
-	return combinedErr
+	return yavErr
 }
 
 func UnnamedValidate[T Validatable](_ string, value T) (stop bool, err error) {

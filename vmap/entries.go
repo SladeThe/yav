@@ -4,28 +4,30 @@ import (
 	"fmt"
 	"strings"
 
-	"go.uber.org/multierr"
-
 	"github.com/SladeThe/yav"
 )
 
 func Keys[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[K]) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
+		var yavErrs yav.Errors
+
 		for k := range value {
-			multierr.AppendInto(&err, keyChain(name, k, validateFuncs))
+			yavErrs.Append(keyChain(name, k, validateFuncs))
 		}
 
-		return
+		return false, yavErrs.AsError()
 	}
 }
 
 func Values[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[V]) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
+		var yavErrs yav.Errors
+
 		for k, v := range value {
-			multierr.AppendInto(&err, valueChain(name, k, v, validateFuncs))
+			yavErrs.Append(valueChain(name, k, v, validateFuncs))
 		}
 
-		return
+		return false, yavErrs.AsError()
 	}
 }
 
@@ -54,30 +56,30 @@ func withKeyName[K any](name string, key K, err error) error {
 		return nil
 	}
 
-	if validationErr, ok := err.(yav.Error); ok {
-		if !strings.HasPrefix(validationErr.ValueName, name) {
-			return err
+	switch typedErr := err.(type) {
+	case yav.Error:
+		return withKeyNameYAV(name, key, typedErr)
+	case yav.Errors:
+		for i, yavErr := range typedErr.Validation {
+			typedErr.Validation[i] = withKeyNameYAV(name, key, yavErr)
 		}
 
-		if len(validationErr.ValueName) > len(name) && validationErr.ValueName[len(name)] != '.' {
-			validationErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, validationErr.ValueName[len(name):])
-		} else {
-			validationErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, validationErr.ValueName[len(name):])
-		}
-
-		return validationErr
-	}
-
-	partialErrs := multierr.Errors(err)
-	if len(partialErrs) <= 1 {
+		return typedErr
+	default:
 		return err
 	}
+}
 
-	var combinedErr error
-
-	for _, partialErr := range partialErrs {
-		multierr.AppendInto(&combinedErr, withKeyName(name, key, partialErr))
+func withKeyNameYAV[K any](name string, key K, yavErr yav.Error) yav.Error {
+	if !strings.HasPrefix(yavErr.ValueName, name) {
+		return yavErr
 	}
 
-	return combinedErr
+	if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
+		yavErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, yavErr.ValueName[len(name):])
+	} else {
+		yavErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, yavErr.ValueName[len(name):])
+	}
+
+	return yavErr
 }

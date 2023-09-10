@@ -41,7 +41,7 @@ func (id AccountID) Validate() error {
 
 #### Combine validation errors
 
-Use [multierr](https://github.com/uber-go/multierr) to combine multiple validation errors.
+Use `yav.Join` to combine multiple validation errors.
 
 ```go
 type Password struct {
@@ -49,7 +49,7 @@ type Password struct {
 }
 
 func (p Password) Validate() error {
-	return multierr.Combine(
+	return yav.Join(
 		yav.Chain(
 			"salt", p.Salt,
 			vbytes.Required,
@@ -78,7 +78,7 @@ type Account struct {
 }
 
 func (a Account) Validate() error {
-	return multierr.Combine(
+	return yav.Join(
 		a.AccountID.Validate(),
 		yav.Chain(
 			"login", a.Login,
@@ -111,7 +111,7 @@ type Account struct {
 }
 
 func (a Account) Validate() error {
-	return multierr.Combine(
+	return yav.Join(
 		yav.Chain(
 			"id", a.ID,
 			vstring.Required,

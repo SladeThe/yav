@@ -9,7 +9,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/go-playground/validator/v10"
-	"go.uber.org/multierr"
 
 	"github.com/SladeThe/yav/common"
 )
@@ -83,7 +82,7 @@ func (p Playground) Validate(s any) error {
 	}
 
 	if fieldErrs, ok := err.(validator.ValidationErrors); ok {
-		var combinedErr error
+		var yavErrs Errors
 
 		for _, fieldErr := range fieldErrs {
 			tag := fieldErr.Tag()
@@ -98,7 +97,7 @@ func (p Playground) Validate(s any) error {
 				value = nil
 			}
 
-			multierr.AppendInto(&combinedErr, Error{
+			yavErrs.Validation = append(yavErrs.Validation, Error{
 				CheckName: tag,
 				Parameter: parameter,
 				ValueName: fieldErr.Field(),
@@ -106,10 +105,10 @@ func (p Playground) Validate(s any) error {
 			})
 		}
 
-		return combinedErr
+		return yavErrs.AsError()
 	}
 
-	return Error{}
+	return Errors{Unknown: []error{err}}
 }
 
 func (p Playground) useJSONFieldName() {

@@ -1,6 +1,7 @@
 package yav
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"strconv"
@@ -185,4 +186,91 @@ func (err Error) ValueAsString() string {
 	}
 
 	return ""
+}
+
+type Errors struct {
+	Unknown    []error
+	Validation []Error
+}
+
+func (errs Errors) IsZero() bool {
+	return len(errs.Unknown)+len(errs.Validation) == 0
+}
+
+func (errs Errors) Error() string {
+	switch len(errs.Unknown) + len(errs.Validation) {
+	case 0:
+		return ""
+	case 1:
+		if len(errs.Unknown) > 0 {
+			return errs.Unknown[0].Error()
+		}
+
+		return errs.Validation[0].Error()
+	default:
+		var s bytes.Buffer
+
+		for _, err := range errs.Unknown {
+			if s.Len() > 0 {
+				s.WriteString("; ")
+			}
+
+			s.WriteString(err.Error())
+		}
+
+		for _, err := range errs.Validation {
+			if s.Len() > 0 {
+				s.WriteString("; ")
+			}
+
+			s.WriteString(err.Error())
+		}
+
+		return s.String()
+	}
+}
+
+// AsError returns non-zero Errors or nil.
+func (errs Errors) AsError() error {
+	if errs.IsZero() {
+		return nil
+	}
+
+	return errs
+}
+
+func (errs *Errors) Append(err error) {
+	if err == nil {
+		return
+	}
+
+	switch typedErr := err.(type) {
+	case Errors:
+		if len(errs.Unknown) > 0 {
+			errs.Unknown = append(errs.Unknown, typedErr.Unknown...)
+		} else {
+			errs.Unknown = typedErr.Unknown
+		}
+
+		if len(errs.Validation) > 0 {
+			errs.Validation = append(errs.Validation, typedErr.Validation...)
+		} else {
+			errs.Validation = typedErr.Validation
+		}
+	case Error:
+		errs.Validation = append(errs.Validation, typedErr)
+	default:
+		errs.Unknown = append(errs.Unknown, typedErr)
+	}
+}
+
+// Join returns combined Errors or nil.
+func Join(errs ...error) error {
+	var yavErrs Errors
+
+	for _, err := range errs {
+		yavErrs.Append(err)
+	}
+
+	return yavErrs.AsError()
 }
