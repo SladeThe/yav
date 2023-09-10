@@ -195,6 +195,23 @@ func TestBetween(t *testing.T) {
 				Value:     map[int]string{1: "a", 2: "b", 3: "c"},
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: map[int]string{1: "a", 2: "b"},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     map[int]string{1: "a", 2: "b"},
+			},
+		},
 	}}
 
 	for _, tt := range tests {

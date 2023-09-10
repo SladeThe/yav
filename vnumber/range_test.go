@@ -199,6 +199,23 @@ func TestBetweenInt(t *testing.T) {
 				Value:     int(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     int(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -622,6 +639,23 @@ func TestBetweenInt8(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     int8(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     int8(2),
 			},
 		},
 	}}
@@ -1049,6 +1083,23 @@ func TestBetweenInt16(t *testing.T) {
 				Value:     int16(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     int16(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -1472,6 +1523,23 @@ func TestBetweenInt32(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     int32(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     int32(2),
 			},
 		},
 	}}
@@ -1899,6 +1967,23 @@ func TestBetweenInt64(t *testing.T) {
 				Value:     int64(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     int64(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -2322,6 +2407,23 @@ func TestBetweenUint(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     uint(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     uint(2),
 			},
 		},
 	}}
@@ -2749,6 +2851,23 @@ func TestBetweenUint8(t *testing.T) {
 				Value:     uint8(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     uint8(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -3172,6 +3291,23 @@ func TestBetweenUint16(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     uint16(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     uint16(2),
 			},
 		},
 	}}
@@ -3599,6 +3735,23 @@ func TestBetweenUint32(t *testing.T) {
 				Value:     uint32(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     uint32(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -4022,6 +4175,23 @@ func TestBetweenUint64(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     uint64(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     uint64(2),
 			},
 		},
 	}}
@@ -4449,6 +4619,23 @@ func TestBetweenFloat32(t *testing.T) {
 				Value:     float32(3),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     float32(2),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -4872,6 +5059,23 @@ func TestBetweenFloat64(t *testing.T) {
 				Parameter: "2",
 				ValueName: "v",
 				Value:     float64(3),
+			},
+		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   3,
+			max:   3,
+			name:  "v",
+			value: 2,
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: "3",
+				ValueName: "v",
+				Value:     float64(2),
 			},
 		},
 	}}

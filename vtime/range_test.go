@@ -203,6 +203,23 @@ func TestBetween(t *testing.T) {
 				Value:     now.Add(2),
 			},
 		},
+	}, {
+		name: "invalid with range shift",
+		args: args{
+			min:   now.Add(3),
+			max:   now.Add(3),
+			name:  "t",
+			value: now.Add(1),
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "min",
+				Parameter: now.Add(3).String(),
+				ValueName: "t",
+				Value:     now.Add(1),
+			},
+		},
 	}}
 
 	for _, tt := range tests {
