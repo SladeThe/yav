@@ -6,11 +6,7 @@ import (
 )
 
 const (
-	CharactersLowerAlpha = "abcdefghijklmnopqrstuvwxyz"
-	CharactersUpperAlpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	CharactersAlpha      = CharactersLowerAlpha + CharactersUpperAlpha
-	CharactersDigit      = "0123456789"
-	CharactersSpecial    = ",!@#$%^&*)(+=._-"
+	CharactersSpecial = ",!@#$%^&*)(+=._-"
 )
 
 func IsLowerAlpha(r rune) bool {
