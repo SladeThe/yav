@@ -8,12 +8,16 @@ type Zeroer interface {
 	IsZero() bool
 }
 
+// ValidateFunc usually represents a single validation check against the given named value.
 type ValidateFunc[T any] func(name string, value T) (stop bool, err error)
 
+// Next is a no-op ValidateFunc.
 func Next[T any](string, T) (stop bool, err error) {
 	return false, nil
 }
 
+// Chain allows chaining validation funcs against a single struct field or value.
+// If not nil, the result is always of Errors type.
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
 	var yavErrs Errors
 
@@ -28,6 +32,20 @@ func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error 
 	return yavErrs.AsError()
 }
 
+// Join returns combined Errors or nil. It is useful to combine Chain results, while validating multiple values.
+func Join(errs ...error) error {
+	var yavErrs Errors
+
+	for _, err := range errs {
+		yavErrs.Append(err)
+	}
+
+	return yavErrs.AsError()
+}
+
+// Or combines the given validation funcs into a new one, which iterates over and sequentially invokes the arguments.
+// When any of the functions returns a nil error, its result is immediately returned.
+// Otherwise, a non-nil error and stop flag of the last function are returned.
 func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 	if len(validateFuncs) == 1 {
 		return validateFuncs[0]
@@ -44,6 +62,7 @@ func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 	}
 }
 
+// Or2 exactly equals to Or with two arguments, but makes one less memory allocation.
 func Or2[T any](validateFunc1, validateFunc2 ValidateFunc[T]) ValidateFunc[T] {
 	return func(name string, value T) (stop bool, err error) {
 		if stop, err = validateFunc1(name, value); err == nil {
@@ -54,6 +73,7 @@ func Or2[T any](validateFunc1, validateFunc2 ValidateFunc[T]) ValidateFunc[T] {
 	}
 }
 
+// Or3 exactly equals to Or with three arguments, but makes one less memory allocation.
 func Or3[T any](validateFunc1, validateFunc2, validateFunc3 ValidateFunc[T]) ValidateFunc[T] {
 	return func(name string, value T) (stop bool, err error) {
 		if stop, err = validateFunc1(name, value); err == nil {
@@ -68,6 +88,8 @@ func Or3[T any](validateFunc1, validateFunc2, validateFunc3 ValidateFunc[T]) Val
 	}
 }
 
+// Nested processes errors of either Error or Errors type, prepending Error.ValueName with name argument.
+// It returns unsupported and nil errors as is.
 func Nested(name string, err error) error {
 	if err == nil {
 		return nil
@@ -99,11 +121,14 @@ func nestedYAV(name string, yavErr Error) Error {
 	return yavErr
 }
 
+// UnnamedValidate is a ValidateFunc that simply calls Validatable.Validate of the given value.
+// It may be useful, while validating slice items or map entries.
 func UnnamedValidate[T Validatable](_ string, value T) (stop bool, err error) {
 	err = value.Validate()
 	return err != nil, err
 }
 
+// NestedValidate basically equals to UnnamedValidate, but additionally calls Nested before returning the error.
 func NestedValidate[T Validatable](name string, value T) (stop bool, err error) {
 	err = value.Validate()
 	return err != nil, Nested(name, err)

@@ -23,8 +23,8 @@ of 3rd-party dependencies. The removed code still can be found in [yav-tests](ht
 
 #### Single field struct validation
 
-The field name passed to `yav.Chain` doesn't affect the validation process and
-is only necessary for building a validation error.
+The field name passed to `yav.Chain` doesn't affect the validation process and is only necessary
+for building a validation error, so that you may use whatever naming style you like, i.e. `id`, `ID`, `Id`.
 
 ```go
 type AccountID struct {

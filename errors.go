@@ -110,6 +110,15 @@ func (err Error) Is(target error) bool {
 	return err == validationErr
 }
 
+func (err Error) As(target any) bool {
+	if yavErr, ok := target.(*Error); ok && yavErr != nil {
+		*yavErr = err
+		return true
+	}
+
+	return false
+}
+
 func (err Error) Error() string {
 	if err.CheckName != "" && err.ValueName != "" {
 		if err.Parameter != "" {
@@ -213,6 +222,27 @@ func (errs Errors) Is(target error) bool {
 	return false
 }
 
+func (errs Errors) As(target any) bool {
+	if yavErrs, ok := target.(*Errors); ok && yavErrs != nil {
+		*yavErrs = errs
+		return true
+	}
+
+	for _, err := range errs.Unknown {
+		if errors.As(err, target) {
+			return true
+		}
+	}
+
+	for _, yavErr := range errs.Validation {
+		if yavErr.As(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (errs Errors) IsZero() bool {
 	return len(errs.Unknown)+len(errs.Validation) == 0
 }
@@ -228,26 +258,30 @@ func (errs Errors) Error() string {
 
 		return errs.Validation[0].Error()
 	default:
-		var s bytes.Buffer
-
-		for _, err := range errs.Unknown {
-			if s.Len() > 0 {
-				s.WriteString("; ")
-			}
-
-			s.WriteString(err.Error())
-		}
-
-		for _, err := range errs.Validation {
-			if s.Len() > 0 {
-				s.WriteString("; ")
-			}
-
-			s.WriteString(err.Error())
-		}
-
-		return s.String()
+		return errs.error()
 	}
+}
+
+func (errs Errors) error() string {
+	s := bytes.NewBuffer(make([]byte, 0, (len(errs.Unknown)+len(errs.Validation))*50))
+
+	for _, err := range errs.Unknown {
+		if s.Len() > 0 {
+			s.WriteString("; ")
+		}
+
+		s.WriteString(err.Error())
+	}
+
+	for _, err := range errs.Validation {
+		if s.Len() > 0 {
+			s.WriteString("; ")
+		}
+
+		s.WriteString(err.Error())
+	}
+
+	return s.String()
 }
 
 // AsError returns non-zero Errors or nil.
@@ -282,15 +316,4 @@ func (errs *Errors) Append(err error) {
 	default:
 		errs.Unknown = append(errs.Unknown, typedErr)
 	}
-}
-
-// Join returns combined Errors or nil.
-func Join(errs ...error) error {
-	var yavErrs Errors
-
-	for _, err := range errs {
-		yavErrs.Append(err)
-	}
-
-	return yavErrs.AsError()
 }
