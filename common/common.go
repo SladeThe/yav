@@ -38,7 +38,7 @@ func IsSpecialCharacter(r rune) bool {
 }
 
 // IsText checks the given value to contain only visible characters and various whitespaces, including line breaks.
-// No ring bells and other control characters.
+// No ring bells and other control characters. The value is allowed to be empty.
 func IsText(value string) bool {
 	for _, r := range value {
 		if r != '\r' && r != '\n' && !unicode.IsGraphic(r) {
@@ -49,20 +49,26 @@ func IsText(value string) bool {
 	return true
 }
 
-// IsTitle checks the given value is a single line string with neither leading nor trailing spaces.
+// IsTitle checks the given value is a single non-empty line with neither leading nor trailing spaces.
 // It must contain only printable characters and single ASCII spaces (a space must not follow a space).
 // No tabulations, no unbreakable spaces, no ring bells and other control characters.
 func IsTitle(value string) bool {
-	// TODO improve performance
-
-	if len(value) != len(strings.TrimSpace(value)) || strings.Contains(value, "  ") {
+	if len(value) == 0 || len(value) != len(strings.TrimSpace(value)) {
 		return false
 	}
+
+	lastSpace := false
 
 	for _, r := range value {
 		if !unicode.IsPrint(r) {
 			return false
 		}
+
+		if r == ' ' && lastSpace {
+			return false
+		}
+
+		lastSpace = r == ' '
 	}
 
 	return true
