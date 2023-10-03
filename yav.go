@@ -16,6 +16,13 @@ func Next[T any](string, T) (stop bool, err error) {
 	return false, nil
 }
 
+// OmitEmpty skips further validation, when a generic comparable value is default for its type.
+// Most of the validation packages contain specialized versions of this function, e.g. vstring.OmitEmpty, etc.
+func OmitEmpty[T comparable](_ string, value T) (stop bool, err error) {
+	var zero T
+	return value == zero, nil
+}
+
 // Chain allows chaining validation funcs against a single struct field or value.
 // If not nil, the result is always of Errors type.
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
