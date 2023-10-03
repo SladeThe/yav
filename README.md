@@ -176,6 +176,23 @@ Max
 Between
 ```
 
+#### Duration
+
+```
+Min
+Max
+Between
+LessThan
+LessThanOrEqual
+GreaterThan
+GreaterThanOrEqual
+
+LessThanNamed
+LessThanOrEqualNamed
+GreaterThanNamed
+GreaterThanOrEqualNamed
+```
+
 #### Map
 
 ```
