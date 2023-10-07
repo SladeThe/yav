@@ -7,6 +7,11 @@ import (
 	"github.com/SladeThe/yav"
 )
 
+type Entry[K comparable, V any] struct {
+	Key   K
+	Value V
+}
+
 func Keys[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[K]) yav.ValidateFunc[M] {
 	return func(name string, value M) (stop bool, err error) {
 		var yavErrs yav.Errors
@@ -31,6 +36,18 @@ func Values[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[V
 	}
 }
 
+func Entries[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[Entry[K, V]]) yav.ValidateFunc[M] {
+	return func(name string, value M) (stop bool, err error) {
+		var yavErrs yav.Errors
+
+		for k, v := range value {
+			yavErrs.Append(entryChain(name, k, v, validateFuncs))
+		}
+
+		return false, yavErrs.AsError()
+	}
+}
+
 func keyChain[K comparable](name string, key K, validateFuncs []yav.ValidateFunc[K]) error {
 	for _, validateFunc := range validateFuncs {
 		if stop, err := validateFunc(name, key); stop {
@@ -44,6 +61,16 @@ func keyChain[K comparable](name string, key K, validateFuncs []yav.ValidateFunc
 func valueChain[K comparable, V any](name string, key K, value V, validateFuncs []yav.ValidateFunc[V]) error {
 	for _, validateFunc := range validateFuncs {
 		if stop, err := validateFunc(name, value); stop {
+			return withKeyName(name, key, err)
+		}
+	}
+
+	return nil
+}
+
+func entryChain[K comparable, V any](name string, key K, value V, validateFuncs []yav.ValidateFunc[Entry[K, V]]) error {
+	for _, validateFunc := range validateFuncs {
+		if stop, err := validateFunc(name, Entry[K, V]{key, value}); stop {
 			return withKeyName(name, key, err)
 		}
 	}
