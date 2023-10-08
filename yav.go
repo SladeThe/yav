@@ -50,6 +50,27 @@ func Join(errs ...error) error {
 	return yavErrs.AsError()
 }
 
+// Join2 exactly equals to Join with two arguments, but works faster.
+func Join2(err0, err1 error) error {
+	var yavErrs Errors
+
+	yavErrs.Append(err0)
+	yavErrs.Append(err1)
+
+	return yavErrs.AsError()
+}
+
+// Join3 exactly equals to Join with three arguments, but works faster.
+func Join3(err0, err1, err2 error) error {
+	var yavErrs Errors
+
+	yavErrs.Append(err0)
+	yavErrs.Append(err1)
+	yavErrs.Append(err2)
+
+	return yavErrs.AsError()
+}
+
 // Or combines the given validation funcs into a new one, which iterates over and sequentially invokes the arguments.
 // When any of the functions returns a nil error, its result is immediately returned.
 // Otherwise, a non-nil error and stop flag of the last function are returned.
@@ -70,28 +91,28 @@ func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 }
 
 // Or2 exactly equals to Or with two arguments, but makes one less memory allocation.
-func Or2[T any](validateFunc1, validateFunc2 ValidateFunc[T]) ValidateFunc[T] {
+func Or2[T any](validateFunc0, validateFunc1 ValidateFunc[T]) ValidateFunc[T] {
 	return func(name string, value T) (stop bool, err error) {
+		if stop, err = validateFunc0(name, value); err == nil {
+			return
+		}
+
+		return validateFunc1(name, value)
+	}
+}
+
+// Or3 exactly equals to Or with three arguments, but makes one less memory allocation.
+func Or3[T any](validateFunc0, validateFunc1, validateFunc2 ValidateFunc[T]) ValidateFunc[T] {
+	return func(name string, value T) (stop bool, err error) {
+		if stop, err = validateFunc0(name, value); err == nil {
+			return
+		}
+
 		if stop, err = validateFunc1(name, value); err == nil {
 			return
 		}
 
 		return validateFunc2(name, value)
-	}
-}
-
-// Or3 exactly equals to Or with three arguments, but makes one less memory allocation.
-func Or3[T any](validateFunc1, validateFunc2, validateFunc3 ValidateFunc[T]) ValidateFunc[T] {
-	return func(name string, value T) (stop bool, err error) {
-		if stop, err = validateFunc1(name, value); err == nil {
-			return
-		}
-
-		if stop, err = validateFunc2(name, value); err == nil {
-			return
-		}
-
-		return validateFunc3(name, value)
 	}
 }
 
