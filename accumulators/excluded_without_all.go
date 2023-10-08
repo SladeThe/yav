@@ -39,6 +39,11 @@ func (r ExcludedWithoutAll[T]) Map(value any) ExcludedWithoutAll[T] {
 	return r
 }
 
+func (r ExcludedWithoutAll[T]) Pointer(value any) ExcludedWithoutAll[T] {
+	r.excluded = r.excluded && reflect.ValueOf(value).IsNil()
+	return r
+}
+
 func (r ExcludedWithoutAll[T]) Time(value time.Time) ExcludedWithoutAll[T] {
 	r.excluded = r.excluded && value.IsZero()
 	return r

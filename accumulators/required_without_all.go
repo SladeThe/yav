@@ -39,6 +39,11 @@ func (r RequiredWithoutAll[T]) Map(value any) RequiredWithoutAll[T] {
 	return r
 }
 
+func (r RequiredWithoutAll[T]) Pointer(value any) RequiredWithoutAll[T] {
+	r.required = r.required && reflect.ValueOf(value).IsNil()
+	return r
+}
+
 func (r RequiredWithoutAll[T]) Time(value time.Time) RequiredWithoutAll[T] {
 	r.required = r.required && value.IsZero()
 	return r

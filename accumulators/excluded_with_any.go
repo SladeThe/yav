@@ -39,6 +39,11 @@ func (r ExcludedWithAny[T]) Map(value any) ExcludedWithAny[T] {
 	return r
 }
 
+func (r ExcludedWithAny[T]) Pointer(value any) ExcludedWithAny[T] {
+	r.excluded = r.excluded || !reflect.ValueOf(value).IsNil()
+	return r
+}
+
 func (r ExcludedWithAny[T]) Time(value time.Time) ExcludedWithAny[T] {
 	r.excluded = r.excluded || !value.IsZero()
 	return r

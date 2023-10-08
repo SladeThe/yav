@@ -168,6 +168,13 @@ ExcludedWithAll
 ExcludedWithoutAll
 ```
 
+#### Bool
+
+```
+Equal
+NotEqual
+```
+
 #### Bytes
 
 ```
