@@ -326,6 +326,7 @@ BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 al
 
 ```
 BenchmarkYAV                729123        1658 ns/op        123 B/op        4 allocs/op
+BenchmarkPreAllocatedYAV    802777        1488 ns/op          0 B/op        0 allocs/op
 BenchmarkOzzo*               54954       21684 ns/op      19215 B/op      317 allocs/op
 BenchmarkPlayground         172633        6789 ns/op        653 B/op       23 allocs/op
 ```
