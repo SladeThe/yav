@@ -161,3 +161,53 @@ func NestedValidate[T Validatable](name string, value T) (stop bool, err error) 
 	err = value.Validate()
 	return err != nil, Nested(name, err)
 }
+
+// NamedCheck processes errors of either Error or Errors type,
+// clearing Error.Parameter and replacing Error.CheckName with the given name.
+// Unsupported and nil errors are returned as is.
+func NamedCheck(checkName string, err error) error {
+	if err == nil {
+		return nil
+	}
+
+	switch typedErr := err.(type) {
+	case Error:
+		return namedCheckYAV(checkName, typedErr)
+	case Errors:
+		for i, yavErr := range typedErr.Validation {
+			typedErr.Validation[i] = namedCheckYAV(checkName, yavErr)
+		}
+
+		return typedErr
+	default:
+		return err
+	}
+}
+
+func namedCheckYAV(checkName string, yavErr Error) Error {
+	yavErr.CheckName = checkName
+	yavErr.Parameter = ""
+	return yavErr
+}
+
+// NamedValidateFunc combines the given validation funcs into a new named one.
+// Those functions are invoked similarly to Chain, then NamedCheck is applied to the result.
+func NamedValidateFunc[T any](checkName string, validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
+	if len(validateFuncs) == 0 {
+		return Next[T]
+	}
+
+	return func(name string, value T) (stop bool, err error) {
+		var yavErrs Errors
+
+		for _, validateFunc := range validateFuncs {
+			stop, err = validateFunc(name, value)
+			yavErrs.Append(err)
+			if stop {
+				break
+			}
+		}
+
+		return stop, NamedCheck(checkName, yavErrs.AsError())
+	}
+}
