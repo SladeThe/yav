@@ -97,6 +97,10 @@ func IsError(err error) bool {
 	return errors.As(err, &validationErr)
 }
 
+func ErrRequired(name string) Error {
+	return Error{CheckName: CheckNameRequired, ValueName: name}
+}
+
 func (err Error) Is(target error) bool {
 	var validationErr Error
 
