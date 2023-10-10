@@ -90,10 +90,7 @@ func TestRequired(t *testing.T) {
 		},
 		want: want{
 			stop: true,
-			err: yav.Error{
-				CheckName: yav.CheckNameRequired,
-				ValueName: "v",
-			},
+			err:  yav.ErrRequired("v"),
 		},
 	}, {
 		name: "not empty",

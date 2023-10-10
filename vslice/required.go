@@ -17,10 +17,7 @@ func OmitEmpty[S ~[]T, T any](_ string, value S) (stop bool, err error) {
 
 func Required[S ~[]T, T any](name string, value S) (stop bool, err error) {
 	if len(value) == 0 {
-		return true, yav.Error{
-			CheckName: yav.CheckNameRequired,
-			ValueName: name,
-		}
+		return true, yav.ErrRequired(name)
 	}
 
 	return false, nil

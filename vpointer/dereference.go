@@ -9,11 +9,7 @@ func Dereference[T any](validateFuncs ...yav.ValidateFunc[T]) yav.ValidateFunc[*
 		var yavErrs yav.Errors
 
 		if value == nil {
-			yavErrs.Append(yav.Error{
-				CheckName: yav.CheckNameRequired,
-				ValueName: name,
-			})
-
+			yavErrs.Append(yav.ErrRequired(name))
 			return true, yavErrs.AsError()
 		}
 

@@ -21,10 +21,7 @@ func OmitEmpty(_ string, value time.Time) (stop bool, err error) {
 
 func Required(name string, value time.Time) (stop bool, err error) {
 	if value.IsZero() {
-		return true, yav.Error{
-			CheckName: yav.CheckNameRequired,
-			ValueName: name,
-		}
+		return true, yav.ErrRequired(name)
 	}
 
 	return false, nil

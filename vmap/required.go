@@ -17,10 +17,7 @@ func OmitEmpty[M ~map[K]V, K comparable, V any](_ string, value M) (stop bool, e
 
 func Required[M ~map[K]V, K comparable, V any](name string, value M) (stop bool, err error) {
 	if len(value) == 0 {
-		return true, yav.Error{
-			CheckName: yav.CheckNameRequired,
-			ValueName: name,
-		}
+		return true, yav.ErrRequired(name)
 	}
 
 	return false, nil

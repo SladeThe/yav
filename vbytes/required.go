@@ -19,10 +19,7 @@ func OmitEmpty(_ string, value []byte) (stop bool, err error) {
 
 func Required(name string, value []byte) (stop bool, err error) {
 	if len(value) == 0 {
-		return true, yav.Error{
-			CheckName: yav.CheckNameRequired,
-			ValueName: name,
-		}
+		return true, yav.ErrRequired(name)
 	}
 
 	return false, nil
