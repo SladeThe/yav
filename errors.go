@@ -54,6 +54,10 @@ const (
 
 	CheckNameRegexp = "regexp"
 
+	CheckNameBase64       = "base64"
+	CheckNameBase64URL    = "base64url"
+	CheckNameBase64RawURL = "base64rawurl"
+
 	CheckNameAlpha        = "alpha"
 	CheckNameAlphanumeric = "alphanum"
 	CheckNameNumeric      = "numeric"
