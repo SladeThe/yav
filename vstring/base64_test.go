@@ -185,6 +185,20 @@ func TestBase64Raw(t *testing.T) {
 			},
 		},
 	}, {
+		name: "invalid length",
+		args: args{
+			name:  "data",
+			value: "A",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "base64raw",
+				ValueName: "data",
+				Value:     "A",
+			},
+		},
+	}, {
 		name: "wrong encoding 0",
 		args: args{
 			name:  "data",
@@ -388,6 +402,20 @@ func TestBase64RawURL(t *testing.T) {
 				CheckName: "base64rawurl",
 				ValueName: "data",
 				Value:     "A?",
+			},
+		},
+	}, {
+		name: "invalid length",
+		args: args{
+			name:  "data",
+			value: "A",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "base64rawurl",
+				ValueName: "data",
+				Value:     "A",
 			},
 		},
 	}, {
