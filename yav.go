@@ -190,9 +190,9 @@ func namedCheckYAV(checkName string, yavErr Error) Error {
 	return yavErr
 }
 
-// NamedValidateFunc combines the given validation funcs into a new named one.
+// NamedCheckFunc combines the given validation funcs into a new named one.
 // Those functions are invoked similarly to Chain, then NamedCheck is applied to the result.
-func NamedValidateFunc[T any](checkName string, validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
+func NamedCheckFunc[T any](checkName string, validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 	if len(validateFuncs) == 0 {
 		return Next[T]
 	}

@@ -55,6 +55,7 @@ const (
 	CheckNameRegexp = "regexp"
 
 	CheckNameBase64       = "base64"
+	CheckNameBase64Raw    = "base64raw"
 	CheckNameBase64URL    = "base64url"
 	CheckNameBase64RawURL = "base64rawurl"
 

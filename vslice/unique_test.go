@@ -168,7 +168,7 @@ func TestUnique(t *testing.T) {
 func BenchmarkUnique(b *testing.B) {
 	const maxLength = 16
 
-	rand.Seed(1432164634643)
+	rnd := rand.New(rand.NewSource(1432164634643))
 
 	var ss [][]uint64
 
@@ -177,7 +177,7 @@ func BenchmarkUnique(b *testing.B) {
 		m := make(map[uint64]struct{}, length)
 
 		for len(m) < length {
-			v := rand.Uint64()
+			v := rnd.Uint64()
 
 			if _, ok := m[v]; ok {
 				continue
