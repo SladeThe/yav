@@ -579,8 +579,10 @@ func BenchmarkRequiredAccumulatorsParallel(b *testing.B) {
 	pointer := new(time.Time)
 
 	b.RunParallel(func(pb *testing.PB) {
+		var err error
+
 		for pb.Next() {
-			_ = yav.Join(
+			err = yav.Join(
 				yav.Chain(
 					"pointer", pointer,
 					RequiredIf[time.Time]("", true),
@@ -592,5 +594,7 @@ func BenchmarkRequiredAccumulatorsParallel(b *testing.B) {
 				),
 			)
 		}
+
+		runtime.KeepAlive(err)
 	})
 }

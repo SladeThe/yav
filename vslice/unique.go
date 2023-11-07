@@ -24,15 +24,7 @@ func Unique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
 			return true, internal.ErrUnique(name, value)
 		}
 	default:
-		m := make(map[T]struct{}, len(value)-1)
-
-		for i, item := range value[:len(value)-1] {
-			if m[item] = struct{}{}; len(m) != i+1 {
-				return true, internal.ErrUnique(name, value)
-			}
-		}
-
-		if _, ok := m[value[len(value)-1]]; ok {
+		if isNotUniqueN(value) {
 			return true, internal.ErrUnique(name, value)
 		}
 	}
@@ -57,4 +49,17 @@ func isNotUnique5[S ~[]T, T comparable](value S) bool {
 	return value[0] == value[1] || value[0] == value[2] || value[0] == value[3] || value[0] == value[4] ||
 		value[1] == value[2] || value[1] == value[3] || value[1] == value[4] ||
 		value[2] == value[3] || value[2] == value[4] || value[3] == value[4]
+}
+
+func isNotUniqueN[S ~[]T, T comparable](value S) bool {
+	m := make(map[T]struct{}, len(value)-1)
+
+	for i, item := range value[:len(value)-1] {
+		if m[item] = struct{}{}; len(m) != i+1 {
+			return true
+		}
+	}
+
+	_, ok := m[value[len(value)-1]]
+	return ok
 }
