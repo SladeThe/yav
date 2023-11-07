@@ -49,7 +49,7 @@ func IsText(value string) bool {
 // It must contain only printable characters and single ASCII spaces (a space must not follow a space).
 // No tabulations, no unbreakable spaces, no ring bells and other control characters.
 func IsTitle(value string) bool {
-	if len(value) == 0 || len(value) != len(strings.TrimSpace(value)) {
+	if value == "" || len(value) != len(strings.TrimSpace(value)) {
 		return false
 	}
 

@@ -1,0 +1,245 @@
+run:
+  concurrency: 2
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+  build-tags: []
+  skip-dirs:
+    - examples
+  skip-dirs-use-default: true # skip vendor, third_party, test_data
+
+output:
+  # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
+  format: colored-line-number
+  # print lines of code with issue, default is true
+  print-issued-lines: true
+  # print linter name in the end of issue text, default is true
+  print-linter-name: true
+  # make issues output unique by line, default is true
+  uniq-by-line: true
+  # add a prefix to the output file references; default is no prefix
+  path-prefix: ""
+
+linters-settings:
+  depguard:
+    rules:
+      main:
+        files:
+          - $all
+        allow:
+          - $gostd
+          - github.com/
+        deny:
+          - pkg: github.com/pkg/errors
+            desc: the repo is archived and should be replaced with standard lib errors
+
+  dogsled:
+    max-blank-identifiers: 3
+
+  dupl:
+    threshold: 100
+
+  errcheck:
+    check-type-assertions: true # checking of errors in type assertions
+    check-blank: false # errors assignment to blank identifier
+
+  exhaustive:
+    default-signifies-exhaustive: false
+    ignore-enum-members: ".*Undefined.*|.*Count"
+
+  funlen:
+    lines: 200
+    statements: 100
+
+  gci:
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/SladeThe/yav)
+    skip-generated: false # Skip generated files.
+    custom-order: true # Enable custom order of sections.
+  
+  gocognit:
+    min-complexity: 20 # minimal code complexity to report
+
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - ifElseChain
+      - importShadow
+      - initClause
+      - octalLiteral
+      - paramTypeCombine
+      - singleCaseSwitch
+      - sloppyReassign
+      - timeCmpSimplify # suggests replacing !before with after, which is wrong in general case
+      - unnamedResult
+    settings:
+      hugeParam:
+        sizeThreshold: 1024
+      rangeValCopy:
+        sizeThreshold: 1024
+
+  gocyclo:
+    min-complexity: 20
+
+  goimports:
+    local-prefixes: github.com/SladeThe/yav
+
+  golint:
+    min-confidence: 0
+
+  gomnd:
+    settings:
+      mnd:
+        checks:
+          - argument
+          - case
+          - condition
+          - operation
+          - return
+          - assign
+
+  gosec:
+    excludes:
+      - G101 # Potential hardcoded credentials
+      - G108 # Profiling endpoint automatically exposed on /debug/pprof
+      - G402 # TLS InsecureSkipVerify set true
+
+  govet:
+    check-shadowing: false
+
+  grouper:
+    const-require-single-const: false # Require the use of a single global 'const' declaration only.
+    const-require-grouping: false # Require the use of grouped global 'const' declarations.
+    import-require-single-import: true # Require the use of a single 'import' declaration only.
+    import-require-grouping: false # Require the use of grouped 'import' declarations.
+    type-require-single-type: false # Require the use of a single global 'type' declaration only.
+    type-require-grouping: false # Require the use of grouped global 'type' declarations.
+    var-require-single-var: false # Require the use of a single global 'var' declaration only.
+    var-require-grouping: false # Require the use of grouped global 'var' declarations.
+
+  importas:
+    no-unaliased: false # Do not allow unaliased imports of aliased packages.
+    alias:
+      - pkg: log
+        alias: stdlog
+
+  lll:
+    line-length: 120
+    tab-width: 4
+
+  maligned:
+    suggest-new: true
+
+  misspell:
+    locale: US
+    ignore-words: []
+
+  nakedret:
+    max-func-lines: 20
+
+  nolintlint:
+    allow-unused: false # report any unused nolint directives
+    require-explanation: true # don't require an explanation for nolint directives
+    require-specific: true # don't require nolint directives to be specific about which linter is being skipped
+
+  stylecheck:
+    initialisms: [
+      # Default from https://staticcheck.io/docs/configuration/options/#initialisms
+      "ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP", "DB", "TS",
+      # Extended
+      "2FA", "ACS", "DB", "GC", "GRPC", "IAM", "IDP", "JPEG", "JPG", "PNG", "SA", "SAML", "SLO", "SMS", "TOTP"
+    ]
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    - asasalint # Check for pass []any as any in variadic func(...any)
+    - asciicheck # Simple linter to check that your code does not contain non-ASCII identifiers
+    - bidichk # Checks for dangerous unicode character sequences
+    - bodyclose # Checks whether HTTP response body is closed successfully [fast: true, auto-fix: false]
+    - containedctx # Containedctx is a linter that detects struct contained context.Context field
+    - depguard # Go linter that checks if package imports are in a list of acceptable packages [fast: true, auto-fix: false]
+    - dogsled # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f()) [fast: true, auto-fix: false]
+    - durationcheck # Check for two durations multiplied together
+    - errcheck # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases [fast: true, auto-fix: false]
+    - exhaustive # Check exhaustiveness of enum switch statements [fast: true, auto-fix: false]
+    - exportloopref # An analyzer that finds exporting pointers for loop variables. [fast: true, auto-fix: false]
+    - funlen # Tool for detection of long functions [fast: true, auto-fix: false]
+    - gci # Gci controls golang package import order and makes it always deterministic.
+    - gocheckcompilerdirectives # Checks that go compiler directive comments (//go:) are valid.
+    - gocognit # Computes and checks the cognitive complexity of functions [fast: true, auto-fix: false]
+    - goconst # Finds repeated strings that could be replaced by a constant [fast: true, auto-fix: false]
+    - gocritic # The most opinionated Go source code linter [fast: true, auto-fix: false]
+    - gocyclo # Computes and checks the cyclomatic complexity of functions [fast: true, auto-fix: false]
+    - gofmt # Gofmt checks whether code was gofmt-ed. By default, this tool runs with -s option to check for code simplification [fast: true, auto-fix: true]
+    - goimports # Goimports does everything that gofmt does. Additionally, it checks unused imports [fast: true, auto-fix: true]
+    - goprintffuncname # Checks that printf-like functions are named with `f` at the end [fast: true, auto-fix: false]
+    - gosec # Inspects source code for security problems [fast: true, auto-fix: false]
+    - gosimple # Linter for Go source code that specializes in simplifying code
+    - govet # Vet examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string [fast: true, auto-fix: false]
+    - grouper # An analyzer to analyze expression groups.
+    - importas # Enforces consistent import aliases
+    - inamedparam # Reports interfaces with unnamed method parameters.
+    - ineffassign # Detects when assignments to existing variables are not used [fast: true, auto-fix: false]
+    - lll # Reports long lines [fast: true, auto-fix: false]
+    - makezero # Finds slice declarations with non-zero initial length
+    - mirror # Reports wrong mirror patterns of bytes/strings usage
+    - misspell # Finds commonly misspelled English words in comments [fast: true, auto-fix: true]
+    - nakedret # Finds naked returns in functions greater than a specified function length [fast: true, auto-fix: false]
+    - noctx # Noctx finds sending http request without context.Context [fast: true, auto-fix: false]
+    - nolintlint # Reports ill-formed or insufficient nolint directives [fast: true, auto-fix: false]
+    - prealloc # Finds slice declarations that could potentially be preallocated [fast: true, auto-fix: false]
+    - rowserrcheck # Checks whether Err of rows is checked successfully [fast: true, auto-fix: false]
+    - staticcheck # Staticcheck is a go vet on steroids, applying a ton of static analysis checks [fast: true, auto-fix: false]
+    - stylecheck # Stylecheck is a replacement for golint [fast: true, auto-fix: false]
+    - tenv # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17
+    - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code [fast: true, auto-fix: false]
+    - unconvert # Remove unnecessary type conversions [fast: true, auto-fix: false]
+    - unused # Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
+    - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
+
+  # don't enable:
+  # - gochecknoglobals
+  # - gochecknoinits
+  # - godot
+  # - godox
+  # - goerr113
+  # - maligned
+  # - nestif
+  # - testpackage
+  # - wsl
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - containedctx
+        - funlen
+        - gocognit
+        - goconst
+        - goerr113
+        - gomnd
+        - gosec
+
+    # https://github.com/go-critic/go-critic/issues/926
+    - linters:
+        - gocritic
+      text: "unnecessaryDefer:"
+
+    - linters:
+        - lll
+      source: "^//go:generate |^\\s+[a-zA-Z_][a-zA-Z0-9_]+\\s+=\\s+regexp\\.MustCompile\\("

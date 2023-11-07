@@ -1,10 +1,8 @@
-package vpointer
+package vslice
 
 import (
 	"reflect"
-	"runtime"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -14,7 +12,7 @@ import (
 func TestOmitEmpty(t *testing.T) {
 	type args struct {
 		name  string
-		value *time.Time
+		value []int
 	}
 
 	type want struct {
@@ -45,10 +43,20 @@ func TestOmitEmpty(t *testing.T) {
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "empty",
 		args: args{
 			name:  "v",
-			value: new(time.Time),
+			value: []int{},
+		},
+		want: want{
+			stop: true,
+			err:  nil,
+		},
+	}, {
+		name: "not empty",
+		args: args{
+			name:  "v",
+			value: []int{1},
 		},
 		want: want{
 			stop: false,
@@ -64,7 +72,7 @@ func TestOmitEmpty(t *testing.T) {
 func TestRequired(t *testing.T) {
 	type args struct {
 		name  string
-		value *time.Time
+		value []int
 	}
 
 	type want struct {
@@ -95,10 +103,20 @@ func TestRequired(t *testing.T) {
 			err:  yav.ErrRequired("v"),
 		},
 	}, {
-		name: "not nil",
+		name: "empty",
 		args: args{
 			name:  "v",
-			value: new(time.Time),
+			value: []int{},
+		},
+		want: want{
+			stop: true,
+			err:  yav.ErrRequired("v"),
+		},
+	}, {
+		name: "not empty",
+		args: args{
+			name:  "v",
+			value: []int{1},
 		},
 		want: want{
 			stop: false,
@@ -116,7 +134,7 @@ func TestRequiredIf(t *testing.T) {
 		condition       bool
 		conditionString string
 		name            string
-		value           *time.Time
+		value           []int
 	}
 
 	type want struct {
@@ -126,7 +144,7 @@ func TestRequiredIf(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredIf[time.Time](a.conditionString, a.condition)(a.name, a.value)
+			stop, err := RequiredIf[[]int](a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -153,24 +171,40 @@ func TestRequiredIf(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			condition:       true,
+			conditionString: "a == a",
+			name:            "v",
+			value:           []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredIf,
+				Parameter: "a == a",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           nil,
+			value:           []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
-			value:           new(time.Time),
+			value:           []int{1},
 		},
 		want: want{
 			stop: false,
@@ -188,7 +222,7 @@ func TestRequiredUnless(t *testing.T) {
 		condition       bool
 		conditionString string
 		name            string
-		value           *time.Time
+		value           []int
 	}
 
 	type want struct {
@@ -198,7 +232,7 @@ func TestRequiredUnless(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			stop, err := RequiredUnless[time.Time](a.conditionString, a.condition)(a.name, a.value)
+			stop, err := RequiredUnless[[]int](a.conditionString, a.condition)(a.name, a.value)
 			assert.Equalf(t, w.stop, stop, "invalid stop: want = %v, got = %v", w.stop, stop)
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
@@ -225,24 +259,40 @@ func TestRequiredUnless(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			condition:       false,
+			conditionString: "a == b",
+			name:            "v",
+			value:           []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredUnless,
+				Parameter: "a == b",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			condition:       true,
 			conditionString: "a == a",
 			name:            "v",
-			value:           nil,
+			value:           []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			condition:       false,
 			conditionString: "a == b",
 			name:            "v",
-			value:           new(time.Time),
+			value:           []int{1},
 		},
 		want: want{
 			stop: false,
@@ -259,7 +309,7 @@ func TestRequiredWithAny(t *testing.T) {
 	type args struct {
 		parameters []int
 		name       string
-		value      *time.Time
+		value      []int
 	}
 
 	type want struct {
@@ -269,7 +319,7 @@ func TestRequiredWithAny(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithAny[time.Time]()
+			accumulator := RequiredWithAny[[]int]()
 
 			for _, parameter := range a.parameters {
 				accumulator = accumulator.Int(parameter)
@@ -301,22 +351,37 @@ func TestRequiredWithAny(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			parameters: []int{-1, 0},
+			name:       "v",
+			value:      []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredWithAny,
+				Parameter: "pp",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			parameters: []int{0, 0},
 			name:       "v",
-			value:      nil,
+			value:      []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			parameters: []int{1},
 			name:       "v",
-			value:      new(time.Time),
+			value:      []int{1},
 		},
 		want: want{
 			stop: false,
@@ -333,7 +398,7 @@ func TestRequiredWithoutAny(t *testing.T) {
 	type args struct {
 		parameters []int
 		name       string
-		value      *time.Time
+		value      []int
 	}
 
 	type want struct {
@@ -343,7 +408,7 @@ func TestRequiredWithoutAny(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithoutAny[time.Time]()
+			accumulator := RequiredWithoutAny[[]int]()
 
 			for _, parameter := range a.parameters {
 				accumulator = accumulator.Int(parameter)
@@ -375,22 +440,37 @@ func TestRequiredWithoutAny(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			parameters: []int{-1, 0},
+			name:       "v",
+			value:      []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredWithoutAny,
+				Parameter: "pp",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			parameters: []int{-1, 1},
 			name:       "v",
-			value:      nil,
+			value:      []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			parameters: []int{0},
 			name:       "v",
-			value:      new(time.Time),
+			value:      []int{1},
 		},
 		want: want{
 			stop: false,
@@ -407,7 +487,7 @@ func TestRequiredWithAll(t *testing.T) {
 	type args struct {
 		parameters []int
 		name       string
-		value      *time.Time
+		value      []int
 	}
 
 	type want struct {
@@ -417,7 +497,7 @@ func TestRequiredWithAll(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithAll[time.Time]()
+			accumulator := RequiredWithAll[[]int]()
 
 			for _, parameter := range a.parameters {
 				accumulator = accumulator.Int(parameter)
@@ -449,22 +529,37 @@ func TestRequiredWithAll(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			parameters: []int{-1, 1},
+			name:       "v",
+			value:      []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredWithAll,
+				Parameter: "pp",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			parameters: []int{-1, 0},
 			name:       "v",
-			value:      nil,
+			value:      []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			parameters: []int{1},
 			name:       "v",
-			value:      new(time.Time),
+			value:      []int{1},
 		},
 		want: want{
 			stop: false,
@@ -481,7 +576,7 @@ func TestRequiredWithoutAll(t *testing.T) {
 	type args struct {
 		parameters []int
 		name       string
-		value      *time.Time
+		value      []int
 	}
 
 	type want struct {
@@ -491,7 +586,7 @@ func TestRequiredWithoutAll(t *testing.T) {
 
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
-			accumulator := RequiredWithoutAll[time.Time]()
+			accumulator := RequiredWithoutAll[[]int]()
 
 			for _, parameter := range a.parameters {
 				accumulator = accumulator.Int(parameter)
@@ -523,22 +618,37 @@ func TestRequiredWithoutAll(t *testing.T) {
 			},
 		},
 	}, {
-		name: "nil not required",
+		name: "empty required",
+		args: args{
+			parameters: []int{0, 0},
+			name:       "v",
+			value:      []int{},
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameRequiredWithoutAll,
+				Parameter: "pp",
+				ValueName: "v",
+			},
+		},
+	}, {
+		name: "empty not required",
 		args: args{
 			parameters: []int{-1, 0},
 			name:       "v",
-			value:      nil,
+			value:      []int{},
 		},
 		want: want{
 			stop: true,
 			err:  nil,
 		},
 	}, {
-		name: "not nil",
+		name: "not empty",
 		args: args{
 			parameters: []int{0},
 			name:       "v",
-			value:      new(time.Time),
+			value:      []int{1},
 		},
 		want: want{
 			stop: false,
@@ -549,48 +659,4 @@ func TestRequiredWithoutAll(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, test(tt.args, tt.want))
 	}
-}
-
-func BenchmarkRequiredAccumulators(b *testing.B) {
-	pointer := new(time.Time)
-
-	b.ReportAllocs()
-
-	var err error
-
-	for i := 0; i < b.N; i++ {
-		err = yav.Join(
-			yav.Chain(
-				"pointer", pointer,
-				RequiredIf[time.Time]("", true),
-				RequiredUnless[time.Time]("", false),
-				RequiredWithAny[time.Time]().Bool(true).Names(""),
-				RequiredWithoutAny[time.Time]().Bool(false).Names(""),
-				RequiredWithAll[time.Time]().Bool(true).Names(""),
-				RequiredWithoutAll[time.Time]().Bool(false).Names(""),
-			),
-		)
-	}
-
-	runtime.KeepAlive(err)
-}
-
-func BenchmarkRequiredAccumulatorsParallel(b *testing.B) {
-	pointer := new(time.Time)
-
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			_ = yav.Join(
-				yav.Chain(
-					"pointer", pointer,
-					RequiredIf[time.Time]("", true),
-					RequiredUnless[time.Time]("", false),
-					RequiredWithAny[time.Time]().Bool(true).Names(""),
-					RequiredWithoutAny[time.Time]().Bool(false).Names(""),
-					RequiredWithAll[time.Time]().Bool(true).Names(""),
-					RequiredWithoutAll[time.Time]().Bool(false).Names(""),
-				),
-			)
-		}
-	})
 }
