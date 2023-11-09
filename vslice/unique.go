@@ -1,7 +1,7 @@
 package vslice
 
 import (
-	"github.com/SladeThe/yav/internal"
+	"github.com/SladeThe/yav"
 )
 
 func Unique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
@@ -9,23 +9,23 @@ func Unique[S ~[]T, T comparable](name string, value S) (stop bool, err error) {
 	case 0, 1:
 	case 2:
 		if isNotUnique2(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 3:
 		if isNotUnique3(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 4:
 		if isNotUnique4(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 5:
 		if isNotUnique5(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	default:
 		if isNotUniqueN(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	}
 

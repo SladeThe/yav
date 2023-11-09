@@ -1,9 +1,5 @@
 package internal
 
-import (
-	"github.com/SladeThe/yav"
-)
-
 //nolint:gocritic // It is necessary to have a pointer here.
 func RegisterMapEntry[K comparable, V any](m *map[K]V, key K, value V) V {
 	src := *m
@@ -21,12 +17,4 @@ func RegisterMapEntry[K comparable, V any](m *map[K]V, key K, value V) V {
 	dst[key] = value
 	*m = dst
 	return value
-}
-
-func ErrUnique(name string, value any) yav.Error {
-	return yav.Error{
-		CheckName: yav.CheckNameUnique,
-		ValueName: name,
-		Value:     value,
-	}
 }

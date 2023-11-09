@@ -1,7 +1,7 @@
 package vmap
 
 import (
-	"github.com/SladeThe/yav/internal"
+	"github.com/SladeThe/yav"
 )
 
 func Unique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop bool, err error) {
@@ -9,23 +9,23 @@ func Unique[M ~map[K]V, K comparable, V comparable](name string, value M) (stop 
 	case 0, 1:
 	case 2:
 		if isNotUnique2(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 3:
 		if isNotUnique3(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 4:
 		if isNotUnique4(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	case 5:
 		if isNotUnique5(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	default:
 		if isNotUniqueN(value) {
-			return true, internal.ErrUnique(name, value)
+			return true, yav.ErrUnique(name, value)
 		}
 	}
 
@@ -99,6 +99,8 @@ func isNotUnique5[M ~map[K]V, K comparable, V comparable](value M) bool {
 	i := 0
 
 	for _, v := range value {
+		// TODO no switch? but we probably need some sort of iterator.Next() instead of range
+
 		switch i {
 		case 4:
 			return v == values[0] || v == values[1] || v == values[2] || v == values[3]

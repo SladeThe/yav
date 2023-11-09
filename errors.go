@@ -106,6 +106,14 @@ func ErrRequired(name string) Error {
 	return Error{CheckName: CheckNameRequired, ValueName: name}
 }
 
+func ErrUnique(name string, value any) Error {
+	return Error{
+		CheckName: CheckNameUnique,
+		ValueName: name,
+		Value:     value,
+	}
+}
+
 func (err Error) Is(target error) bool {
 	var validationErr Error
 

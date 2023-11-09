@@ -74,6 +74,9 @@ func Join3(err0, err1, err2 error) error {
 // Or combines the given validation funcs into a new one, which iterates over and sequentially invokes the arguments.
 // When any of the functions returns a nil error, its result is immediately returned.
 // Otherwise, a non-nil error and stop flag of the last function are returned.
+//
+// Constructing and dropping intermediate errors is somewhat expensive, so that use Or with care.
+// If performance is crucial, write your own validation func returning an error if and only if all the checks fail.
 func Or[T any](validateFuncs ...ValidateFunc[T]) ValidateFunc[T] {
 	if len(validateFuncs) == 1 {
 		return validateFuncs[0]
