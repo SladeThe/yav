@@ -11,7 +11,7 @@ type key[P comparable] struct {
 
 func newKey[P comparable, T any](parameter P) key[P] {
 	return key[P]{
-		pointedType: reflect.TypeOf((*T)(nil)).Elem(), // TODO TypeFor[T] in Go 1.22
+		pointedType: reflect.TypeFor[T](),
 		parameter:   parameter,
 	}
 }

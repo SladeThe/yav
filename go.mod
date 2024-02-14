@@ -1,11 +1,11 @@
 module github.com/SladeThe/yav
 
-go 1.21
+go 1.22
 
 require (
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678
+	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a
 )
 
 require (
