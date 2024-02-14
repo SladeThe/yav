@@ -7,17 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set up Go 1.21
-        uses: actions/setup-go@v4
+      - name: Set up Go 1.22
+        uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.22'
         id: go
 
       - name: Print version
         run: go version
 
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download dependencies
         run: go mod tidy && go mod download
@@ -29,7 +29,7 @@ jobs:
         run: make test
 
       - name: Lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
-          version: v1.55.2
+          version: v1.56.1
           args: --timeout 5m --verbose
