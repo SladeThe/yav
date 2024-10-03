@@ -235,11 +235,6 @@ issues:
         - gomnd
         - gosec
 
-    # https://github.com/go-critic/go-critic/issues/926
-    - linters:
-        - gocritic
-      text: "unnecessaryDefer:"
-
     - linters:
         - lll
       source: "^//go:generate |^\\s+[a-zA-Z_][a-zA-Z0-9_]+\\s+=\\s+regexp\\.MustCompile\\("
