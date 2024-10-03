@@ -23,6 +23,18 @@ func OmitEmpty[T comparable](_ string, value T) (stop bool, err error) {
 	return value == zero, nil
 }
 
+// Required checks a generic comparable value against the default for its type.
+// Most of the validation packages contain specialized versions of this function, e.g. vstring.Required, etc.
+func Required[T comparable](name string, value T) (stop bool, err error) {
+	var zero T
+
+	if value == zero {
+		return true, ErrRequired(name)
+	}
+
+	return false, nil
+}
+
 // Chain allows chaining validation funcs against a single struct field or value.
 // If not nil, the result is always of Errors type.
 func Chain[T any](name string, value T, validateFuncs ...ValidateFunc[T]) error {
