@@ -1,4 +1,4 @@
-package vpointer
+package vinterface
 
 import (
 	"reflect"
