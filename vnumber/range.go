@@ -43,7 +43,7 @@ type minInt struct {
 }
 
 func (m minInt) validate(name string, value int) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -60,7 +60,7 @@ type maxInt struct {
 }
 
 func (m maxInt) validate(name string, value int) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -77,7 +77,7 @@ type betweenInt struct {
 }
 
 func (b betweenInt) validate(name string, value int) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -86,7 +86,7 @@ func (b betweenInt) validate(name string, value int) (stop bool, err error) {
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -103,7 +103,7 @@ type lessThanInt struct {
 }
 
 func (l lessThanInt) validate(name string, value int) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -120,7 +120,7 @@ type lessThanOrEqualInt struct {
 }
 
 func (l lessThanOrEqualInt) validate(name string, value int) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -137,7 +137,7 @@ type greaterThanInt struct {
 }
 
 func (g greaterThanInt) validate(name string, value int) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -154,7 +154,7 @@ type greaterThanOrEqualInt struct {
 }
 
 func (g greaterThanOrEqualInt) validate(name string, value int) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -199,7 +199,7 @@ type minInt8 struct {
 }
 
 func (m minInt8) validate(name string, value int8) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -216,7 +216,7 @@ type maxInt8 struct {
 }
 
 func (m maxInt8) validate(name string, value int8) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -233,7 +233,7 @@ type betweenInt8 struct {
 }
 
 func (b betweenInt8) validate(name string, value int8) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -242,7 +242,7 @@ func (b betweenInt8) validate(name string, value int8) (stop bool, err error) {
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -259,7 +259,7 @@ type lessThanInt8 struct {
 }
 
 func (l lessThanInt8) validate(name string, value int8) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -276,7 +276,7 @@ type lessThanOrEqualInt8 struct {
 }
 
 func (l lessThanOrEqualInt8) validate(name string, value int8) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -293,7 +293,7 @@ type greaterThanInt8 struct {
 }
 
 func (g greaterThanInt8) validate(name string, value int8) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -310,7 +310,7 @@ type greaterThanOrEqualInt8 struct {
 }
 
 func (g greaterThanOrEqualInt8) validate(name string, value int8) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -355,7 +355,7 @@ type minInt16 struct {
 }
 
 func (m minInt16) validate(name string, value int16) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -372,7 +372,7 @@ type maxInt16 struct {
 }
 
 func (m maxInt16) validate(name string, value int16) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -389,7 +389,7 @@ type betweenInt16 struct {
 }
 
 func (b betweenInt16) validate(name string, value int16) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -398,7 +398,7 @@ func (b betweenInt16) validate(name string, value int16) (stop bool, err error) 
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -415,7 +415,7 @@ type lessThanInt16 struct {
 }
 
 func (l lessThanInt16) validate(name string, value int16) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -432,7 +432,7 @@ type lessThanOrEqualInt16 struct {
 }
 
 func (l lessThanOrEqualInt16) validate(name string, value int16) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -449,7 +449,7 @@ type greaterThanInt16 struct {
 }
 
 func (g greaterThanInt16) validate(name string, value int16) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -466,7 +466,7 @@ type greaterThanOrEqualInt16 struct {
 }
 
 func (g greaterThanOrEqualInt16) validate(name string, value int16) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -511,7 +511,7 @@ type minInt32 struct {
 }
 
 func (m minInt32) validate(name string, value int32) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -528,7 +528,7 @@ type maxInt32 struct {
 }
 
 func (m maxInt32) validate(name string, value int32) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -545,7 +545,7 @@ type betweenInt32 struct {
 }
 
 func (b betweenInt32) validate(name string, value int32) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -554,7 +554,7 @@ func (b betweenInt32) validate(name string, value int32) (stop bool, err error) 
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -571,7 +571,7 @@ type lessThanInt32 struct {
 }
 
 func (l lessThanInt32) validate(name string, value int32) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -588,7 +588,7 @@ type lessThanOrEqualInt32 struct {
 }
 
 func (l lessThanOrEqualInt32) validate(name string, value int32) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -605,7 +605,7 @@ type greaterThanInt32 struct {
 }
 
 func (g greaterThanInt32) validate(name string, value int32) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -622,7 +622,7 @@ type greaterThanOrEqualInt32 struct {
 }
 
 func (g greaterThanOrEqualInt32) validate(name string, value int32) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -667,7 +667,7 @@ type minInt64 struct {
 }
 
 func (m minInt64) validate(name string, value int64) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -684,7 +684,7 @@ type maxInt64 struct {
 }
 
 func (m maxInt64) validate(name string, value int64) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -701,7 +701,7 @@ type betweenInt64 struct {
 }
 
 func (b betweenInt64) validate(name string, value int64) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -710,7 +710,7 @@ func (b betweenInt64) validate(name string, value int64) (stop bool, err error) 
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -727,7 +727,7 @@ type lessThanInt64 struct {
 }
 
 func (l lessThanInt64) validate(name string, value int64) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -744,7 +744,7 @@ type lessThanOrEqualInt64 struct {
 }
 
 func (l lessThanOrEqualInt64) validate(name string, value int64) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -761,7 +761,7 @@ type greaterThanInt64 struct {
 }
 
 func (g greaterThanInt64) validate(name string, value int64) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -778,7 +778,7 @@ type greaterThanOrEqualInt64 struct {
 }
 
 func (g greaterThanOrEqualInt64) validate(name string, value int64) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -823,7 +823,7 @@ type minUint struct {
 }
 
 func (m minUint) validate(name string, value uint) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -840,7 +840,7 @@ type maxUint struct {
 }
 
 func (m maxUint) validate(name string, value uint) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -857,7 +857,7 @@ type betweenUint struct {
 }
 
 func (b betweenUint) validate(name string, value uint) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -866,7 +866,7 @@ func (b betweenUint) validate(name string, value uint) (stop bool, err error) {
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -883,7 +883,7 @@ type lessThanUint struct {
 }
 
 func (l lessThanUint) validate(name string, value uint) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -900,7 +900,7 @@ type lessThanOrEqualUint struct {
 }
 
 func (l lessThanOrEqualUint) validate(name string, value uint) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -917,7 +917,7 @@ type greaterThanUint struct {
 }
 
 func (g greaterThanUint) validate(name string, value uint) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -934,7 +934,7 @@ type greaterThanOrEqualUint struct {
 }
 
 func (g greaterThanOrEqualUint) validate(name string, value uint) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -979,7 +979,7 @@ type minUint8 struct {
 }
 
 func (m minUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -996,7 +996,7 @@ type maxUint8 struct {
 }
 
 func (m maxUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1013,7 +1013,7 @@ type betweenUint8 struct {
 }
 
 func (b betweenUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1022,7 +1022,7 @@ func (b betweenUint8) validate(name string, value uint8) (stop bool, err error) 
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1039,7 +1039,7 @@ type lessThanUint8 struct {
 }
 
 func (l lessThanUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1056,7 +1056,7 @@ type lessThanOrEqualUint8 struct {
 }
 
 func (l lessThanOrEqualUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1073,7 +1073,7 @@ type greaterThanUint8 struct {
 }
 
 func (g greaterThanUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1090,7 +1090,7 @@ type greaterThanOrEqualUint8 struct {
 }
 
 func (g greaterThanOrEqualUint8) validate(name string, value uint8) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1135,7 +1135,7 @@ type minUint16 struct {
 }
 
 func (m minUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1152,7 +1152,7 @@ type maxUint16 struct {
 }
 
 func (m maxUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1169,7 +1169,7 @@ type betweenUint16 struct {
 }
 
 func (b betweenUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1178,7 +1178,7 @@ func (b betweenUint16) validate(name string, value uint16) (stop bool, err error
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1195,7 +1195,7 @@ type lessThanUint16 struct {
 }
 
 func (l lessThanUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1212,7 +1212,7 @@ type lessThanOrEqualUint16 struct {
 }
 
 func (l lessThanOrEqualUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1229,7 +1229,7 @@ type greaterThanUint16 struct {
 }
 
 func (g greaterThanUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1246,7 +1246,7 @@ type greaterThanOrEqualUint16 struct {
 }
 
 func (g greaterThanOrEqualUint16) validate(name string, value uint16) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1291,7 +1291,7 @@ type minUint32 struct {
 }
 
 func (m minUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1308,7 +1308,7 @@ type maxUint32 struct {
 }
 
 func (m maxUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1325,7 +1325,7 @@ type betweenUint32 struct {
 }
 
 func (b betweenUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1334,7 +1334,7 @@ func (b betweenUint32) validate(name string, value uint32) (stop bool, err error
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1351,7 +1351,7 @@ type lessThanUint32 struct {
 }
 
 func (l lessThanUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1368,7 +1368,7 @@ type lessThanOrEqualUint32 struct {
 }
 
 func (l lessThanOrEqualUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1385,7 +1385,7 @@ type greaterThanUint32 struct {
 }
 
 func (g greaterThanUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1402,7 +1402,7 @@ type greaterThanOrEqualUint32 struct {
 }
 
 func (g greaterThanOrEqualUint32) validate(name string, value uint32) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1447,7 +1447,7 @@ type minUint64 struct {
 }
 
 func (m minUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1464,7 +1464,7 @@ type maxUint64 struct {
 }
 
 func (m maxUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1481,7 +1481,7 @@ type betweenUint64 struct {
 }
 
 func (b betweenUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1490,7 +1490,7 @@ func (b betweenUint64) validate(name string, value uint64) (stop bool, err error
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1507,7 +1507,7 @@ type lessThanUint64 struct {
 }
 
 func (l lessThanUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1524,7 +1524,7 @@ type lessThanOrEqualUint64 struct {
 }
 
 func (l lessThanOrEqualUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1541,7 +1541,7 @@ type greaterThanUint64 struct {
 }
 
 func (g greaterThanUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1558,7 +1558,7 @@ type greaterThanOrEqualUint64 struct {
 }
 
 func (g greaterThanOrEqualUint64) validate(name string, value uint64) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1603,7 +1603,7 @@ type minFloat32 struct {
 }
 
 func (m minFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1620,7 +1620,7 @@ type maxFloat32 struct {
 }
 
 func (m maxFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1637,7 +1637,7 @@ type betweenFloat32 struct {
 }
 
 func (b betweenFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1646,7 +1646,7 @@ func (b betweenFloat32) validate(name string, value float32) (stop bool, err err
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1663,7 +1663,7 @@ type lessThanFloat32 struct {
 }
 
 func (l lessThanFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1680,7 +1680,7 @@ type lessThanOrEqualFloat32 struct {
 }
 
 func (l lessThanOrEqualFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1697,7 +1697,7 @@ type greaterThanFloat32 struct {
 }
 
 func (g greaterThanFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1714,7 +1714,7 @@ type greaterThanOrEqualFloat32 struct {
 }
 
 func (g greaterThanOrEqualFloat32) validate(name string, value float32) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1759,7 +1759,7 @@ type minFloat64 struct {
 }
 
 func (m minFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1776,7 +1776,7 @@ type maxFloat64 struct {
 }
 
 func (m maxFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -1793,7 +1793,7 @@ type betweenFloat64 struct {
 }
 
 func (b betweenFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -1802,7 +1802,7 @@ func (b betweenFloat64) validate(name string, value float64) (stop bool, err err
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -1819,7 +1819,7 @@ type lessThanFloat64 struct {
 }
 
 func (l lessThanFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1836,7 +1836,7 @@ type lessThanOrEqualFloat64 struct {
 }
 
 func (l lessThanOrEqualFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -1853,7 +1853,7 @@ type greaterThanFloat64 struct {
 }
 
 func (g greaterThanFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -1870,7 +1870,7 @@ type greaterThanOrEqualFloat64 struct {
 }
 
 func (g greaterThanOrEqualFloat64) validate(name string, value float64) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),

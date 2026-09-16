@@ -43,7 +43,7 @@ type minElement struct {
 }
 
 func (m minElement) validate(name string, value Element) (stop bool, err error) {
-	if value < m.parameter {
+	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -60,7 +60,7 @@ type maxElement struct {
 }
 
 func (m maxElement) validate(name string, value Element) (stop bool, err error) {
-	if value > m.parameter {
+	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", m.parameter),
@@ -77,7 +77,7 @@ type betweenElement struct {
 }
 
 func (b betweenElement) validate(name string, value Element) (stop bool, err error) {
-	if value < b.min {
+	if !(value >= b.min) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
 			Parameter: fmt.Sprintf("%v", b.min),
@@ -86,7 +86,7 @@ func (b betweenElement) validate(name string, value Element) (stop bool, err err
 		}
 	}
 
-	if value > b.max {
+	if !(value <= b.max) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
 			Parameter: fmt.Sprintf("%v", b.max),
@@ -103,7 +103,7 @@ type lessThanElement struct {
 }
 
 func (l lessThanElement) validate(name string, value Element) (stop bool, err error) {
-	if value >= l.parameter {
+	if !(value < l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThan,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -120,7 +120,7 @@ type lessThanOrEqualElement struct {
 }
 
 func (l lessThanOrEqualElement) validate(name string, value Element) (stop bool, err error) {
-	if value > l.parameter {
+	if !(value <= l.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameLessThanOrEqual,
 			Parameter: fmt.Sprintf("%v", l.parameter),
@@ -137,7 +137,7 @@ type greaterThanElement struct {
 }
 
 func (g greaterThanElement) validate(name string, value Element) (stop bool, err error) {
-	if value <= g.parameter {
+	if !(value > g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThan,
 			Parameter: fmt.Sprintf("%v", g.parameter),
@@ -154,7 +154,7 @@ type greaterThanOrEqualElement struct {
 }
 
 func (g greaterThanOrEqualElement) validate(name string, value Element) (stop bool, err error) {
-	if value < g.parameter {
+	if !(value >= g.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameGreaterThanOrEqual,
 			Parameter: fmt.Sprintf("%v", g.parameter),
