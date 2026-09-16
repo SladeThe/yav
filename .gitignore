@@ -11,6 +11,13 @@
 
 # IDEs
 /.idea
+/.zed/
 
 # Vendor
 vendor/
+
+# Local agent files
+.codex/
+.agents/
+AGENTS.override.md
+!/AGENTS.md

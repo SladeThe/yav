@@ -17,7 +17,7 @@ func Keys[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[K])
 		var yavErrs yav.Errors
 
 		for k := range value {
-			yavErrs.Append(keyChain(name, k, validateFuncs))
+			keyChain(&yavErrs, name, k, validateFuncs)
 		}
 
 		return false, yavErrs.AsError()
@@ -29,7 +29,7 @@ func Values[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[V
 		var yavErrs yav.Errors
 
 		for k, v := range value {
-			yavErrs.Append(valueChain(name, k, v, validateFuncs))
+			valueChain(&yavErrs, name, k, v, validateFuncs)
 		}
 
 		return false, yavErrs.AsError()
@@ -41,41 +41,45 @@ func Entries[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[
 		var yavErrs yav.Errors
 
 		for k, v := range value {
-			yavErrs.Append(entryChain(name, k, v, validateFuncs))
+			entryChain(&yavErrs, name, k, v, validateFuncs)
 		}
 
 		return false, yavErrs.AsError()
 	}
 }
 
-func keyChain[K comparable](name string, key K, validateFuncs []yav.ValidateFunc[K]) error {
+func keyChain[K comparable](yavErrs *yav.Errors, name string, key K, validateFuncs []yav.ValidateFunc[K]) {
 	for _, validateFunc := range validateFuncs {
-		if stop, err := validateFunc(name, key); stop {
-			return withKeyName(name, key, err)
+		stop, err := validateFunc(name, key)
+		yavErrs.Append(withKeyName(name, key, err))
+		if stop {
+			break
 		}
 	}
-
-	return nil
 }
 
-func valueChain[K comparable, V any](name string, key K, value V, validateFuncs []yav.ValidateFunc[V]) error {
+func valueChain[K comparable, V any](
+	yavErrs *yav.Errors, name string, key K, value V, validateFuncs []yav.ValidateFunc[V],
+) {
 	for _, validateFunc := range validateFuncs {
-		if stop, err := validateFunc(name, value); stop {
-			return withKeyName(name, key, err)
+		stop, err := validateFunc(name, value)
+		yavErrs.Append(withKeyName(name, key, err))
+		if stop {
+			break
 		}
 	}
-
-	return nil
 }
 
-func entryChain[K comparable, V any](name string, key K, value V, validateFuncs []yav.ValidateFunc[Entry[K, V]]) error {
+func entryChain[K comparable, V any](
+	yavErrs *yav.Errors, name string, key K, value V, validateFuncs []yav.ValidateFunc[Entry[K, V]],
+) {
 	for _, validateFunc := range validateFuncs {
-		if stop, err := validateFunc(name, Entry[K, V]{key, value}); stop {
-			return withKeyName(name, key, err)
+		stop, err := validateFunc(name, Entry[K, V]{key, value})
+		yavErrs.Append(withKeyName(name, key, err))
+		if stop {
+			break
 		}
 	}
-
-	return nil
 }
 
 func withKeyName[K any](name string, key K, err error) error {

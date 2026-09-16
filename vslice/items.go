@@ -12,21 +12,21 @@ func Items[S ~[]T, T any](validateFuncs ...yav.ValidateFunc[T]) yav.ValidateFunc
 		var yavErrs yav.Errors
 
 		for i, v := range value {
-			yavErrs.Append(itemChain(name, i, v, validateFuncs))
+			itemChain(&yavErrs, name, i, v, validateFuncs)
 		}
 
 		return false, yavErrs.AsError()
 	}
 }
 
-func itemChain[T any](name string, index int, value T, validateFuncs []yav.ValidateFunc[T]) error {
+func itemChain[T any](yavErrs *yav.Errors, name string, index int, value T, validateFuncs []yav.ValidateFunc[T]) {
 	for _, validateFunc := range validateFuncs {
-		if stop, err := validateFunc(name, value); stop {
-			return withIndex(name, index, err)
+		stop, err := validateFunc(name, value)
+		yavErrs.Append(withIndex(name, index, err))
+		if stop {
+			break
 		}
 	}
-
-	return nil
 }
 
 func withIndex(name string, index int, err error) error {
