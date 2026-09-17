@@ -198,6 +198,7 @@ linters:
     - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code [fast: true, auto-fix: false]
     - unconvert # Remove unnecessary type conversions [fast: true, auto-fix: false]
     - unused # Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
+    - wsl # Block-to-expression spacing only; other rules are filtered below.
     - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
 
   # don't enable:
@@ -209,7 +210,6 @@ linters:
   # - maligned
   # - nestif
   # - testpackage
-  # - wsl
 
 issues:
   exclude-dirs:
@@ -231,3 +231,8 @@ issues:
         - lll
       # Keep generator commands and equivalent regexps copyable.
       source: "^//go:generate |^// (Equivalent regexp: )?`\\^.*\\$`$"
+
+    - linters:
+        - wsl
+      # Keep only missing blank lines between blocks and following expressions.
+      text: "^(anonymous|append|assignments|block|branch|case|declarations|defer|for|go|if|only|ranges|return|short|switch|type|expressions should not be cuddled with declarations or returns)"

@@ -48,6 +48,7 @@ Preserve paths such as `field[0].child` and `field[0][1]`; do not assume map ite
 Collection names match complete field/index prefixes; an empty collection name also accepts relative field names.
 
 String length checks count bytes. Alpha/digit helpers are ASCII; case and whitespace checks use Unicode.
+`Lowercase` and `Uppercase` accept valid UTF-8 unchanged by `strings.ToLower`/`strings.ToUpper`, including empty strings.
 Keep these semantics explicit in tests and documentation.
 
 ## Numeric generation
@@ -63,6 +64,7 @@ Preserve valid-input performance first; discuss error-construction cost separate
 Implement built-in fixed formats with native checks; regexp use is reserved for the explicit public Regexp adapter.
 When replacing a regexp, document an expression matching the native helper's behavior, including any separate length limits.
 Measure changes instead of assuming a closure, interface conversion, or byte conversion allocates.
+When performance varies by input, prefer substantially simpler or shorter code; saving one or two lines alone is rarely decisive.
 Do not manually inline helper bodies at call sites to tune compiler output; keep the helper calls.
 Separate fixed-rule reuse from construction, warm caches from cold misses, and valid from invalid inputs.
 Global caches need bounded-retention reasoning and synchronized reads and publication; copying a map alone is insufficient.
@@ -91,6 +93,11 @@ Run lint exactly as defined in `Makefile`, including its `GOTOOLCHAIN` setting. 
 ## Repository hygiene
 
 For every multiline delimiter pair (`()`, `[]`, `{}`), give the opening and closing lines the same indentation.
+Separate ordinary statements from large adjacent control-flow blocks with a blank line. Always leave a blank line after a block before a following ordinary statement.
+Separate adjacent code blocks with a blank line. A short `if` (body at most three lines) may stay next to a related preceding assignment, such as an error check.
+Prefer self-documenting code. Outside public API docs, add comments only to prevent likely mistakes by future readers or editors.
+Enforce only style rules linters can check without false positives; keep unsupported cases in review.
+WSL checks blank lines from control-flow blocks to expression statements; its other rules are excluded.
 Use bracketed Go doc links only when they resolve correctly and preserve IDE navigation. Keep declaration opening names and local parameter/field names plain.
 Keep references to unimported packages and unsupported members qualified and plain to preserve IDE navigation; do not use full import paths or explicit URLs.
 Preserve unrelated working-tree edits. Keep generated code, templates, tests, examples, and docs synchronized with relevant changes.

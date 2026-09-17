@@ -51,28 +51,54 @@ func Numeric(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
+// Lowercase accepts valid UTF-8 unchanged by [strings.ToLower], including empty strings.
 func Lowercase(name string, value string) (stop bool, err error) {
-	for _, r := range value {
-		if unicode.IsUpper(r) {
-			return true, yav.Error{
-				CheckName: yav.CheckNameLowercase,
-				ValueName: name,
-				Value:     value,
+	for index, r := range value {
+		if r <= unicode.MaxLatin1 {
+			if !unicode.IsUpper(r) {
+				continue
 			}
+		} else if unicode.ToLower(r) == r {
+			if r != utf8.RuneError {
+				continue
+			}
+
+			if _, width := utf8.DecodeRuneInString(value[index:]); width != 1 {
+				continue
+			}
+		}
+
+		return true, yav.Error{
+			CheckName: yav.CheckNameLowercase,
+			ValueName: name,
+			Value:     value,
 		}
 	}
 
 	return false, nil
 }
 
+// Uppercase accepts valid UTF-8 unchanged by [strings.ToUpper], including empty strings.
 func Uppercase(name string, value string) (stop bool, err error) {
-	for _, r := range value {
-		if unicode.IsLower(r) {
-			return true, yav.Error{
-				CheckName: yav.CheckNameUppercase,
-				ValueName: name,
-				Value:     value,
+	for index, r := range value {
+		if r <= unicode.MaxLatin1 {
+			if !unicode.IsLower(r) || r == 'ß' {
+				continue
 			}
+		} else if unicode.ToUpper(r) == r {
+			if r != utf8.RuneError {
+				continue
+			}
+
+			if _, width := utf8.DecodeRuneInString(value[index:]); width != 1 {
+				continue
+			}
+		}
+
+		return true, yav.Error{
+			CheckName: yav.CheckNameUppercase,
+			ValueName: name,
+			Value:     value,
 		}
 	}
 
