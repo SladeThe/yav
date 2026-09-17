@@ -164,6 +164,44 @@ func TestIsTitle(t *testing.T) {
 			stop: false,
 			err:  nil,
 		},
+	}, {
+		name: "invalid UTF-8",
+		args: args{
+			name:  "v",
+			value: "\xff",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameTitle,
+				ValueName: "v",
+				Value:     "\xff",
+			},
+		},
+	}, {
+		name: "truncated UTF-8",
+		args: args{
+			name:  "v",
+			value: "a\xe2\x82",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameTitle,
+				ValueName: "v",
+				Value:     "a\xe2\x82",
+			},
+		},
+	}, {
+		name: "replacement character",
+		args: args{
+			name:  "v",
+			value: "\uFFFD",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
 	}}
 
 	for _, tt := range tests {
@@ -694,6 +732,9 @@ func TestText(t *testing.T) {
 		{name: "Unicode space", value: "a\u00A0b", valid: true},
 		{name: "control", value: "\u0007", valid: false},
 		{name: "tab", value: "\t", valid: false},
+		{name: "invalid UTF-8", value: "\xff", valid: false},
+		{name: "truncated UTF-8", value: "a\xe2\x82", valid: false},
+		{name: "replacement character", value: "\uFFFD", valid: true},
 	}
 
 	testCharacterCheck(t, Text, yav.CheckNameText, tests)

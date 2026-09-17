@@ -3,6 +3,7 @@ package common
 import (
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 const (
@@ -33,10 +34,16 @@ func IsSpecialCharacter(r rune) bool {
 	return strings.ContainsRune(CharactersSpecial, r)
 }
 
-// IsText checks the given value to contain only visible characters and various whitespaces, including line breaks.
+// IsText checks for valid UTF-8 containing only graphic characters and CR/LF line breaks.
 // No ring bells and other control characters. The value is allowed to be empty.
 func IsText(value string) bool {
-	for _, r := range value {
+	for index, r := range value {
+		if r == utf8.RuneError {
+			if _, width := utf8.DecodeRuneInString(value[index:]); width == 1 {
+				return false
+			}
+		}
+
 		if r != '\r' && r != '\n' && !unicode.IsGraphic(r) {
 			return false
 		}
@@ -45,7 +52,7 @@ func IsText(value string) bool {
 	return true
 }
 
-// IsTitle checks the given value is a single non-empty line with neither leading nor trailing spaces.
+// IsTitle checks for a non-empty, valid UTF-8 line with neither leading nor trailing spaces.
 // It must contain only printable characters and single ASCII spaces (a space must not follow a space).
 // No tabulations, no unbreakable spaces, no ring bells and other control characters.
 func IsTitle(value string) bool {
@@ -55,7 +62,13 @@ func IsTitle(value string) bool {
 
 	lastSpace := false
 
-	for _, r := range value {
+	for index, r := range value {
+		if r == utf8.RuneError {
+			if _, width := utf8.DecodeRuneInString(value[index:]); width == 1 {
+				return false
+			}
+		}
+
 		if !unicode.IsPrint(r) {
 			return false
 		}
