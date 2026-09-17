@@ -70,7 +70,8 @@ For hot-path changes, record `ns/op`, `B/op`, and `allocs/op`; use focused alloc
 Give each benchmark a clear unit, exclude fixture setup, retain results, and compare representative sizes and failure positions.
 Compare implementations within one process; this machine's two CCDs make separate-process timings unsuitable for comparison.
 
-Run commands from the repository root with the Go version required by `go.mod` or newer:
+Run commands from the repository root using the `toolchain` version in `go.mod`. Make exports it as `GOTOOLCHAIN`; CI reads it through setup-go.
+For direct Go commands, set `GOTOOLCHAIN` explicitly when the installed Go is newer; the toolchain directive does not force a downgrade.
 
 ```text
 go test -mod=readonly ./...

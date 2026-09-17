@@ -4,19 +4,15 @@ run:
   issues-exit-code: 1
   tests: true
   build-tags: []
-  skip-dirs:
-    - examples
-  skip-dirs-use-default: true # skip vendor, third_party, test_data
 
 output:
   # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   # print lines of code with issue, default is true
   print-issued-lines: true
   # print linter name in the end of issue text, default is true
   print-linter-name: true
-  # make issues output unique by line, default is true
-  uniq-by-line: true
   # add a prefix to the output file references; default is no prefix
   path-prefix: ""
 
@@ -29,6 +25,7 @@ linters-settings:
         allow:
           - $gostd
           - github.com/
+          - golang.org/x/exp/constraints
         deny:
           - pkg: github.com/pkg/errors
             desc: the repo is archived and should be replaced with standard lib errors
@@ -81,7 +78,6 @@ linters-settings:
       - paramTypeCombine
       - singleCaseSwitch
       - sloppyReassign
-      - timeCmpSimplify # suggests replacing !before with after, which is wrong in general case
       - unnamedResult
     settings:
       hugeParam:
@@ -95,20 +91,6 @@ linters-settings:
   goimports:
     local-prefixes: github.com/SladeThe/yav
 
-  golint:
-    min-confidence: 0
-
-  gomnd:
-    settings:
-      mnd:
-        checks:
-          - argument
-          - case
-          - condition
-          - operation
-          - return
-          - assign
-
   gosec:
     excludes:
       - G101 # Potential hardcoded credentials
@@ -116,7 +98,8 @@ linters-settings:
       - G402 # TLS InsecureSkipVerify set true
 
   govet:
-    check-shadowing: false
+    disable:
+      - shadow
 
   grouper:
     const-require-single-const: false # Require the use of a single global 'const' declaration only.
@@ -138,9 +121,6 @@ linters-settings:
     line-length: 120
     tab-width: 4
 
-  maligned:
-    suggest-new: true
-
   misspell:
     locale: US
     ignore-words: []
@@ -161,6 +141,16 @@ linters-settings:
       "2FA", "ACS", "DB", "GC", "GRPC", "IAM", "IDP", "JPEG", "JPG", "PNG", "SA", "SAML", "SLO", "SMS", "TOTP"
     ]
 
+  usetesting:
+    # Keep the former tenv scope.
+    os-setenv: true
+    os-create-temp: false
+    os-mkdir-temp: false
+    os-temp-dir: false
+    os-chdir: false
+    context-background: false
+    context-todo: false
+
 linters:
   # please, do not use `enable-all`: it's deprecated and will be removed soon.
   # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
@@ -176,7 +166,6 @@ linters:
     - durationcheck # Check for two durations multiplied together
     - errcheck # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases [fast: true, auto-fix: false]
     - exhaustive # Check exhaustiveness of enum switch statements [fast: true, auto-fix: false]
-    - exportloopref # An analyzer that finds exporting pointers for loop variables. [fast: true, auto-fix: false]
     - funlen # Tool for detection of long functions [fast: true, auto-fix: false]
     - gci # Gci controls golang package import order and makes it always deterministic.
     - gocheckcompilerdirectives # Checks that go compiler directive comments (//go:) are valid.
@@ -205,7 +194,7 @@ linters:
     - rowserrcheck # Checks whether Err of rows is checked successfully [fast: true, auto-fix: false]
     - staticcheck # Staticcheck is a go vet on steroids, applying a ton of static analysis checks [fast: true, auto-fix: false]
     - stylecheck # Stylecheck is a replacement for golint [fast: true, auto-fix: false]
-    - tenv # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17
+    - usetesting # Prefer t.Setenv over os.Setenv in tests.
     - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code [fast: true, auto-fix: false]
     - unconvert # Remove unnecessary type conversions [fast: true, auto-fix: false]
     - unused # Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
@@ -223,6 +212,11 @@ linters:
   # - wsl
 
 issues:
+  exclude-dirs:
+    - examples
+  exclude-dirs-use-default: true # skip vendor, third_party, test_data
+  uniq-by-line: true
+
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
     - path: _test\.go
@@ -231,8 +225,6 @@ issues:
         - funlen
         - gocognit
         - goconst
-        - goerr113
-        - gomnd
         - gosec
 
     - linters:
