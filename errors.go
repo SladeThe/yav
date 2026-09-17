@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 )
 
@@ -310,27 +311,77 @@ func (errs Errors) AsError() error {
 	return errs
 }
 
+// Append adds err, ignoring nil. Empty merges leave destination slices unchanged.
+// Adopted slices share elements, but not spare capacity.
 func (errs *Errors) Append(err error) {
-	if err == nil {
-		return
+	if err != nil {
+		errs.append(err)
 	}
+}
 
+func (errs *Errors) append(err error) {
 	switch typedErr := err.(type) {
 	case Errors:
-		if len(errs.Unknown) > 0 {
-			errs.Unknown = append(errs.Unknown, typedErr.Unknown...)
-		} else {
-			errs.Unknown = typedErr.Unknown
+		errs.appendUnknown(typedErr.Unknown)
+
+		if len(typedErr.Validation) == 0 {
+			return
 		}
 
 		if len(errs.Validation) > 0 {
 			errs.Validation = append(errs.Validation, typedErr.Validation...)
 		} else {
-			errs.Validation = typedErr.Validation
+			errs.Validation = slices.Clip(typedErr.Validation)
 		}
 	case Error:
 		errs.Validation = append(errs.Validation, typedErr)
 	default:
 		errs.Unknown = append(errs.Unknown, typedErr)
+	}
+}
+
+// AppendConverted applies convertFunc to validation errors before appending them.
+// A nil convertFunc behaves like Append. Unknown errors are appended unchanged.
+func (errs *Errors) AppendConverted(err error, convertFunc func(Error) Error) {
+	if err != nil {
+		errs.appendConverted(err, convertFunc)
+	}
+}
+
+func (errs *Errors) appendConverted(err error, convertFunc func(Error) Error) {
+	if convertFunc == nil {
+		errs.append(err)
+		return
+	}
+
+	switch typedErr := err.(type) {
+	case Errors:
+		errs.appendUnknown(typedErr.Unknown)
+
+		if len(typedErr.Validation) == 0 {
+			return
+		}
+
+		errs.Validation = slices.Grow(errs.Validation, len(typedErr.Validation))
+
+		for _, yavErr := range typedErr.Validation {
+			errs.Validation = append(errs.Validation, convertFunc(yavErr))
+		}
+	case Error:
+		errs.Validation = append(errs.Validation, convertFunc(typedErr))
+	default:
+		errs.Unknown = append(errs.Unknown, typedErr)
+	}
+}
+
+func (errs *Errors) appendUnknown(unknownErrs []error) {
+	if len(unknownErrs) == 0 {
+		return
+	}
+
+	if len(errs.Unknown) > 0 {
+		errs.Unknown = append(errs.Unknown, unknownErrs...)
+	} else {
+		errs.Unknown = slices.Clip(unknownErrs)
 	}
 }

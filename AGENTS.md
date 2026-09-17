@@ -25,7 +25,10 @@ Names only label errors; they do not look up struct fields. A successful chain r
 Use `yav.Nested` or `yav.NestedValidate` for namespaced errors.
 `yav.Or` selects the first nil-error result, otherwise the last failure and its stop flag.
 Keep `CheckName`, `Parameter`, `ValueName`, and `Value` consistent with neighboring checks.
-Test error ownership when composing or renaming aggregates; their slices can alias.
+Nested and NamedCheck copy validation entries before rewriting them. Collection conversion appends transformed entries directly into the destination.
+Append clips adopted slice capacity to prevent append overwrites. AppendConverted applies convertFunc only to validation errors; nil uses Append.
+Merging an empty error slice preserves the destination's nilness and capacity.
+Public slices and error payloads can still alias; direct mutation requires caller-managed ownership.
 
 `Required` rejects the value kind's empty value; `OmitEmpty` skips remaining checks for it.
 Strings, slices, maps, and bytes use length; pointers use nil; numbers and durations use zero; bool uses false; time uses `IsZero`.
@@ -51,8 +54,9 @@ Edit templates, run `go generate ./vnumber`, and review the generated diff toget
 
 ## Performance and testing
 
-Keep valid paths cheap. Build error payloads and format diagnostics only where needed.
+Preserve valid-input performance first; discuss error-construction cost separately. Build error payloads and format diagnostics only where needed.
 Measure changes instead of assuming a closure, interface conversion, or byte conversion allocates.
+Do not manually inline helper bodies at call sites to tune compiler output; keep the helper calls.
 Separate fixed-rule reuse from construction, warm caches from cold misses, and valid from invalid inputs.
 Global caches need bounded-retention reasoning and synchronized reads and publication; copying a map alone is insufficient.
 
@@ -60,6 +64,7 @@ Follow existing table-driven test style and check both return values plus comple
 Cover composition, boundary values, nil/empty inputs, named types, Unicode, and NaN where relevant.
 For hot-path changes, record `ns/op`, `B/op`, and `allocs/op`; use focused allocation assertions for stable guarantees.
 Give each benchmark a clear unit, exclude fixture setup, retain results, and compare representative sizes and failure positions.
+Compare implementations within one process; this machine's two CCDs make separate-process timings unsuitable for comparison.
 
 Run commands from the repository root with the Go version required by `go.mod` or newer:
 

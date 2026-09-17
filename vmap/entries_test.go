@@ -1,6 +1,7 @@
 package vmap
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
@@ -28,6 +29,8 @@ func TestKeys(t *testing.T) {
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
 	}
+
+	reusedErr := yav.Errors{Validation: []yav.Error{yav.ErrRequired("v")}}
 
 	tests := []struct {
 		name string
@@ -67,6 +70,29 @@ func TestKeys(t *testing.T) {
 					ValueName: "v[1]",
 					Value:     1,
 				}},
+			},
+		},
+	}, {
+		name: "reused aggregate",
+		args: args{
+			validateFuncs: []yav.ValidateFunc[int]{
+				func(string, int) (bool, error) {
+					return false, reusedErr
+				},
+				func(string, int) (bool, error) {
+					return true, reusedErr
+				},
+			},
+			name:  "v",
+			value: map[int]int{1: 2},
+		},
+		want: want{
+			stop: false,
+			err: yav.Errors{
+				Validation: []yav.Error{
+					yav.ErrRequired("v[1]"),
+					yav.ErrRequired("v[1]"),
+				},
 			},
 		},
 	}}
@@ -96,6 +122,8 @@ func TestValues(t *testing.T) {
 		}
 	}
 
+	reusedErr := yav.Errors{Validation: []yav.Error{yav.ErrRequired("v")}}
+
 	tests := []struct {
 		name string
 		args args
@@ -136,6 +164,29 @@ func TestValues(t *testing.T) {
 				}},
 			},
 		},
+	}, {
+		name: "reused aggregate",
+		args: args{
+			validateFuncs: []yav.ValidateFunc[int]{
+				func(string, int) (bool, error) {
+					return false, reusedErr
+				},
+				func(string, int) (bool, error) {
+					return true, reusedErr
+				},
+			},
+			name:  "v",
+			value: map[int]int{1: 2},
+		},
+		want: want{
+			stop: false,
+			err: yav.Errors{
+				Validation: []yav.Error{
+					yav.ErrRequired("v[1]"),
+					yav.ErrRequired("v[1]"),
+				},
+			},
+		},
 	}}
 
 	for _, tt := range tests {
@@ -162,6 +213,8 @@ func TestEntries(t *testing.T) {
 			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
 		}
 	}
+
+	reusedErr := yav.Errors{Validation: []yav.Error{yav.ErrRequired("v")}}
 
 	tests := []struct {
 		name string
@@ -203,6 +256,79 @@ func TestEntries(t *testing.T) {
 				}},
 			},
 		},
+	}, {
+		name: "reused aggregate",
+		args: args{
+			validateFuncs: []yav.ValidateFunc[Entry[int, int]]{
+				func(string, Entry[int, int]) (bool, error) {
+					return false, reusedErr
+				},
+				func(string, Entry[int, int]) (bool, error) {
+					return true, reusedErr
+				},
+			},
+			name:  "v",
+			value: map[int]int{1: 2},
+		},
+		want: want{
+			stop: false,
+			err: yav.Errors{
+				Validation: []yav.Error{
+					yav.ErrRequired("v[1]"),
+					yav.ErrRequired("v[1]"),
+				},
+			},
+		},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, test(tt.args, tt.want))
+	}
+}
+
+func TestWithKeyName(t *testing.T) {
+	type args struct {
+		err error
+	}
+
+	type want struct {
+		isNil bool
+	}
+
+	test := func(a args, w want) func(t *testing.T) {
+		return func(t *testing.T) {
+			convertFunc := withKeyName("v", 1, a.err)
+			assert.Equalf(t, w.isNil, convertFunc == nil, "invalid nil convertFunc: want = %v, got = %v", w.isNil, convertFunc == nil)
+		}
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{{
+		name: "nil error",
+		want: want{isNil: true},
+	}, {
+		name: "unknown error",
+		args: args{err: errors.New("unknown")},
+		want: want{isNil: true},
+	}, {
+		name: "empty aggregate",
+		args: args{err: yav.Errors{}},
+		want: want{isNil: true},
+	}, {
+		name: "unknown aggregate",
+		args: args{err: yav.Errors{Unknown: []error{errors.New("unknown")}}},
+		want: want{isNil: true},
+	}, {
+		name: "validation error",
+		args: args{err: yav.ErrRequired("v")},
+		want: want{isNil: false},
+	}, {
+		name: "validation aggregate",
+		args: args{err: yav.Errors{Validation: []yav.Error{yav.ErrRequired("v")}}},
+		want: want{isNil: false},
 	}}
 
 	for _, tt := range tests {

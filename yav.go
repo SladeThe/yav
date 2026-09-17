@@ -1,5 +1,7 @@
 package yav
 
+import "slices"
+
 type Validatable interface {
 	Validate() error
 }
@@ -142,6 +144,7 @@ func Nested(name string, err error) error {
 	case Error:
 		return nestedYAV(name, typedErr)
 	case Errors:
+		typedErr.Validation = slices.Clone(typedErr.Validation)
 		for i, yavErr := range typedErr.Validation {
 			typedErr.Validation[i] = nestedYAV(name, yavErr)
 		}
@@ -181,14 +184,20 @@ func NestedValidate[T Validatable](name string, value T) (stop bool, err error) 
 // clearing Error.Parameter and replacing Error.CheckName with the given name.
 // Unsupported and nil errors are returned as is.
 func NamedCheck(checkName string, err error) error {
-	if err == nil {
-		return nil
+	if err != nil {
+		return namedCheck(checkName, err)
 	}
 
+	return nil
+}
+
+// Keep the nil-error path in NamedCheck inlineable.
+func namedCheck(checkName string, err error) error {
 	switch typedErr := err.(type) {
 	case Error:
 		return namedCheckYAV(checkName, typedErr)
 	case Errors:
+		typedErr.Validation = slices.Clone(typedErr.Validation)
 		for i, yavErr := range typedErr.Validation {
 			typedErr.Validation[i] = namedCheckYAV(checkName, yavErr)
 		}

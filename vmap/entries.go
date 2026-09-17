@@ -51,7 +51,7 @@ func Entries[M ~map[K]V, K comparable, V any](validateFuncs ...yav.ValidateFunc[
 func keyChain[K comparable](yavErrs *yav.Errors, name string, key K, validateFuncs []yav.ValidateFunc[K]) {
 	for _, validateFunc := range validateFuncs {
 		stop, err := validateFunc(name, key)
-		yavErrs.Append(withKeyName(name, key, err))
+		yavErrs.AppendConverted(err, withKeyName(name, key, err))
 		if stop {
 			break
 		}
@@ -63,7 +63,7 @@ func valueChain[K comparable, V any](
 ) {
 	for _, validateFunc := range validateFuncs {
 		stop, err := validateFunc(name, value)
-		yavErrs.Append(withKeyName(name, key, err))
+		yavErrs.AppendConverted(err, withKeyName(name, key, err))
 		if stop {
 			break
 		}
@@ -75,42 +75,43 @@ func entryChain[K comparable, V any](
 ) {
 	for _, validateFunc := range validateFuncs {
 		stop, err := validateFunc(name, Entry[K, V]{key, value})
-		yavErrs.Append(withKeyName(name, key, err))
+		yavErrs.AppendConverted(err, withKeyName(name, key, err))
 		if stop {
 			break
 		}
 	}
 }
 
-func withKeyName[K any](name string, key K, err error) error {
+func withKeyName[K any](name string, key K, err error) func(yav.Error) yav.Error {
 	if err == nil {
 		return nil
 	}
 
 	switch typedErr := err.(type) {
 	case yav.Error:
-		return withKeyNameYAV(name, key, typedErr)
 	case yav.Errors:
-		for i, yavErr := range typedErr.Validation {
-			typedErr.Validation[i] = withKeyNameYAV(name, key, yavErr)
+		if len(typedErr.Validation) == 0 {
+			return nil
 		}
-
-		return typedErr
 	default:
-		return err
+		return nil
 	}
+
+	return withKeyNameYAV(name, key)
 }
 
-func withKeyNameYAV[K any](name string, key K, yavErr yav.Error) yav.Error {
-	if !strings.HasPrefix(yavErr.ValueName, name) {
+func withKeyNameYAV[K any](name string, key K) func(yav.Error) yav.Error {
+	return func(yavErr yav.Error) yav.Error {
+		if !strings.HasPrefix(yavErr.ValueName, name) {
+			return yavErr
+		}
+
+		if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
+			yavErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, yavErr.ValueName[len(name):])
+		} else {
+			yavErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, yavErr.ValueName[len(name):])
+		}
+
 		return yavErr
 	}
-
-	if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
-		yavErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, yavErr.ValueName[len(name):])
-	} else {
-		yavErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, yavErr.ValueName[len(name):])
-	}
-
-	return yavErr
 }

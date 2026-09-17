@@ -22,42 +22,43 @@ func Items[S ~[]T, T any](validateFuncs ...yav.ValidateFunc[T]) yav.ValidateFunc
 func itemChain[T any](yavErrs *yav.Errors, name string, index int, value T, validateFuncs []yav.ValidateFunc[T]) {
 	for _, validateFunc := range validateFuncs {
 		stop, err := validateFunc(name, value)
-		yavErrs.Append(withIndex(name, index, err))
+		yavErrs.AppendConverted(err, withIndex(name, index, err))
 		if stop {
 			break
 		}
 	}
 }
 
-func withIndex(name string, index int, err error) error {
+func withIndex(name string, index int, err error) func(yav.Error) yav.Error {
 	if err == nil {
 		return nil
 	}
 
 	switch typedErr := err.(type) {
 	case yav.Error:
-		return withIndexYAV(name, index, typedErr)
 	case yav.Errors:
-		for i, yavErr := range typedErr.Validation {
-			typedErr.Validation[i] = withIndexYAV(name, index, yavErr)
+		if len(typedErr.Validation) == 0 {
+			return nil
 		}
-
-		return typedErr
 	default:
-		return err
+		return nil
 	}
+
+	return withIndexYAV(name, index)
 }
 
-func withIndexYAV(name string, index int, yavErr yav.Error) yav.Error {
-	if !strings.HasPrefix(yavErr.ValueName, name) {
+func withIndexYAV(name string, index int) func(yav.Error) yav.Error {
+	return func(yavErr yav.Error) yav.Error {
+		if !strings.HasPrefix(yavErr.ValueName, name) {
+			return yavErr
+		}
+
+		if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
+			yavErr.ValueName = fmt.Sprintf("%s[%d].%s", name, index, yavErr.ValueName[len(name):])
+		} else {
+			yavErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, yavErr.ValueName[len(name):])
+		}
+
 		return yavErr
 	}
-
-	if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
-		yavErr.ValueName = fmt.Sprintf("%s[%d].%s", name, index, yavErr.ValueName[len(name):])
-	} else {
-		yavErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, yavErr.ValueName[len(name):])
-	}
-
-	return yavErr
 }
