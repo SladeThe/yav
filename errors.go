@@ -253,7 +253,7 @@ func (errs Errors) As(target any) bool {
 	}
 
 	for _, yavErr := range errs.Validation {
-		if yavErr.As(target) {
+		if errors.As(yavErr, target) {
 			return true
 		}
 	}
