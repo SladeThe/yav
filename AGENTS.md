@@ -3,6 +3,7 @@
 Go validation library at `github.com/SladeThe/yav`.
 Priorities: fast validation with as few heap allocations as possible, then a statically checked API.
 Use explicit typed checks; field tags and reflective struct traversal are not the API.
+Use the latest go-playground/validator checks as a behavior reference. Fix confirmed bugs even when upstream shares them.
 
 ## Layout
 
@@ -56,6 +57,8 @@ Edit templates, run `go generate ./vnumber`, and review the generated diff toget
 ## Performance and testing
 
 Preserve valid-input performance first; discuss error-construction cost separately. Build error payloads and format diagnostics only where needed.
+Implement built-in fixed formats with native checks; regexp use is reserved for the explicit public Regexp adapter.
+When replacing a regexp, document an expression matching the native helper's behavior, including any separate length limits.
 Measure changes instead of assuming a closure, interface conversion, or byte conversion allocates.
 Do not manually inline helper bodies at call sites to tune compiler output; keep the helper calls.
 Separate fixed-rule reuse from construction, warm caches from cold misses, and valid from invalid inputs.
