@@ -106,10 +106,16 @@ func withKeyNameYAV[K any](name string, key K) func(yav.Error) yav.Error {
 			return yavErr
 		}
 
-		if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
-			yavErr.ValueName = fmt.Sprintf("%s[%v].%s", name, key, yavErr.ValueName[len(name):])
+		suffix := yavErr.ValueName[len(name):]
+
+		if suffix != "" && suffix[0] != '.' && suffix[0] != '[' {
+			if name != "" {
+				return yavErr
+			}
+
+			yavErr.ValueName = fmt.Sprintf("[%v].%s", key, suffix)
 		} else {
-			yavErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, yavErr.ValueName[len(name):])
+			yavErr.ValueName = fmt.Sprintf("%s[%v]%s", name, key, suffix)
 		}
 
 		return yavErr

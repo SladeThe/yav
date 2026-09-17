@@ -53,10 +53,16 @@ func withIndexYAV(name string, index int) func(yav.Error) yav.Error {
 			return yavErr
 		}
 
-		if len(yavErr.ValueName) > len(name) && yavErr.ValueName[len(name)] != '.' {
-			yavErr.ValueName = fmt.Sprintf("%s[%d].%s", name, index, yavErr.ValueName[len(name):])
+		suffix := yavErr.ValueName[len(name):]
+
+		if suffix != "" && suffix[0] != '.' && suffix[0] != '[' {
+			if name != "" {
+				return yavErr
+			}
+
+			yavErr.ValueName = fmt.Sprintf("[%d].%s", index, suffix)
 		} else {
-			yavErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, yavErr.ValueName[len(name):])
+			yavErr.ValueName = fmt.Sprintf("%s[%d]%s", name, index, suffix)
 		}
 
 		return yavErr

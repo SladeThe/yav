@@ -148,3 +148,112 @@ func TestWithIndex(t *testing.T) {
 		t.Run(tt.name, test(tt.args, tt.want))
 	}
 }
+
+func TestWithIndexYAV(t *testing.T) {
+	type args struct {
+		name  string
+		index int
+		err   yav.Error
+	}
+
+	type want struct {
+		err yav.Error
+	}
+
+	test := func(a args, w want) func(t *testing.T) {
+		return func(t *testing.T) {
+			err := withIndexYAV(a.name, a.index)(a.err)
+			assert.Truef(t, reflect.DeepEqual(w.err, err), "invalid error: want = %v, got = %v", w.err, err)
+		}
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{{
+		name: "exact name",
+		args: args{
+			name:  "items",
+			index: 0,
+			err:   yav.ErrRequired("items"),
+		},
+		want: want{
+			err: yav.ErrRequired("items[0]"),
+		},
+	}, {
+		name: "child field",
+		args: args{
+			name:  "items",
+			index: 0,
+			err:   yav.ErrRequired("items.child"),
+		},
+		want: want{
+			err: yav.ErrRequired("items[0].child"),
+		},
+	}, {
+		name: "nested index",
+		args: args{
+			name:  "items",
+			index: 0,
+			err:   yav.ErrRequired("items[1]"),
+		},
+		want: want{
+			err: yav.ErrRequired("items[0][1]"),
+		},
+	}, {
+		name: "unrelated prefix",
+		args: args{
+			name:  "a",
+			index: 0,
+			err:   yav.ErrRequired("age"),
+		},
+		want: want{
+			err: yav.ErrRequired("age"),
+		},
+	}, {
+		name: "unrelated name",
+		args: args{
+			name:  "items",
+			index: 0,
+			err:   yav.ErrRequired("other"),
+		},
+		want: want{
+			err: yav.ErrRequired("other"),
+		},
+	}, {
+		name: "unnamed collection field",
+		args: args{
+			name:  "",
+			index: 0,
+			err:   yav.ErrRequired("child"),
+		},
+		want: want{
+			err: yav.ErrRequired("[0].child"),
+		},
+	}, {
+		name: "unnamed collection index",
+		args: args{
+			name:  "",
+			index: 0,
+			err:   yav.ErrRequired("[1]"),
+		},
+		want: want{
+			err: yav.ErrRequired("[0][1]"),
+		},
+	}, {
+		name: "unnamed collection value",
+		args: args{
+			name:  "",
+			index: 0,
+			err:   yav.ErrRequired(""),
+		},
+		want: want{
+			err: yav.ErrRequired("[0]"),
+		},
+	}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, test(tt.args, tt.want))
+	}
+}

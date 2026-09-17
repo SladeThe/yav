@@ -41,6 +41,7 @@ Conditions and compared values are captured during construction. Recompute input
 `vslice.Items` and `vmap.Keys`/`Values`/`Entries` validate contained values.
 `vpointer.Dereference` requires a non-nil pointer; precede it with `vpointer.OmitEmpty` for optional pointers.
 Preserve paths such as `field[0].child` and `field[0][1]`; do not assume map iteration order.
+Collection names match complete field/index prefixes; an empty collection name also accepts relative field names.
 
 String length checks count bytes. Alpha/digit helpers are ASCII; case and whitespace checks use Unicode.
 Keep these semantics explicit in tests and documentation.
