@@ -12,6 +12,7 @@ var (
 	uuidPartLengths = [5]int{8, 4, 4, 4, 12}
 )
 
+// UUID checks the 8-4-4-4-12 hexadecimal form, accepting mixed case.
 func UUID(name string, value string) (stop bool, err error) {
 	if !isUUID(value) {
 		return true, yav.Error{
@@ -34,7 +35,7 @@ func isUUID(value string) bool {
 
 	for _, r := range []byte(value) {
 		if partLength > 0 {
-			if (r < '0' || r > '9') && (r < 'a' || r > 'f') {
+			if lower := r | ('a' - 'A'); (r < '0' || r > '9') && (lower < 'a' || lower > 'f') {
 				return false
 			}
 

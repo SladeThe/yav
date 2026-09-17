@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/SladeThe/yav"
@@ -34,14 +33,48 @@ func TestUUID(t *testing.T) {
 		args args
 		want want
 	}{{
-		name: "valid",
+		name: "lowercase",
 		args: args{
 			name:  "",
-			value: uuid.NewString(),
+			value: "6a310c88-4698-4807-9578-f1f054a8b4ca",
 		},
 		want: want{
 			stop: false,
 			err:  nil,
+		},
+	}, {
+		name: "uppercase",
+		args: args{
+			name:  "id",
+			value: "6A310C88-4698-4807-9578-F1F054A8B4CA",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "mixed case",
+		args: args{
+			name:  "id",
+			value: "6a310C88-4698-4807-9578-f1f054a8B4ca",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "invalid uppercase hex",
+		args: args{
+			name:  "id",
+			value: "6A310C88-4698-4807-9578-G1F054A8B4CA",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: "uuid",
+				ValueName: "id",
+				Value:     "6A310C88-4698-4807-9578-G1F054A8B4CA",
+			},
 		},
 	}, {
 		name: "invalid length",

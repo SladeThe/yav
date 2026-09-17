@@ -76,7 +76,8 @@ Give each benchmark a clear unit, exclude fixture setup, retain results, and com
 Compare implementations within one process; this machine's two CCDs make separate-process timings unsuitable for comparison.
 
 Run commands from the repository root using the `toolchain` version in `go.mod`. Make exports it as `GOTOOLCHAIN`; CI reads it through setup-go.
-For direct Go commands, set `GOTOOLCHAIN` explicitly when the installed Go is newer; the toolchain directive does not force a downgrade.
+For direct Go commands, invoke the executable matching `toolchain` in `go.mod`; the directive does not downgrade a newer installed Go.
+Keep each invocation standalone; do not prepend environment assignments that prevent reusable command approvals.
 
 ```text
 go test -mod=readonly ./...
