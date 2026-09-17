@@ -24,7 +24,7 @@ func Min[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 		return validateFunc.(yav.ValidateFunc[S])
 	}
 
-	return internal.RegisterMapEntry[key[int], any](&minFuncs, k, min[S](parameter)).(yav.ValidateFunc[S])
+	return internal.RegisterMapEntry[key[int], any](&minFuncs, k, minimum[S](parameter)).(yav.ValidateFunc[S])
 }
 
 func Max[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
@@ -34,20 +34,22 @@ func Max[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 		return validateFunc.(yav.ValidateFunc[S])
 	}
 
-	return internal.RegisterMapEntry[key[int], any](&maxFuncs, k, max[S](parameter)).(yav.ValidateFunc[S])
+	return internal.RegisterMapEntry[key[int], any](&maxFuncs, k, maximum[S](parameter)).(yav.ValidateFunc[S])
 }
 
-func Between[S ~[]T, T any](min, max int) yav.ValidateFunc[S] {
-	k := newKey[betweenKey, S](betweenKey{min: min, max: max})
+func Between[S ~[]T, T any](minimum, maximum int) yav.ValidateFunc[S] {
+	k := newKey[betweenKey, S](betweenKey{min: minimum, max: maximum})
 
 	if validateFunc, ok := betweenFuncs[k]; ok {
 		return validateFunc.(yav.ValidateFunc[S])
 	}
 
-	return internal.RegisterMapEntry[key[betweenKey], any](&betweenFuncs, k, between[S](min, max)).(yav.ValidateFunc[S])
+	return internal.RegisterMapEntry[key[betweenKey], any](
+		&betweenFuncs, k, between[S](minimum, maximum),
+	).(yav.ValidateFunc[S])
 }
 
-func min[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
+func minimum[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) < parameter {
 			return true, yav.Error{
@@ -62,7 +64,7 @@ func min[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 	}
 }
 
-func max[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
+func maximum[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 	return func(name string, value S) (stop bool, err error) {
 		if len(value) > parameter {
 			return true, yav.Error{
@@ -77,21 +79,21 @@ func max[S ~[]T, T any](parameter int) yav.ValidateFunc[S] {
 	}
 }
 
-func between[S ~[]T, T any](min, max int) yav.ValidateFunc[S] {
+func between[S ~[]T, T any](minimum, maximum int) yav.ValidateFunc[S] {
 	return func(name string, value S) (stop bool, err error) {
-		if len(value) < min {
+		if len(value) < minimum {
 			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
-				Parameter: strconv.Itoa(min),
+				Parameter: strconv.Itoa(minimum),
 				ValueName: name,
 				Value:     value,
 			}
 		}
 
-		if len(value) > max {
+		if len(value) > maximum {
 			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
-				Parameter: strconv.Itoa(max),
+				Parameter: strconv.Itoa(maximum),
 				ValueName: name,
 				Value:     value,
 			}

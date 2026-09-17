@@ -11,15 +11,15 @@ import (
 )
 
 func MinInt(parameter int) yav.ValidateFunc[int] {
-	return minInt{parameter: parameter}.validate
+	return minimumInt{parameter: parameter}.validate
 }
 
 func MaxInt(parameter int) yav.ValidateFunc[int] {
-	return maxInt{parameter: parameter}.validate
+	return maximumInt{parameter: parameter}.validate
 }
 
-func BetweenInt(min, max int) yav.ValidateFunc[int] {
-	return betweenInt{min: min, max: max}.validate
+func BetweenInt(minimum, maximum int) yav.ValidateFunc[int] {
+	return betweenInt{min: minimum, max: maximum}.validate
 }
 
 func LessThanInt(parameter int) yav.ValidateFunc[int] {
@@ -38,11 +38,11 @@ func GreaterThanOrEqualInt(parameter int) yav.ValidateFunc[int] {
 	return greaterThanOrEqualInt{parameter: parameter}.validate
 }
 
-type minInt struct {
+type minimumInt struct {
 	parameter int
 }
 
-func (m minInt) validate(name string, value int) (stop bool, err error) {
+func (m minimumInt) validate(name string, value int) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -55,11 +55,11 @@ func (m minInt) validate(name string, value int) (stop bool, err error) {
 	return false, nil
 }
 
-type maxInt struct {
+type maximumInt struct {
 	parameter int
 }
 
-func (m maxInt) validate(name string, value int) (stop bool, err error) {
+func (m maximumInt) validate(name string, value int) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -167,15 +167,15 @@ func (g greaterThanOrEqualInt) validate(name string, value int) (stop bool, err 
 }
 
 func MinInt8(parameter int8) yav.ValidateFunc[int8] {
-	return minInt8{parameter: parameter}.validate
+	return minimumInt8{parameter: parameter}.validate
 }
 
 func MaxInt8(parameter int8) yav.ValidateFunc[int8] {
-	return maxInt8{parameter: parameter}.validate
+	return maximumInt8{parameter: parameter}.validate
 }
 
-func BetweenInt8(min, max int8) yav.ValidateFunc[int8] {
-	return betweenInt8{min: min, max: max}.validate
+func BetweenInt8(minimum, maximum int8) yav.ValidateFunc[int8] {
+	return betweenInt8{min: minimum, max: maximum}.validate
 }
 
 func LessThanInt8(parameter int8) yav.ValidateFunc[int8] {
@@ -194,11 +194,11 @@ func GreaterThanOrEqualInt8(parameter int8) yav.ValidateFunc[int8] {
 	return greaterThanOrEqualInt8{parameter: parameter}.validate
 }
 
-type minInt8 struct {
+type minimumInt8 struct {
 	parameter int8
 }
 
-func (m minInt8) validate(name string, value int8) (stop bool, err error) {
+func (m minimumInt8) validate(name string, value int8) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -211,11 +211,11 @@ func (m minInt8) validate(name string, value int8) (stop bool, err error) {
 	return false, nil
 }
 
-type maxInt8 struct {
+type maximumInt8 struct {
 	parameter int8
 }
 
-func (m maxInt8) validate(name string, value int8) (stop bool, err error) {
+func (m maximumInt8) validate(name string, value int8) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -323,15 +323,15 @@ func (g greaterThanOrEqualInt8) validate(name string, value int8) (stop bool, er
 }
 
 func MinInt16(parameter int16) yav.ValidateFunc[int16] {
-	return minInt16{parameter: parameter}.validate
+	return minimumInt16{parameter: parameter}.validate
 }
 
 func MaxInt16(parameter int16) yav.ValidateFunc[int16] {
-	return maxInt16{parameter: parameter}.validate
+	return maximumInt16{parameter: parameter}.validate
 }
 
-func BetweenInt16(min, max int16) yav.ValidateFunc[int16] {
-	return betweenInt16{min: min, max: max}.validate
+func BetweenInt16(minimum, maximum int16) yav.ValidateFunc[int16] {
+	return betweenInt16{min: minimum, max: maximum}.validate
 }
 
 func LessThanInt16(parameter int16) yav.ValidateFunc[int16] {
@@ -350,11 +350,11 @@ func GreaterThanOrEqualInt16(parameter int16) yav.ValidateFunc[int16] {
 	return greaterThanOrEqualInt16{parameter: parameter}.validate
 }
 
-type minInt16 struct {
+type minimumInt16 struct {
 	parameter int16
 }
 
-func (m minInt16) validate(name string, value int16) (stop bool, err error) {
+func (m minimumInt16) validate(name string, value int16) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -367,11 +367,11 @@ func (m minInt16) validate(name string, value int16) (stop bool, err error) {
 	return false, nil
 }
 
-type maxInt16 struct {
+type maximumInt16 struct {
 	parameter int16
 }
 
-func (m maxInt16) validate(name string, value int16) (stop bool, err error) {
+func (m maximumInt16) validate(name string, value int16) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -479,15 +479,15 @@ func (g greaterThanOrEqualInt16) validate(name string, value int16) (stop bool, 
 }
 
 func MinInt32(parameter int32) yav.ValidateFunc[int32] {
-	return minInt32{parameter: parameter}.validate
+	return minimumInt32{parameter: parameter}.validate
 }
 
 func MaxInt32(parameter int32) yav.ValidateFunc[int32] {
-	return maxInt32{parameter: parameter}.validate
+	return maximumInt32{parameter: parameter}.validate
 }
 
-func BetweenInt32(min, max int32) yav.ValidateFunc[int32] {
-	return betweenInt32{min: min, max: max}.validate
+func BetweenInt32(minimum, maximum int32) yav.ValidateFunc[int32] {
+	return betweenInt32{min: minimum, max: maximum}.validate
 }
 
 func LessThanInt32(parameter int32) yav.ValidateFunc[int32] {
@@ -506,11 +506,11 @@ func GreaterThanOrEqualInt32(parameter int32) yav.ValidateFunc[int32] {
 	return greaterThanOrEqualInt32{parameter: parameter}.validate
 }
 
-type minInt32 struct {
+type minimumInt32 struct {
 	parameter int32
 }
 
-func (m minInt32) validate(name string, value int32) (stop bool, err error) {
+func (m minimumInt32) validate(name string, value int32) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -523,11 +523,11 @@ func (m minInt32) validate(name string, value int32) (stop bool, err error) {
 	return false, nil
 }
 
-type maxInt32 struct {
+type maximumInt32 struct {
 	parameter int32
 }
 
-func (m maxInt32) validate(name string, value int32) (stop bool, err error) {
+func (m maximumInt32) validate(name string, value int32) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -635,15 +635,15 @@ func (g greaterThanOrEqualInt32) validate(name string, value int32) (stop bool, 
 }
 
 func MinInt64(parameter int64) yav.ValidateFunc[int64] {
-	return minInt64{parameter: parameter}.validate
+	return minimumInt64{parameter: parameter}.validate
 }
 
 func MaxInt64(parameter int64) yav.ValidateFunc[int64] {
-	return maxInt64{parameter: parameter}.validate
+	return maximumInt64{parameter: parameter}.validate
 }
 
-func BetweenInt64(min, max int64) yav.ValidateFunc[int64] {
-	return betweenInt64{min: min, max: max}.validate
+func BetweenInt64(minimum, maximum int64) yav.ValidateFunc[int64] {
+	return betweenInt64{min: minimum, max: maximum}.validate
 }
 
 func LessThanInt64(parameter int64) yav.ValidateFunc[int64] {
@@ -662,11 +662,11 @@ func GreaterThanOrEqualInt64(parameter int64) yav.ValidateFunc[int64] {
 	return greaterThanOrEqualInt64{parameter: parameter}.validate
 }
 
-type minInt64 struct {
+type minimumInt64 struct {
 	parameter int64
 }
 
-func (m minInt64) validate(name string, value int64) (stop bool, err error) {
+func (m minimumInt64) validate(name string, value int64) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -679,11 +679,11 @@ func (m minInt64) validate(name string, value int64) (stop bool, err error) {
 	return false, nil
 }
 
-type maxInt64 struct {
+type maximumInt64 struct {
 	parameter int64
 }
 
-func (m maxInt64) validate(name string, value int64) (stop bool, err error) {
+func (m maximumInt64) validate(name string, value int64) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -791,15 +791,15 @@ func (g greaterThanOrEqualInt64) validate(name string, value int64) (stop bool, 
 }
 
 func MinUint(parameter uint) yav.ValidateFunc[uint] {
-	return minUint{parameter: parameter}.validate
+	return minimumUint{parameter: parameter}.validate
 }
 
 func MaxUint(parameter uint) yav.ValidateFunc[uint] {
-	return maxUint{parameter: parameter}.validate
+	return maximumUint{parameter: parameter}.validate
 }
 
-func BetweenUint(min, max uint) yav.ValidateFunc[uint] {
-	return betweenUint{min: min, max: max}.validate
+func BetweenUint(minimum, maximum uint) yav.ValidateFunc[uint] {
+	return betweenUint{min: minimum, max: maximum}.validate
 }
 
 func LessThanUint(parameter uint) yav.ValidateFunc[uint] {
@@ -818,11 +818,11 @@ func GreaterThanOrEqualUint(parameter uint) yav.ValidateFunc[uint] {
 	return greaterThanOrEqualUint{parameter: parameter}.validate
 }
 
-type minUint struct {
+type minimumUint struct {
 	parameter uint
 }
 
-func (m minUint) validate(name string, value uint) (stop bool, err error) {
+func (m minimumUint) validate(name string, value uint) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -835,11 +835,11 @@ func (m minUint) validate(name string, value uint) (stop bool, err error) {
 	return false, nil
 }
 
-type maxUint struct {
+type maximumUint struct {
 	parameter uint
 }
 
-func (m maxUint) validate(name string, value uint) (stop bool, err error) {
+func (m maximumUint) validate(name string, value uint) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -947,15 +947,15 @@ func (g greaterThanOrEqualUint) validate(name string, value uint) (stop bool, er
 }
 
 func MinUint8(parameter uint8) yav.ValidateFunc[uint8] {
-	return minUint8{parameter: parameter}.validate
+	return minimumUint8{parameter: parameter}.validate
 }
 
 func MaxUint8(parameter uint8) yav.ValidateFunc[uint8] {
-	return maxUint8{parameter: parameter}.validate
+	return maximumUint8{parameter: parameter}.validate
 }
 
-func BetweenUint8(min, max uint8) yav.ValidateFunc[uint8] {
-	return betweenUint8{min: min, max: max}.validate
+func BetweenUint8(minimum, maximum uint8) yav.ValidateFunc[uint8] {
+	return betweenUint8{min: minimum, max: maximum}.validate
 }
 
 func LessThanUint8(parameter uint8) yav.ValidateFunc[uint8] {
@@ -974,11 +974,11 @@ func GreaterThanOrEqualUint8(parameter uint8) yav.ValidateFunc[uint8] {
 	return greaterThanOrEqualUint8{parameter: parameter}.validate
 }
 
-type minUint8 struct {
+type minimumUint8 struct {
 	parameter uint8
 }
 
-func (m minUint8) validate(name string, value uint8) (stop bool, err error) {
+func (m minimumUint8) validate(name string, value uint8) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -991,11 +991,11 @@ func (m minUint8) validate(name string, value uint8) (stop bool, err error) {
 	return false, nil
 }
 
-type maxUint8 struct {
+type maximumUint8 struct {
 	parameter uint8
 }
 
-func (m maxUint8) validate(name string, value uint8) (stop bool, err error) {
+func (m maximumUint8) validate(name string, value uint8) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -1103,15 +1103,15 @@ func (g greaterThanOrEqualUint8) validate(name string, value uint8) (stop bool, 
 }
 
 func MinUint16(parameter uint16) yav.ValidateFunc[uint16] {
-	return minUint16{parameter: parameter}.validate
+	return minimumUint16{parameter: parameter}.validate
 }
 
 func MaxUint16(parameter uint16) yav.ValidateFunc[uint16] {
-	return maxUint16{parameter: parameter}.validate
+	return maximumUint16{parameter: parameter}.validate
 }
 
-func BetweenUint16(min, max uint16) yav.ValidateFunc[uint16] {
-	return betweenUint16{min: min, max: max}.validate
+func BetweenUint16(minimum, maximum uint16) yav.ValidateFunc[uint16] {
+	return betweenUint16{min: minimum, max: maximum}.validate
 }
 
 func LessThanUint16(parameter uint16) yav.ValidateFunc[uint16] {
@@ -1130,11 +1130,11 @@ func GreaterThanOrEqualUint16(parameter uint16) yav.ValidateFunc[uint16] {
 	return greaterThanOrEqualUint16{parameter: parameter}.validate
 }
 
-type minUint16 struct {
+type minimumUint16 struct {
 	parameter uint16
 }
 
-func (m minUint16) validate(name string, value uint16) (stop bool, err error) {
+func (m minimumUint16) validate(name string, value uint16) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -1147,11 +1147,11 @@ func (m minUint16) validate(name string, value uint16) (stop bool, err error) {
 	return false, nil
 }
 
-type maxUint16 struct {
+type maximumUint16 struct {
 	parameter uint16
 }
 
-func (m maxUint16) validate(name string, value uint16) (stop bool, err error) {
+func (m maximumUint16) validate(name string, value uint16) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -1259,15 +1259,15 @@ func (g greaterThanOrEqualUint16) validate(name string, value uint16) (stop bool
 }
 
 func MinUint32(parameter uint32) yav.ValidateFunc[uint32] {
-	return minUint32{parameter: parameter}.validate
+	return minimumUint32{parameter: parameter}.validate
 }
 
 func MaxUint32(parameter uint32) yav.ValidateFunc[uint32] {
-	return maxUint32{parameter: parameter}.validate
+	return maximumUint32{parameter: parameter}.validate
 }
 
-func BetweenUint32(min, max uint32) yav.ValidateFunc[uint32] {
-	return betweenUint32{min: min, max: max}.validate
+func BetweenUint32(minimum, maximum uint32) yav.ValidateFunc[uint32] {
+	return betweenUint32{min: minimum, max: maximum}.validate
 }
 
 func LessThanUint32(parameter uint32) yav.ValidateFunc[uint32] {
@@ -1286,11 +1286,11 @@ func GreaterThanOrEqualUint32(parameter uint32) yav.ValidateFunc[uint32] {
 	return greaterThanOrEqualUint32{parameter: parameter}.validate
 }
 
-type minUint32 struct {
+type minimumUint32 struct {
 	parameter uint32
 }
 
-func (m minUint32) validate(name string, value uint32) (stop bool, err error) {
+func (m minimumUint32) validate(name string, value uint32) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -1303,11 +1303,11 @@ func (m minUint32) validate(name string, value uint32) (stop bool, err error) {
 	return false, nil
 }
 
-type maxUint32 struct {
+type maximumUint32 struct {
 	parameter uint32
 }
 
-func (m maxUint32) validate(name string, value uint32) (stop bool, err error) {
+func (m maximumUint32) validate(name string, value uint32) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -1415,15 +1415,15 @@ func (g greaterThanOrEqualUint32) validate(name string, value uint32) (stop bool
 }
 
 func MinUint64(parameter uint64) yav.ValidateFunc[uint64] {
-	return minUint64{parameter: parameter}.validate
+	return minimumUint64{parameter: parameter}.validate
 }
 
 func MaxUint64(parameter uint64) yav.ValidateFunc[uint64] {
-	return maxUint64{parameter: parameter}.validate
+	return maximumUint64{parameter: parameter}.validate
 }
 
-func BetweenUint64(min, max uint64) yav.ValidateFunc[uint64] {
-	return betweenUint64{min: min, max: max}.validate
+func BetweenUint64(minimum, maximum uint64) yav.ValidateFunc[uint64] {
+	return betweenUint64{min: minimum, max: maximum}.validate
 }
 
 func LessThanUint64(parameter uint64) yav.ValidateFunc[uint64] {
@@ -1442,11 +1442,11 @@ func GreaterThanOrEqualUint64(parameter uint64) yav.ValidateFunc[uint64] {
 	return greaterThanOrEqualUint64{parameter: parameter}.validate
 }
 
-type minUint64 struct {
+type minimumUint64 struct {
 	parameter uint64
 }
 
-func (m minUint64) validate(name string, value uint64) (stop bool, err error) {
+func (m minimumUint64) validate(name string, value uint64) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -1459,11 +1459,11 @@ func (m minUint64) validate(name string, value uint64) (stop bool, err error) {
 	return false, nil
 }
 
-type maxUint64 struct {
+type maximumUint64 struct {
 	parameter uint64
 }
 
-func (m maxUint64) validate(name string, value uint64) (stop bool, err error) {
+func (m maximumUint64) validate(name string, value uint64) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -1571,15 +1571,15 @@ func (g greaterThanOrEqualUint64) validate(name string, value uint64) (stop bool
 }
 
 func MinFloat32(parameter float32) yav.ValidateFunc[float32] {
-	return minFloat32{parameter: parameter}.validate
+	return minimumFloat32{parameter: parameter}.validate
 }
 
 func MaxFloat32(parameter float32) yav.ValidateFunc[float32] {
-	return maxFloat32{parameter: parameter}.validate
+	return maximumFloat32{parameter: parameter}.validate
 }
 
-func BetweenFloat32(min, max float32) yav.ValidateFunc[float32] {
-	return betweenFloat32{min: min, max: max}.validate
+func BetweenFloat32(minimum, maximum float32) yav.ValidateFunc[float32] {
+	return betweenFloat32{min: minimum, max: maximum}.validate
 }
 
 func LessThanFloat32(parameter float32) yav.ValidateFunc[float32] {
@@ -1598,11 +1598,11 @@ func GreaterThanOrEqualFloat32(parameter float32) yav.ValidateFunc[float32] {
 	return greaterThanOrEqualFloat32{parameter: parameter}.validate
 }
 
-type minFloat32 struct {
+type minimumFloat32 struct {
 	parameter float32
 }
 
-func (m minFloat32) validate(name string, value float32) (stop bool, err error) {
+func (m minimumFloat32) validate(name string, value float32) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -1615,11 +1615,11 @@ func (m minFloat32) validate(name string, value float32) (stop bool, err error) 
 	return false, nil
 }
 
-type maxFloat32 struct {
+type maximumFloat32 struct {
 	parameter float32
 }
 
-func (m maxFloat32) validate(name string, value float32) (stop bool, err error) {
+func (m maximumFloat32) validate(name string, value float32) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
@@ -1727,15 +1727,15 @@ func (g greaterThanOrEqualFloat32) validate(name string, value float32) (stop bo
 }
 
 func MinFloat64(parameter float64) yav.ValidateFunc[float64] {
-	return minFloat64{parameter: parameter}.validate
+	return minimumFloat64{parameter: parameter}.validate
 }
 
 func MaxFloat64(parameter float64) yav.ValidateFunc[float64] {
-	return maxFloat64{parameter: parameter}.validate
+	return maximumFloat64{parameter: parameter}.validate
 }
 
-func BetweenFloat64(min, max float64) yav.ValidateFunc[float64] {
-	return betweenFloat64{min: min, max: max}.validate
+func BetweenFloat64(minimum, maximum float64) yav.ValidateFunc[float64] {
+	return betweenFloat64{min: minimum, max: maximum}.validate
 }
 
 func LessThanFloat64(parameter float64) yav.ValidateFunc[float64] {
@@ -1754,11 +1754,11 @@ func GreaterThanOrEqualFloat64(parameter float64) yav.ValidateFunc[float64] {
 	return greaterThanOrEqualFloat64{parameter: parameter}.validate
 }
 
-type minFloat64 struct {
+type minimumFloat64 struct {
 	parameter float64
 }
 
-func (m minFloat64) validate(name string, value float64) (stop bool, err error) {
+func (m minimumFloat64) validate(name string, value float64) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -1771,11 +1771,11 @@ func (m minFloat64) validate(name string, value float64) (stop bool, err error) 
 	return false, nil
 }
 
-type maxFloat64 struct {
+type maximumFloat64 struct {
 	parameter float64
 }
 
-func (m maxFloat64) validate(name string, value float64) (stop bool, err error) {
+func (m maximumFloat64) validate(name string, value float64) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,

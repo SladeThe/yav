@@ -32,3 +32,5 @@ package vnumber
 //go:generate go run github.com/cheekybits/genny@3e22f1a -in=_excluded_without_all_test.go -out=excluded_without_all_test.go -pkg=vnumber gen "Element=int,int8,int16,int32,int64,uint,uint8,uint16,uint32,uint64,float32,float64"
 //go:generate go run github.com/cheekybits/genny@3e22f1a -in=_excluded_without_any.go -out=excluded_without_any.go -pkg=vnumber gen "Element=int,int8,int16,int32,int64,uint,uint8,uint16,uint32,uint64,float32,float64"
 //go:generate go run github.com/cheekybits/genny@3e22f1a -in=_excluded_without_any_test.go -out=excluded_without_any_test.go -pkg=vnumber gen "Element=int,int8,int16,int32,int64,uint,uint8,uint16,uint32,uint64,float32,float64"
+
+//go:generate go run github.com/daixiang0/gci@v0.13.5 write --custom-order -s standard -s default -s "prefix(github.com/SladeThe/yav)" .

@@ -22,7 +22,7 @@ func Min(parameter int) yav.ValidateFunc[[]byte] {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&minFuncs, parameter, min(parameter))
+	return internal.RegisterMapEntry(&minFuncs, parameter, minimum(parameter))
 }
 
 func Max(parameter int) yav.ValidateFunc[[]byte] {
@@ -30,20 +30,20 @@ func Max(parameter int) yav.ValidateFunc[[]byte] {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&maxFuncs, parameter, max(parameter))
+	return internal.RegisterMapEntry(&maxFuncs, parameter, maximum(parameter))
 }
 
-func Between(min, max int) yav.ValidateFunc[[]byte] {
-	k := betweenKey{min: min, max: max}
+func Between(minimum, maximum int) yav.ValidateFunc[[]byte] {
+	k := betweenKey{min: minimum, max: maximum}
 
 	if validateFunc, ok := betweenFuncs[k]; ok {
 		return validateFunc
 	}
 
-	return internal.RegisterMapEntry(&betweenFuncs, k, between(min, max))
+	return internal.RegisterMapEntry(&betweenFuncs, k, between(minimum, maximum))
 }
 
-func min(parameter int) yav.ValidateFunc[[]byte] {
+func minimum(parameter int) yav.ValidateFunc[[]byte] {
 	parameterString := strconv.Itoa(parameter)
 
 	return func(name string, value []byte) (stop bool, err error) {
@@ -60,7 +60,7 @@ func min(parameter int) yav.ValidateFunc[[]byte] {
 	}
 }
 
-func max(parameter int) yav.ValidateFunc[[]byte] {
+func maximum(parameter int) yav.ValidateFunc[[]byte] {
 	parameterString := strconv.Itoa(parameter)
 
 	return func(name string, value []byte) (stop bool, err error) {
@@ -77,12 +77,12 @@ func max(parameter int) yav.ValidateFunc[[]byte] {
 	}
 }
 
-func between(min, max int) yav.ValidateFunc[[]byte] {
-	minString := strconv.Itoa(min)
-	maxString := strconv.Itoa(max)
+func between(minimum, maximum int) yav.ValidateFunc[[]byte] {
+	minString := strconv.Itoa(minimum)
+	maxString := strconv.Itoa(maximum)
 
 	return func(name string, value []byte) (stop bool, err error) {
-		if len(value) < min {
+		if len(value) < minimum {
 			return true, yav.Error{
 				CheckName: yav.CheckNameMin,
 				Parameter: minString,
@@ -91,7 +91,7 @@ func between(min, max int) yav.ValidateFunc[[]byte] {
 			}
 		}
 
-		if len(value) > max {
+		if len(value) > maximum {
 			return true, yav.Error{
 				CheckName: yav.CheckNameMax,
 				Parameter: maxString,

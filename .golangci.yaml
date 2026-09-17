@@ -37,7 +37,7 @@ linters-settings:
     threshold: 100
 
   errcheck:
-    check-type-assertions: true # checking of errors in type assertions
+    check-type-assertions: false # Allow panicking type assertions.
     check-blank: false # errors assignment to blank identifier
 
   exhaustive:
@@ -229,4 +229,5 @@ issues:
 
     - linters:
         - lll
-      source: "^//go:generate |^\\s+[a-zA-Z_][a-zA-Z0-9_]+\\s+=\\s+regexp\\.MustCompile\\("
+      # Keep generator commands and equivalent regexps copyable.
+      source: "^//go:generate |^// (Equivalent regexp: )?`\\^.*\\$`$"

@@ -105,7 +105,6 @@ func isEmailDomain(value string) bool {
 	}
 
 	labelStart := 0
-	validTLDStart := false
 	for i := 0; i < len(value); i++ {
 		c := value[i]
 		if c == '.' {
@@ -131,23 +130,15 @@ func isEmailDomain(value string) bool {
 				return false
 			}
 
-			if i == labelStart {
-				validTLDStart = true
-			}
-
 			i += size - 1
-		} else {
-			if !common.IsAlphanumeric(rune(c)) {
-				return false
-			}
-
-			if i == labelStart {
-				validTLDStart = common.IsAlpha(rune(c))
-			}
+		} else if !common.IsAlphanumeric(rune(c)) {
+			return false
 		}
 	}
 
-	return labelStart > 0 && labelStart < len(value) && validTLDStart && value[len(value)-1] != '-'
+	// The scan already validates each label's first character.
+	return labelStart > 0 && labelStart < len(value) && value[len(value)-1] != '-' &&
+		!common.IsDigit(rune(value[labelStart]))
 }
 
 // Unicode ranges accepted by go-playground's email regexp.

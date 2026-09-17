@@ -133,7 +133,10 @@ func TestErrorsAppendConverted(t *testing.T) {
 			a.errs.AppendConverted(a.err, convertFunc)
 			assert.Truef(t, reflect.DeepEqual(w.errs, a.errs), "invalid errors: want = %v, got = %v", w.errs, a.errs)
 			assert.Equalf(t, w.calls, calls, "invalid calls: want = %v, got = %v", w.calls, calls)
-			assert.Truef(t, reflect.DeepEqual(originalErr, a.err), "input changed: want = %v, got = %v", originalErr, a.err)
+			assert.Truef(
+				t, reflect.DeepEqual(originalErr, a.err),
+				"input changed: want = %v, got = %v", originalErr, a.err,
+			)
 		}
 	}
 

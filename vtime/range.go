@@ -7,15 +7,15 @@ import (
 )
 
 func Min(parameter time.Time) yav.ValidateFunc[time.Time] {
-	return min(parameter).validate
+	return minimum(parameter).validate
 }
 
 func Max(parameter time.Time) yav.ValidateFunc[time.Time] {
-	return max(parameter).validate
+	return maximum(parameter).validate
 }
 
-func Between(min, max time.Time) yav.ValidateFunc[time.Time] {
-	return between{min: min, max: max}.validate
+func Between(minimum, maximum time.Time) yav.ValidateFunc[time.Time] {
+	return between{min: minimum, max: maximum}.validate
 }
 
 func LessThan(parameter time.Time) yav.ValidateFunc[time.Time] {
@@ -34,9 +34,9 @@ func GreaterThanOrEqual(parameter time.Time) yav.ValidateFunc[time.Time] {
 	return greaterThanOrEqual(parameter).validate
 }
 
-type min time.Time
+type minimum time.Time
 
-func (m min) validate(name string, value time.Time) (stop bool, err error) {
+func (m minimum) validate(name string, value time.Time) (stop bool, err error) {
 	if value.Before(time.Time(m)) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -49,9 +49,9 @@ func (m min) validate(name string, value time.Time) (stop bool, err error) {
 	return false, nil
 }
 
-type max time.Time
+type maximum time.Time
 
-func (m max) validate(name string, value time.Time) (stop bool, err error) {
+func (m maximum) validate(name string, value time.Time) (stop bool, err error) {
 	if value.After(time.Time(m)) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,

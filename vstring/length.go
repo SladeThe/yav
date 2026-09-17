@@ -7,20 +7,20 @@ import (
 )
 
 func Min(parameter int) yav.ValidateFunc[string] {
-	return min(parameter).validate
+	return minimum(parameter).validate
 }
 
 func Max(parameter int) yav.ValidateFunc[string] {
-	return max(parameter).validate
+	return maximum(parameter).validate
 }
 
-func Between(min, max int) yav.ValidateFunc[string] {
-	return between{min: min, max: max}.validate
+func Between(minimum, maximum int) yav.ValidateFunc[string] {
+	return between{min: minimum, max: maximum}.validate
 }
 
-type min int
+type minimum int
 
-func (m min) validate(name string, value string) (stop bool, err error) {
+func (m minimum) validate(name string, value string) (stop bool, err error) {
 	if len(value) < int(m) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -33,9 +33,9 @@ func (m min) validate(name string, value string) (stop bool, err error) {
 	return false, nil
 }
 
-type max int
+type maximum int
 
-func (m max) validate(name string, value string) (stop bool, err error) {
+func (m maximum) validate(name string, value string) (stop bool, err error) {
 	if len(value) > int(m) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,

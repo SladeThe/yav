@@ -7,15 +7,15 @@ import (
 )
 
 func Min(parameter time.Duration) yav.ValidateFunc[time.Duration] {
-	return min(parameter).validate
+	return minimum(parameter).validate
 }
 
 func Max(parameter time.Duration) yav.ValidateFunc[time.Duration] {
-	return max(parameter).validate
+	return maximum(parameter).validate
 }
 
-func Between(min, max time.Duration) yav.ValidateFunc[time.Duration] {
-	return between{min: min, max: max}.validate
+func Between(minimum, maximum time.Duration) yav.ValidateFunc[time.Duration] {
+	return between{min: minimum, max: maximum}.validate
 }
 
 func LessThan(parameter time.Duration) yav.ValidateFunc[time.Duration] {
@@ -34,9 +34,9 @@ func GreaterThanOrEqual(parameter time.Duration) yav.ValidateFunc[time.Duration]
 	return greaterThanOrEqual(parameter).validate
 }
 
-type min time.Duration
+type minimum time.Duration
 
-func (m min) validate(name string, value time.Duration) (stop bool, err error) {
+func (m minimum) validate(name string, value time.Duration) (stop bool, err error) {
 	if value < time.Duration(m) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -49,9 +49,9 @@ func (m min) validate(name string, value time.Duration) (stop bool, err error) {
 	return false, nil
 }
 
-type max time.Duration
+type maximum time.Duration
 
-func (m max) validate(name string, value time.Duration) (stop bool, err error) {
+func (m maximum) validate(name string, value time.Duration) (stop bool, err error) {
 	if value > time.Duration(m) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,

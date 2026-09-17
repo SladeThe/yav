@@ -33,7 +33,10 @@ func TestNested(t *testing.T) {
 			}
 
 			assert.Truef(t, reflect.DeepEqual(w.errs, errs), "invalid errors: want = %v, got = %v", w.errs, errs)
-			assert.Truef(t, reflect.DeepEqual(originalErr, a.err), "input changed: want = %v, got = %v", originalErr, a.err)
+			assert.Truef(
+				t, reflect.DeepEqual(originalErr, a.err),
+				"input changed: want = %v, got = %v", originalErr, a.err,
+			)
 		}
 	}
 
@@ -124,7 +127,10 @@ func TestNamedCheck(t *testing.T) {
 			}
 
 			assert.Truef(t, reflect.DeepEqual(w.errs, errs), "invalid errors: want = %v, got = %v", w.errs, errs)
-			assert.Truef(t, reflect.DeepEqual(originalErr, a.err), "input changed: want = %v, got = %v", originalErr, a.err)
+			assert.Truef(
+				t, reflect.DeepEqual(originalErr, a.err),
+				"input changed: want = %v, got = %v", originalErr, a.err,
+			)
 		}
 	}
 

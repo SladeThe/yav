@@ -78,7 +78,7 @@ func errHostnamePort(name string, value string) yav.Error {
 // Equivalent regexp with len(value) <= maxHostnameLength:
 // `^[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$`
 func isHostname(value string) bool {
-	return len(value) > 0 && common.IsAlpha(rune(value[0])) && isHostnameRFC1123(value)
+	return value != "" && common.IsAlpha(rune(value[0])) && isHostnameRFC1123(value)
 }
 
 // Equivalent regexp with len(value) <= maxHostnameLength:

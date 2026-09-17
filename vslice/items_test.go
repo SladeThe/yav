@@ -111,7 +111,10 @@ func TestWithIndex(t *testing.T) {
 	test := func(a args, w want) func(t *testing.T) {
 		return func(t *testing.T) {
 			convertFunc := withIndex("v", 1, a.err)
-			assert.Equalf(t, w.isNil, convertFunc == nil, "invalid nil convertFunc: want = %v, got = %v", w.isNil, convertFunc == nil)
+			assert.Equalf(
+				t, w.isNil, convertFunc == nil,
+				"invalid nil convertFunc: want = %v, got = %v", w.isNil, convertFunc == nil,
+			)
 		}
 	}
 

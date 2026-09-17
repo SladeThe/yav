@@ -50,7 +50,7 @@ Keep these semantics explicit in tests and documentation.
 ## Numeric generation
 
 `vnumber/_*.go` files are templates, including test templates.
-`vnumber/gen.go` pins the generator and expands twelve primitive numeric types.
+`vnumber/gen.go` pins generation and import-formatting tools and expands twelve primitive numeric types.
 Edit templates, run `go generate ./vnumber`, and review the generated diff together. Do not edit generated outputs alone.
 `vnumber/required.go` and its tests are handwritten generics.
 
@@ -86,6 +86,7 @@ Keep CI, the linter version, and its configuration aligned with `go.mod`.
 
 ## Repository hygiene
 
+For every multiline delimiter pair (`()`, `[]`, `{}`), give the opening and closing lines the same indentation.
 Preserve unrelated working-tree edits. Keep generated code, templates, tests, examples, and docs synchronized with relevant changes.
 Keep local agent state and review artifacts in ignored directories. The root `AGENTS.md` belongs in version control.
 Keep agent-document lines at most 280 characters, preferably at most 240.

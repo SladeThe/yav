@@ -11,15 +11,15 @@ import (
 type Element generic.Type
 
 func MinElement(parameter Element) yav.ValidateFunc[Element] {
-	return minElement{parameter: parameter}.validate
+	return minimumElement{parameter: parameter}.validate
 }
 
 func MaxElement(parameter Element) yav.ValidateFunc[Element] {
-	return maxElement{parameter: parameter}.validate
+	return maximumElement{parameter: parameter}.validate
 }
 
-func BetweenElement(min, max Element) yav.ValidateFunc[Element] {
-	return betweenElement{min: min, max: max}.validate
+func BetweenElement(minimum, maximum Element) yav.ValidateFunc[Element] {
+	return betweenElement{min: minimum, max: maximum}.validate
 }
 
 func LessThanElement(parameter Element) yav.ValidateFunc[Element] {
@@ -38,11 +38,11 @@ func GreaterThanOrEqualElement(parameter Element) yav.ValidateFunc[Element] {
 	return greaterThanOrEqualElement{parameter: parameter}.validate
 }
 
-type minElement struct {
+type minimumElement struct {
 	parameter Element
 }
 
-func (m minElement) validate(name string, value Element) (stop bool, err error) {
+func (m minimumElement) validate(name string, value Element) (stop bool, err error) {
 	if !(value >= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMin,
@@ -55,11 +55,11 @@ func (m minElement) validate(name string, value Element) (stop bool, err error) 
 	return false, nil
 }
 
-type maxElement struct {
+type maximumElement struct {
 	parameter Element
 }
 
-func (m maxElement) validate(name string, value Element) (stop bool, err error) {
+func (m maximumElement) validate(name string, value Element) (stop bool, err error) {
 	if !(value <= m.parameter) {
 		return true, yav.Error{
 			CheckName: yav.CheckNameMax,
