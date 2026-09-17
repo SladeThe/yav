@@ -84,7 +84,7 @@ func (r ExcludedWithoutAll[T]) Int64(value int64) ExcludedWithoutAll[T] {
 	return r
 }
 
-func (r ExcludedWithoutAll[T]) Uint(value int) ExcludedWithoutAll[T] {
+func (r ExcludedWithoutAll[T]) Uint(value uint) ExcludedWithoutAll[T] {
 	r.excluded = r.excluded && value == 0
 	return r
 }

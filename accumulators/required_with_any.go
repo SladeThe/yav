@@ -84,7 +84,7 @@ func (r RequiredWithAny[T]) Int64(value int64) RequiredWithAny[T] {
 	return r
 }
 
-func (r RequiredWithAny[T]) Uint(value int) RequiredWithAny[T] {
+func (r RequiredWithAny[T]) Uint(value uint) RequiredWithAny[T] {
 	r.required = r.required || value != 0
 	return r
 }
