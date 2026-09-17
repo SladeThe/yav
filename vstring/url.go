@@ -33,6 +33,10 @@ func URL(name string, value string) (stop bool, err error) {
 
 func isURX(value string, isURI bool) bool {
 	if i := strings.IndexRune(value, '#'); i >= 0 {
+		if !isURXFragment(value[i+1:]) {
+			return false
+		}
+
 		value = value[:i]
 	}
 
@@ -42,4 +46,30 @@ func isURX(value string, isURI bool) bool {
 
 	u, err := url.ParseRequestURI(value)
 	return err == nil && (isURI || u.Scheme != "")
+}
+
+// Equivalent regexp: `^(?:[^\x00-\x1f\x7f%]|%[0-9a-fA-F]{2})*$`
+func isURXFragment(value string) bool {
+	for i := 0; i < len(value); i++ {
+		c := value[i]
+		if c < ' ' || c == '\x7f' {
+			return false
+		}
+
+		if c == '%' {
+			if i+2 >= len(value) || !isHexDigit(value[i+1]) || !isHexDigit(value[i+2]) {
+				return false
+			}
+
+			i += 2
+		}
+	}
+
+	return true
+}
+
+func isHexDigit(c byte) bool {
+	return c >= '0' && c <= '9' ||
+		c >= 'a' && c <= 'f' ||
+		c >= 'A' && c <= 'F'
 }
