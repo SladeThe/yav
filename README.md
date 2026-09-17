@@ -3,12 +3,12 @@
 Go struct and field validation.
 
 The project is inspired by [go-playground/validator](https://github.com/go-playground/validator) and uses some of its codebase. \
-YAV aims to provide Playground-like validator configuration and produce compatible errors whenever possible. \
+YAV aims to provide Playground-like validator configuration and produce compatible errors when possible. \
 At the same time, the introduced chained validator improves validation speed dramatically. \
 The Playground validator's performance is quite poor due to heavy reflection usage, which YAV strives not to use.
 
 YAV's key principles:
-- mimic Playground validator whenever possible;
+- mimic Playground validator when possible;
 - make fewer to zero allocations;
 - work fast.
 
@@ -92,6 +92,24 @@ func (a Account) Validate() error {
 	)
 }
 ```
+
+#### Match validation errors
+
+`yav.Error.Is` matches `CheckName`, `Parameter`, and `ValueName` exactly, ignoring `Value` on both sides.
+
+For [`errors.Is`](https://pkg.go.dev/errors#Is), the right-hand `target` must be comparable.
+Leave `Value` nil in YAV targets; the actual error may retain any `Value`.
+
+```go
+err := yav.ErrUnique("items", []int{1, 1})
+target := yav.ErrUnique("items", nil)
+
+errors.Is(err, target) // true
+```
+
+`errors.Is` may compare values before calling `Error.Is`.
+Using an error with a slice, map, or other non-comparable `Value` as the target can panic,
+including `errors.Is(err, err)`.
 
 #### Compare YAV and Playground validator
 

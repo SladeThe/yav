@@ -281,7 +281,7 @@ func EndsWithSpecialCharacter(name string, value string) (stop bool, err error) 
 	return false, nil
 }
 
-// Text validates string value using common.IsText.
+// Text validates string value using [common.IsText].
 func Text(name string, value string) (stop bool, err error) {
 	if common.IsText(value) {
 		return false, nil
@@ -294,7 +294,7 @@ func Text(name string, value string) (stop bool, err error) {
 	}
 }
 
-// Title validates string value using common.IsTitle.
+// Title validates string value using [common.IsTitle].
 func Title(name string, value string) (stop bool, err error) {
 	if common.IsTitle(value) {
 		return false, nil

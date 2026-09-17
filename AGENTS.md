@@ -31,6 +31,9 @@ Append clips adopted slice capacity to prevent append overwrites. AppendConverte
 Merging an empty error slice preserves the destination's nilness and capacity.
 Public slices and error payloads can still alias; direct mutation requires caller-managed ownership.
 
+`Error.Is` compares `CheckName`, `Parameter`, and `ValueName`, ignoring `Value` on both sides.
+For `errors.Is(err, target)`, use an `Error` target with `Value` left nil; `err` may retain any payload.
+
 `Required` rejects the value kind's empty value; `OmitEmpty` skips remaining checks for it.
 Strings, slices, maps, and bytes use length; pointers use nil; numbers and durations use zero; bool uses false; time uses `IsZero`.
 Inactive conditional required checks use `OmitEmpty`. Inactive excluded checks use `yav.Next`; exclusion alone does not skip later checks.
@@ -83,10 +86,13 @@ go test -mod=readonly -race ./...
 The race detector requires an appropriate CGO toolchain. Include concurrent cold-construction tests for cache changes.
 `make test` also produces coverage but uses POSIX cleanup commands; direct Go commands work in PowerShell.
 Keep CI, the linter version, and its configuration aligned with `go.mod`.
+Run lint exactly as defined in `Makefile`, including its `GOTOOLCHAIN` setting. Update the recipe before changing lint flags.
 
 ## Repository hygiene
 
 For every multiline delimiter pair (`()`, `[]`, `{}`), give the opening and closing lines the same indentation.
+Use bracketed Go doc links only when they resolve correctly and preserve IDE navigation. Keep declaration opening names and local parameter/field names plain.
+Keep references to unimported packages and unsupported members qualified and plain to preserve IDE navigation; do not use full import paths or explicit URLs.
 Preserve unrelated working-tree edits. Keep generated code, templates, tests, examples, and docs synchronized with relevant changes.
 Keep local agent state and review artifacts in ignored directories. The root `AGENTS.md` belongs in version control.
 Keep agent-document lines at most 280 characters, preferably at most 240.

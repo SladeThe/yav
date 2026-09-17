@@ -6,7 +6,7 @@ import (
 	"github.com/SladeThe/yav"
 )
 
-// Regexp validates string value using regexp.Regexp.MatchString.
+// Regexp validates string value using [regexp.Regexp.MatchString].
 // That means the value must contain any match of the regular expression re.
 // Wrap your expression with ^...$ to test the value for a full match.
 func Regexp(re *regexp.Regexp) yav.ValidateFunc[string] {

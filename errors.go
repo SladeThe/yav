@@ -90,6 +90,8 @@ const (
 	CheckNameTitle = "title"
 )
 
+// Error describes a validation failure.
+// See [Error.Is] for matching rules and [errors.Is] target requirements.
 type Error struct {
 	CheckName string
 	Parameter string
@@ -115,6 +117,12 @@ func ErrUnique(name string, value any) Error {
 	}
 }
 
+// Is matches a validation error by CheckName, Parameter, and ValueName.
+// Value is ignored on both sides.
+//
+// For [errors.Is], use a target [Error] with Value left nil. The reported error
+// may keep any Value. A non-comparable target.Value can panic in [errors.Is]
+// before this method is called.
 func (err Error) Is(target error) bool {
 	var validationErr Error
 
@@ -302,7 +310,7 @@ func (errs Errors) error() string {
 	return s.String()
 }
 
-// AsError returns non-zero Errors or nil.
+// AsError returns non-zero [Errors] or nil.
 func (errs Errors) AsError() error {
 	if errs.IsZero() {
 		return nil
@@ -341,7 +349,7 @@ func (errs *Errors) append(err error) {
 }
 
 // AppendConverted applies convertFunc to validation errors before appending them.
-// A nil convertFunc behaves like Append. Unknown errors are appended unchanged.
+// A nil convertFunc behaves like [Errors.Append]. Unknown errors are appended unchanged.
 func (errs *Errors) AppendConverted(err error, convertFunc func(Error) Error) {
 	if err != nil {
 		errs.appendConverted(err, convertFunc)
