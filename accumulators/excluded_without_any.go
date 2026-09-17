@@ -40,7 +40,7 @@ func (r ExcludedWithoutAny[T]) Map(value any) ExcludedWithoutAny[T] {
 }
 
 func (r ExcludedWithoutAny[T]) Pointer(value any) ExcludedWithoutAny[T] {
-	r.excluded = r.excluded || reflect.ValueOf(value).IsNil()
+	r.excluded = r.excluded || value == nil || reflect.ValueOf(value).IsNil()
 	return r
 }
 

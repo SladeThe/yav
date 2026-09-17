@@ -40,7 +40,7 @@ func (r RequiredWithoutAll[T]) Map(value any) RequiredWithoutAll[T] {
 }
 
 func (r RequiredWithoutAll[T]) Pointer(value any) RequiredWithoutAll[T] {
-	r.required = r.required && reflect.ValueOf(value).IsNil()
+	r.required = r.required && (value == nil || reflect.ValueOf(value).IsNil())
 	return r
 }
 
