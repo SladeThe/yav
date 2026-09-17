@@ -24,6 +24,7 @@ For example: `yav.Chain("login", login, vstring.Required, vstring.Between(4, 20)
 Names only label errors; they do not look up struct fields. A successful chain returns nil; a failing chain returns `yav.Errors`.
 
 Use `yav.Nested` or `yav.NestedValidate` for namespaced errors.
+Reusable `Validate` methods use relative names: empty for the value itself, local field/index names for its contents. Containing validators add their field names with `Nested`.
 `yav.Or` selects the first nil-error result, otherwise the last failure and its stop flag.
 Keep `CheckName`, `Parameter`, `ValueName`, and `Value` consistent with neighboring checks.
 Nested and NamedCheck copy validation entries before rewriting them. Collection conversion appends transformed entries directly into the destination.
@@ -57,6 +58,7 @@ Keep these semantics explicit in tests and documentation.
 `vnumber/gen.go` pins generation and import-formatting tools and expands twelve primitive numeric types.
 Edit templates, run `go generate ./vnumber`, and review the generated diff together. Do not edit generated outputs alone.
 `vnumber/required.go` and its tests are handwritten generics.
+Primitive-specific factories intentionally require exact types. Convert defined numeric values at the validation boundary, e.g. `int(age)` for `type Age int`.
 
 ## Performance and testing
 

@@ -40,6 +40,30 @@ func (id AccountID) Validate() error {
 }
 ```
 
+#### Defined numeric types
+
+Type-specific numeric factories, such as `vnumber.MinInt`, accept their exact primitive type.
+Convert defined numeric values at the validation boundary.
+A value validator leaves its name empty; the containing validator adds the field name with `yav.Nested`:
+
+```go
+type Age int
+
+func (age Age) Validate() error {
+	return yav.Chain("", int(age), vnumber.Required[int], vnumber.MinInt(18))
+}
+
+type User struct {
+	Age Age
+}
+
+func (u User) Validate() error {
+	return yav.Nested("age", u.Age.Validate())
+}
+```
+
+Checks that report the value store the converted type in `Error.Value`.
+
 #### Combine validation errors
 
 Use `yav.Join` to combine multiple validation errors.
