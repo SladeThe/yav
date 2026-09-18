@@ -352,7 +352,7 @@ GreaterThanOrEqualNamed
 
 Valid Account validation, measured on 2026-09-18 with Go 1.27.1 on Windows/amd64,
 AMD Ryzen 9 9900X, `GOAMD64=v1`, and `GOMAXPROCS=24`.
-Versions: YAV `bdf780b`, go-playground/validator v10.15.1, and ozzo-validation v4.4.1.
+Versions: YAV v0.17.0, go-playground/validator v10.15.1, and ozzo-validation v4.4.1.
 
 Each operation validates one account. Results are medians of five 300 ms samples collected in one process.
 
