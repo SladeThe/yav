@@ -313,6 +313,98 @@ func TestURL(t *testing.T) {
 			err:  nil,
 		},
 	}, {
+		name: "HTTP host",
+		args: args{
+			name:  "v",
+			value: "http://localhost",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "port path query",
+		args: args{
+			name:  "v",
+			value: "https://Api.Example-1.com:8443/a%20b?q=x%2Fy",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "raw query escape",
+		args: args{
+			name:  "v",
+			value: "https://example.com/path?q=%zz",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "userinfo IPv6",
+		args: args{
+			name:  "v",
+			value: "https://user:pass@[2001:db8::1]:443/path",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "empty authority",
+		args: args{
+			name:  "v",
+			value: "https:///path",
+		},
+		want: want{
+			stop: false,
+			err:  nil,
+		},
+	}, {
+		name: "invalid port",
+		args: args{
+			name:  "v",
+			value: "https://example.com:abc/path",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameURL,
+				ValueName: "v",
+				Value:     "https://example.com:abc/path",
+			},
+		},
+	}, {
+		name: "invalid path escape",
+		args: args{
+			name:  "v",
+			value: "https://example.com/%zz",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameURL,
+				ValueName: "v",
+				Value:     "https://example.com/%zz",
+			},
+		},
+	}, {
+		name: "path control",
+		args: args{
+			name:  "v",
+			value: "https://example.com/path\n",
+		},
+		want: want{
+			stop: true,
+			err: yav.Error{
+				CheckName: yav.CheckNameURL,
+				ValueName: "v",
+				Value:     "https://example.com/path\n",
+			},
+		},
+	}, {
 		name: "empty",
 		args: args{
 			name:  "v",

@@ -33,7 +33,7 @@ func URL(name string, value string) (stop bool, err error) {
 
 func isURX(value string, isURI bool) bool {
 	if i := strings.IndexRune(value, '#'); i >= 0 {
-		if !isURXFragment(value[i+1:]) {
+		if !isURXComponent(value[i+1:]) {
 			return false
 		}
 
@@ -44,12 +44,54 @@ func isURX(value string, isURI bool) bool {
 		return false
 	}
 
+	if isSimpleHTTPURL(value) {
+		return true
+	}
+
 	u, err := url.ParseRequestURI(value)
 	return err == nil && (isURI || u.Scheme != "")
 }
 
+func isSimpleHTTPURL(value string) bool {
+	switch {
+	case strings.HasPrefix(value, "https://"):
+		value = value[len("https://"):]
+	case strings.HasPrefix(value, "http://"):
+		value = value[len("http://"):]
+	default:
+		return false
+	}
+
+	index := 0
+
+	for index < len(value) {
+		c := value[index]
+
+		if lower := c | ('a' - 'A'); (lower < 'a' || lower > 'z') && (c < '0' || c > '9') && c != '.' && c != '-' {
+			break
+		}
+
+		index++
+	}
+
+	if index == 0 {
+		return false
+	}
+
+	if index < len(value) && value[index] == ':' {
+		index++
+
+		for index < len(value) && '0' <= value[index] && value[index] <= '9' {
+			index++
+		}
+	}
+
+	return index == len(value) ||
+		(value[index] == '/' || value[index] == '?') && isURXComponent(value[index:])
+}
+
 // Equivalent regexp: `^(?:[^\x00-\x1f\x7f%]|%[0-9a-fA-F]{2})*$`
-func isURXFragment(value string) bool {
+func isURXComponent(value string) bool {
 	for i := 0; i < len(value); i++ {
 		c := value[i]
 		if c < ' ' || c == '\x7f' {

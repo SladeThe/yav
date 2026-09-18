@@ -105,4 +105,5 @@ Use bracketed Go doc links only when they resolve correctly and preserve IDE nav
 Keep references to unimported packages and unsupported members qualified and plain to preserve IDE navigation; do not use full import paths or explicit URLs.
 Preserve unrelated working-tree edits. Keep generated code, templates, tests, examples, and docs synchronized with relevant changes.
 Keep local agent state and review artifacts in ignored directories. The root `AGENTS.md` belongs in version control.
+If present, `.codex/review/status.md` records local review decisions and deferred findings; read it before resuming this review.
 Keep agent-document lines at most 280 characters, preferably at most 240.
