@@ -350,32 +350,34 @@ GreaterThanOrEqualNamed
 
 ## Benchmarks
 
-```
-goos: windows
-goarch: amd64
-cpu: Intel(R) Core(TM) i9-10850K CPU @ 3.60GHz
-```
+Valid Account validation, measured on 2026-09-18 with Go 1.27.1 on Windows/amd64,
+AMD Ryzen 9 9900X, `GOAMD64=v1`, and `GOMAXPROCS=24`.
+Versions: YAV `bdf780b`, go-playground/validator v10.15.1, and ozzo-validation v4.4.1.
 
-#### Tiny struct validation
+Each operation validates one account. Results are medians of five 300 ms samples collected in one process.
 
-```
-BenchmarkYAV              12907930       92.15 ns/op          0 B/op        0 allocs/op
-BenchmarkOzzo              1334562       890.1 ns/op       1248 B/op       20 allocs/op
-BenchmarkPlayground        1324868       911.8 ns/op         40 B/op        2 allocs/op
-```
+### Sequential
 
-#### Account struct validation
+| Validator | ns/op | B/op | allocs/op |
+|---|---:|---:|---:|
+| YAV | 438.7 | 0 | 0 |
+| Preallocated YAV | 375.7 | 0 | 0 |
+| Playground v10.15.1 | 3078 | 559 | 15 |
+| Ozzo v4.4.1 | 6324 | 6255 | 107 |
 
-```
-BenchmarkYAV                729123        1658 ns/op        123 B/op        4 allocs/op
-BenchmarkPreAllocatedYAV    802777        1488 ns/op          0 B/op        0 allocs/op
-BenchmarkOzzo*               54954       21684 ns/op      19215 B/op      317 allocs/op
-BenchmarkPlayground         172633        6789 ns/op        653 B/op       23 allocs/op
-```
+### Parallel
 
-#### Notes
+| Validator | ns/op | B/op | allocs/op |
+|---|---:|---:|---:|
+| YAV | 32.74 | 0 | 0 |
+| Preallocated YAV | 29.44 | 0 | 0 |
+| Playground v10.15.1 | 509.1 | 552 | 15 |
+| Ozzo v4.4.1 | 2042 | 6211 | 107 |
 
-* The Account in the Examples section is a reduced version of the [benchmarked structure](https://github.com/SladeThe/yav-tests/blob/main/account_test.go#L85).
-* Ozzo validator lacks some features available in both YAV and Playground validator.
-  Therefore, those validation steps were not enabled for ozzo.
-* The YAV is still slower, than a manually written validation boilerplate, but the amount of code differs dramatically.
+Parallel ns/op reflects aggregate throughput across 24 workers.
+Preallocated YAV reuses rules prepared before validation.
+
+All 32 compatibility tests pass against Playground v10.15.1.
+The Ozzo fixture omits some password/name rules and avatar key/value checks.
+
+The Account in the Examples section is a reduced version of the [benchmarked structure](https://github.com/SladeThe/yav-tests/blob/main/account_test.go).
